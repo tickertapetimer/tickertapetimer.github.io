@@ -22,15 +22,15 @@
 <meta property="og:site_name" content="ticker-tape timer&#39;s blog">
 <meta property="og:description" content="BUUCTF warmup_csaw_2016打开IDA，发现)PS：这个题直接把函数位置给了。。。可以看出，gets绝对有问题，v5的长度为0x40，同时加上返回地址8个字节，所以要溢出总长度为0x48，在运行程序时可以看到sub_40060D的地址就为0x40060D…所以构建payload：payload &#x3D; ’a’ * 0x48 + p64(0x40060D)，得flag：">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://whyiamddjsq.icu/2020/04/04/BUUCTF-warmup-csaw-2016-writeup/BUUCTF-warmup-csaw-2016-writeup/1.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/2020/04/04/BUUCTF-warmup-csaw-2016-writeup/BUUCTF-warmup-csaw-2016-writeup/2.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/2020/04/04/BUUCTF-warmup-csaw-2016-writeup/BUUCTF-warmup-csaw-2016-writeup/3.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/2020/04/04/BUUCTF-warmup-csaw-2016-writeup/BUUCTF-warmup-csaw-2016-writeup/4.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/img/BUUCTF-warmup-csaw-2016-writeup/1.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/img/BUUCTF-warmup-csaw-2016-writeup/2.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/img/BUUCTF-warmup-csaw-2016-writeup/3.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/img/BUUCTF-warmup-csaw-2016-writeup/4.png">
 <meta property="article:published_time" content="2020-04-04T06:39:21.000Z">
 <meta property="article:modified_time" content="2020-07-17T03:19:57.753Z">
 <meta property="article:author" content="ticker-tape timer">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://whyiamddjsq.icu/2020/04/04/BUUCTF-warmup-csaw-2016-writeup/BUUCTF-warmup-csaw-2016-writeup/1.png">
+<meta name="twitter:image" content="http://whyiamddjsq.icu/img/BUUCTF-warmup-csaw-2016-writeup/1.png">
 
   
 
@@ -185,7 +185,7 @@ ga('send', 'pageview');
 
   <div class="article-content">
     
-      <h2 id="BUUCTF-warmup-csaw-2016"><a href="#BUUCTF-warmup-csaw-2016" class="headerlink" title="BUUCTF warmup_csaw_2016"></a>BUUCTF warmup_csaw_2016</h2><p>打开IDA，发现<img src="/2020/04/04/BUUCTF-warmup-csaw-2016-writeup/BUUCTF-warmup-csaw-2016-writeup/1.png" alt="1">)<img src="/2020/04/04/BUUCTF-warmup-csaw-2016-writeup/BUUCTF-warmup-csaw-2016-writeup/2.png" alt="2"><br>PS：这个题直接把函数位置给了。。。<br>可以看出，<code>gets</code>绝对有问题，v5的长度为<code>0x40</code>，同时加上返回地址8个字节，所以要溢出总长度为<code>0x48</code>，在运行程序时可以看到<code>sub_40060D</code>的地址就为<code>0x40060D</code>…<br><img src="/2020/04/04/BUUCTF-warmup-csaw-2016-writeup/BUUCTF-warmup-csaw-2016-writeup/3.png" alt="3"><br>所以构建payload：payload = ’a’ * 0x48 + p64(0x40060D)，得flag：<br><img src="/2020/04/04/BUUCTF-warmup-csaw-2016-writeup/BUUCTF-warmup-csaw-2016-writeup/4.png" alt="4"></p>
+      <h2 id="BUUCTF-warmup-csaw-2016"><a href="#BUUCTF-warmup-csaw-2016" class="headerlink" title="BUUCTF warmup_csaw_2016"></a>BUUCTF warmup_csaw_2016</h2><p>打开IDA，发现<img src="/img/BUUCTF-warmup-csaw-2016-writeup/1.png" alt="1">)<img src="/img/BUUCTF-warmup-csaw-2016-writeup/2.png" alt="2"><br>PS：这个题直接把函数位置给了。。。<br>可以看出，<code>gets</code>绝对有问题，v5的长度为<code>0x40</code>，同时加上返回地址8个字节，所以要溢出总长度为<code>0x48</code>，在运行程序时可以看到<code>sub_40060D</code>的地址就为<code>0x40060D</code>…<br><img src="/img/BUUCTF-warmup-csaw-2016-writeup/3.png" alt="3"><br>所以构建payload：payload = ’a’ * 0x48 + p64(0x40060D)，得flag：<br><img src="/img/BUUCTF-warmup-csaw-2016-writeup/4.png" alt="4"></p>
 
     
   </div>

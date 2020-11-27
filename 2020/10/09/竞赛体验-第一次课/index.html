@@ -22,13 +22,13 @@
 <meta property="og:site_name" content="ticker-tape timer&#39;s blog">
 <meta property="og:description" content="堆Q:为什么需要动态分配内存 A:无法确定要分配的内存大小 Q:什么时候需要动态分配内存 A:当程序中有比较大的数据块需要使用内存的时候使用 Q:如何动态分配内存 A:用堆 堆栈分配内存方式栈：简单快捷，缺乏安全检查，局部 堆：全局，有安全检查，速度较慢，依赖安全检查 栈分配函数：alloc 堆分配函数：malloc，realloc，calloc，free chunk数据结构malloc_chun">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://whyiamddjsq.icu/2020/10/09/%E7%AB%9E%E8%B5%9B%E4%BD%93%E9%AA%8C-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AF%BE/%E7%AB%9E%E8%B5%9B%E4%BD%93%E9%AA%8C-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AF%BE/unlink_smallbin_intro.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/2020/10/09/%E7%AB%9E%E8%B5%9B%E4%BD%93%E9%AA%8C-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AF%BE/%E7%AB%9E%E8%B5%9B%E4%BD%93%E9%AA%8C-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AF%BE/420rbsdeo2o0.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/img/%E7%AB%9E%E8%B5%9B%E4%BD%93%E9%AA%8C-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AF%BE/unlink_smallbin_intro.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/img/%E7%AB%9E%E8%B5%9B%E4%BD%93%E9%AA%8C-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AF%BE/420rbsdeo2o0.png">
 <meta property="article:published_time" content="2020-10-09T10:11:00.000Z">
 <meta property="article:modified_time" content="2020-11-10T10:10:24.420Z">
 <meta property="article:author" content="ticker-tape timer">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://whyiamddjsq.icu/2020/10/09/%E7%AB%9E%E8%B5%9B%E4%BD%93%E9%AA%8C-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AF%BE/%E7%AB%9E%E8%B5%9B%E4%BD%93%E9%AA%8C-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AF%BE/unlink_smallbin_intro.png">
+<meta name="twitter:image" content="http://whyiamddjsq.icu/img/%E7%AB%9E%E8%B5%9B%E4%BD%93%E9%AA%8C-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AF%BE/unlink_smallbin_intro.png">
 
   
 
@@ -202,7 +202,7 @@ ga('send', 'pageview');
 
 
 
-<p><img src="/2020/10/09/%E7%AB%9E%E8%B5%9B%E4%BD%93%E9%AA%8C-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AF%BE/%E7%AB%9E%E8%B5%9B%E4%BD%93%E9%AA%8C-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AF%BE/unlink_smallbin_intro.png" alt="img"></p>
+<p><img src="/img/%E7%AB%9E%E8%B5%9B%E4%BD%93%E9%AA%8C-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AF%BE/unlink_smallbin_intro.png" alt="img"></p>
 <h3 id="bin介绍"><a href="#bin介绍" class="headerlink" title="bin介绍"></a>bin介绍</h3><p><strong>bin是一种记录free chunk的链表数据结构</strong>。</p>
 <p>系统针对不同大小的free chunk，将bin分为了4类：</p>
 <p>1) Fast bin; </p>
@@ -220,7 +220,7 @@ ga('send', 'pageview');
 <li><p>bin 64到126为large bin。</p>
 </li>
 </ul>
-<p><img src="/2020/10/09/%E7%AB%9E%E8%B5%9B%E4%BD%93%E9%AA%8C-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AF%BE/%E7%AB%9E%E8%B5%9B%E4%BD%93%E9%AA%8C-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AF%BE/420rbsdeo2o0.png" alt="img"></p>
+<p><img src="/img/%E7%AB%9E%E8%B5%9B%E4%BD%93%E9%AA%8C-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AF%BE/420rbsdeo2o0.png" alt="img"></p>
 
     
   </div>
