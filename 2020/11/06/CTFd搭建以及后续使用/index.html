@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>CTFd搭建以及后续使用 | ticker-tape timer&#39;s blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="blog" />
+  
+
+  <meta name="description" content="搭建首先，如果你要用来给别人打比赛，那你需要一台服务器，如果是自用，那当我没说 安装gitapt install git&#96;&#96;&#96;123456#### 安装pip(ubuntu20.04只能用python3，所以要安装pip3)&#96;&#96;&#96;sudo apt install python-pip  安装flaskpip install Flask&#96;&#96;&#96;1234#### 克隆CTFd&amp;#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CTFd搭建以及后续使用">
+<meta property="og:url" content="https://ddjsq2333.gitee.io/2020/11/06/CTFd%E6%90%AD%E5%BB%BA%E4%BB%A5%E5%8F%8A%E5%90%8E%E7%BB%AD%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="ticker-tape timer&#39;s blog">
+<meta property="og:description" content="搭建首先，如果你要用来给别人打比赛，那你需要一台服务器，如果是自用，那当我没说 安装gitapt install git&#96;&#96;&#96;123456#### 安装pip(ubuntu20.04只能用python3，所以要安装pip3)&#96;&#96;&#96;sudo apt install python-pip  安装flaskpip install Flask&#96;&#96;&#96;1234#### 克隆CTFd&amp;#">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-11-06T10:00:47.000Z">
+<meta property="article:modified_time" content="2020-11-23T08:54:49.982Z">
+<meta property="article:author" content="ticker-tape timer">
+<meta name="twitter:card" content="summary">
+
+  
+
+  
+    <link rel="icon" href="/1.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    
+<link rel="stylesheet" href="/css/personal-style.css">
+
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="ticker-tape timer's blog" type="application/atom+xml">
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">home</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">home</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">Posts List</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#搭建"><span class="toc-text">搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#安装git"><span class="toc-text">安装git</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装flask"><span class="toc-text">安装flask</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装CTFd"><span class="toc-text">安装CTFd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#启动CTFd"><span class="toc-text">启动CTFd</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#优化"><span class="toc-text">优化</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-CTFd搭建以及后续使用" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">CTFd搭建以及后续使用</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2020.11.06</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>ticker-tape timer</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h2 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h2><p>首先，如果你要用来给别人打比赛，那你需要一台服务器，如果是自用，那当我没说</p>
+<h4 id="安装git"><a href="#安装git" class="headerlink" title="安装git"></a>安装git</h4><figure class="highlight plain"><figcaption><span>apt install git```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### 安装pip</span><br><span class="line"></span><br><span class="line">(ubuntu20.04只能用python3，所以要安装pip3)</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;sudo apt install python-pip</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装flask"><a href="#安装flask" class="headerlink" title="安装flask"></a>安装flask</h4><figure class="highlight plain"><figcaption><span>pip install Flask```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### 克隆CTFd</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;sudo git clone https:&#x2F;&#x2F;github.com&#x2F;CTFd&#x2F;CTFd.git</span><br></pre></td></tr></table></figure>
+
+<p>(速度慢的话可以用国内镜像或者换源)</p>
+<h4 id="安装CTFd"><a href="#安装CTFd" class="headerlink" title="安装CTFd"></a>安装CTFd</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo cd /usr/local/CTFd/</span><br><span class="line">sudo pip install -r requirements.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="启动CTFd"><a href="#启动CTFd" class="headerlink" title="启动CTFd"></a>启动CTFd</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo pyhton serve.py</span><br><span class="line">(Ubuntu20.04用下面)</span><br><span class="line">sudo python3 serve.py</span><br></pre></td></tr></table></figure>
+
+<h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><p>打开发现奇慢无比，查看为什么慢，发现有两个CSS文件，引用了国外的资源，导致奇慢无比，优化一手</p>
+<p>将fonts.min.css和fonts.dev.css文件中的<code>https://use.fontawesome.com/releases/v5.9.0/css/all.css</code>改成<code>https://cdn.bootcss.com/font-awesome/5.13.0/css/all.css</code></p>
+<p>再将<code>fonts.googleapis.com</code>改成<code>fonts.useso.com</code></p>
+<p>OK，毫秒级体验，爽了</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2020/10/09/%E7%AB%9E%E8%B5%9B%E4%BD%93%E9%AA%8C-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AF%BE/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2020/11/08/g2uc%20writeup/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">Close</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

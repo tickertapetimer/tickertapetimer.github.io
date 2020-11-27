@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>ticker-tape timer&#39;s blog</title>
+  
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="https://ddjsq2333.gitee.io/"/>
+  <updated>2020-11-24T12:42:58.996Z</updated>
+  <id>https://ddjsq2333.gitee.io/</id>
+  
+  <author>
+    <name>ticker-tape timer</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>SMC技术浅析</title>
+    <link href="https://ddjsq2333.gitee.io/2020/11/24/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/"/>
+    <id>https://ddjsq2333.gitee.io/2020/11/24/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/</id>
+    <published>2020-11-24T11:57:00.000Z</published>
+    <updated>2020-11-24T12:42:58.996Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;之前弄了一道逆向题，在研究的时候发现它使用了一项我没有见过的技术，现在学习了一波，写一下心得&lt;/p&gt;
+&lt;h2 id=&quot;简介&quot;&gt;&lt;a
+        
+      
+    
+    </summary>
+    
+    
+      <category term="逆向" scheme="https://ddjsq2333.gitee.io/categories/%E9%80%86%E5%90%91/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>【ACTF2020】Splendid_MineCraft【wp】</title>
+    <link href="https://ddjsq2333.gitee.io/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/"/>
+    <id>https://ddjsq2333.gitee.io/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/</id>
+    <published>2020-11-23T04:47:00.000Z</published>
+    <updated>2020-11-23T08:48:02.093Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="逆向" scheme="https://ddjsq2333.gitee.io/categories/%E9%80%86%E5%90%91/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>g2uc_writeup</title>
+    <link href="https://ddjsq2333.gitee.io/2020/11/08/g2uc%20writeup/"/>
+    <id>https://ddjsq2333.gitee.io/2020/11/08/g2uc%20writeup/</id>
+    <published>2020-11-08T09:36:00.000Z</published>
+    <updated>2020-11-10T10:12:14.588Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;misc&quot;&gt;&lt;a href=&quot;#misc&quot; class=&quot;headerlink&quot; title=&quot;misc&quot;&gt;&lt;/a&gt;misc&lt;/h2&gt;&lt;h4 id=&quot;签到&quot;&gt;&lt;a href=&quot;#签到&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="WP" scheme="https://ddjsq2333.gitee.io/categories/WP/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>CTFd搭建以及后续使用</title>
+    <link href="https://ddjsq2333.gitee.io/2020/11/06/CTFd%E6%90%AD%E5%BB%BA%E4%BB%A5%E5%8F%8A%E5%90%8E%E7%BB%AD%E4%BD%BF%E7%94%A8/"/>
+    <id>https://ddjsq2333.gitee.io/2020/11/06/CTFd%E6%90%AD%E5%BB%BA%E4%BB%A5%E5%8F%8A%E5%90%8E%E7%BB%AD%E4%BD%BF%E7%94%A8/</id>
+    <published>2020-11-06T10:00:47.000Z</published>
+    <updated>2020-11-23T08:54:49.982Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;搭建&quot;&gt;&lt;a href=&quot;#搭建&quot; class=&quot;headerlink&quot; title=&quot;搭建&quot;&gt;&lt;/a&gt;搭建&lt;/h2&gt;&lt;p&gt;首先，如果你要用来给别人打比赛，那你需要一台服务器，如果是自用，那当我没说&lt;/p&gt;
+&lt;h4 id=&quot;安装git&quot;&gt;&lt;a
+        
+      
+    
+    </summary>
+    
+    
+      <category term="运维" scheme="https://ddjsq2333.gitee.io/categories/%E8%BF%90%E7%BB%B4/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>竞赛体验</title>
+    <link href="https://ddjsq2333.gitee.io/2020/10/09/%E7%AB%9E%E8%B5%9B%E4%BD%93%E9%AA%8C-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AF%BE/"/>
+    <id>https://ddjsq2333.gitee.io/2020/10/09/%E7%AB%9E%E8%B5%9B%E4%BD%93%E9%AA%8C-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AF%BE/</id>
+    <published>2020-10-09T10:11:00.000Z</published>
+    <updated>2020-11-10T10:10:24.420Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;堆&quot;&gt;&lt;a href=&quot;#堆&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="笔记" scheme="https://ddjsq2333.gitee.io/categories/%E7%AC%94%E8%AE%B0/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>分析网易云加密</title>
+    <link href="https://ddjsq2333.gitee.io/2020/09/15/%E5%88%86%E6%9E%90%E7%BD%91%E6%98%93%E4%BA%91%E5%8A%A0%E5%AF%86/"/>
+    <id>https://ddjsq2333.gitee.io/2020/09/15/%E5%88%86%E6%9E%90%E7%BD%91%E6%98%93%E4%BA%91%E5%8A%A0%E5%AF%86/</id>
+    <published>2020-09-15T13:20:25.000Z</published>
+    <updated>2020-09-27T10:47:54.646Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;开始&quot;&gt;&lt;a href=&quot;#开始&quot; class=&quot;headerlink&quot; title=&quot;开始&quot;&gt;&lt;/a&gt;开始&lt;/h1&gt;&lt;h2 id=&quot;请求分析&quot;&gt;&lt;a href=&quot;#请求分析&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="学习" scheme="https://ddjsq2333.gitee.io/categories/%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>基于badusb实现的基础渗透</title>
+    <link href="https://ddjsq2333.gitee.io/2020/08/08/%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/"/>
+    <id>https://ddjsq2333.gitee.io/2020/08/08/%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/</id>
+    <published>2020-08-08T01:00:00.000Z</published>
+    <updated>2020-08-08T02:29:31.281Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;badusb基础&quot;&gt;&lt;a href=&quot;#badusb基础&quot; class=&quot;headerlink&quot; title=&quot;badusb基础&quot;&gt;&lt;/a&gt;badusb基础&lt;/h2&gt;&lt;h3 id=&quot;初识badusb&quot;&gt;&lt;a href=&quot;#初识badusb&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="网络攻防实战" scheme="https://ddjsq2333.gitee.io/categories/%E7%BD%91%E7%BB%9C%E6%94%BB%E9%98%B2%E5%AE%9E%E6%88%98/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title> 辩论队一面辩题资料</title>
+    <link href="https://ddjsq2333.gitee.io/2020/07/29/%E8%BE%A9%E8%AE%BA%E9%98%9F%E4%B8%80%E9%9D%A2%E8%BE%A9%E9%A2%98%E8%B5%84%E6%96%99/"/>
+    <id>https://ddjsq2333.gitee.io/2020/07/29/%E8%BE%A9%E8%AE%BA%E9%98%9F%E4%B8%80%E9%9D%A2%E8%BE%A9%E9%A2%98%E8%B5%84%E6%96%99/</id>
+    <published>2020-07-29T06:36:00.000Z</published>
+    <updated>2020-07-29T09:33:36.528Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h4 id=&quot;《微博“热搜榜”与互联网信息服务的规制》&quot;&gt;&lt;a href=&quot;#《微博“热搜榜”与互联网信息服务的规制》&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="辩论" scheme="https://ddjsq2333.gitee.io/categories/%E8%BE%A9%E8%AE%BA/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>CVE-2017-11882漏洞分析及利用</title>
+    <link href="https://ddjsq2333.gitee.io/2020/07/19/CVE-2017-11882%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%8F%8A%E5%88%86%E6%9E%90/"/>
+    <id>https://ddjsq2333.gitee.io/2020/07/19/CVE-2017-11882%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%8F%8A%E5%88%86%E6%9E%90/</id>
+    <published>2020-07-19T07:57:00.000Z</published>
+    <updated>2020-07-19T12:06:45.595Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;漏洞简介&quot;&gt;&lt;a href=&quot;#漏洞简介&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="漏洞复现系列" scheme="https://ddjsq2333.gitee.io/categories/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E7%B3%BB%E5%88%97/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>pwn IOF</title>
+    <link href="https://ddjsq2333.gitee.io/2020/07/17/pwn-IOF/"/>
+    <id>https://ddjsq2333.gitee.io/2020/07/17/pwn-IOF/</id>
+    <published>2020-07-17T00:49:00.000Z</published>
+    <updated>2020-07-17T03:08:27.814Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h3 id=&quot;首先看源码&quot;&gt;&lt;a href=&quot;#首先看源码&quot; class=&quot;headerlink&quot; title=&quot;首先看源码&quot;&gt;&lt;/a&gt;首先看源码&lt;/h3&gt;&lt;p&gt;&lt;img src=&quot;/.io//pwn-IOF/IOF-1-1594955236992.png&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="二进制" scheme="https://ddjsq2333.gitee.io/categories/%E4%BA%8C%E8%BF%9B%E5%88%B6/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>C++课设</title>
+    <link href="https://ddjsq2333.gitee.io/2020/07/02/C++%E8%AF%BE%E8%AE%BE/"/>
+    <id>https://ddjsq2333.gitee.io/2020/07/02/C++%E8%AF%BE%E8%AE%BE/</id>
+    <published>2020-07-02T12:38:00.000Z</published>
+    <updated>2020-07-17T03:21:47.556Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;1、课程设计题目及内容：&quot;&gt;&lt;a href=&quot;#1、课程设计题目及内容：&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="憨憨的C++" scheme="https://ddjsq2333.gitee.io/categories/%E6%86%A8%E6%86%A8%E7%9A%84C/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title> 利用arp欺骗截取图片信息</title>
+    <link href="https://ddjsq2333.gitee.io/2020/06/25/%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E6%88%AA%E5%8F%96%E5%9B%BE%E7%89%87%E4%BF%A1%E6%81%AF/"/>
+    <id>https://ddjsq2333.gitee.io/2020/06/25/%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E6%88%AA%E5%8F%96%E5%9B%BE%E7%89%87%E4%BF%A1%E6%81%AF/</id>
+    <published>2020-06-25T04:36:00.000Z</published>
+    <updated>2020-07-17T03:14:42.960Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;&lt;font color=&quot;red&quot;&gt;本文仅限于学习交流所用&lt;/font&gt;&lt;/p&gt;
+&lt;h2 id=&quot;arp欺诈&quot;&gt;&lt;a
+        
+      
+    
+    </summary>
+    
+    
+      <category term="网络攻防实战" scheme="https://ddjsq2333.gitee.io/categories/%E7%BD%91%E7%BB%9C%E6%94%BB%E9%98%B2%E5%AE%9E%E6%88%98/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>ms12-020以及ms17-010使用</title>
+    <link href="https://ddjsq2333.gitee.io/2020/06/24/ms12-020%E4%BB%A5%E5%8F%8Ams17-010%E4%BD%BF%E7%94%A8/"/>
+    <id>https://ddjsq2333.gitee.io/2020/06/24/ms12-020%E4%BB%A5%E5%8F%8Ams17-010%E4%BD%BF%E7%94%A8/</id>
+    <published>2020-06-24T13:52:08.000Z</published>
+    <updated>2020-07-19T07:58:36.241Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="漏洞复现系列" scheme="https://ddjsq2333.gitee.io/categories/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E7%B3%BB%E5%88%97/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>末日算法</title>
+    <link href="https://ddjsq2333.gitee.io/2020/05/16/%E6%9C%AB%E6%97%A5%E7%AE%97%E6%B3%95/"/>
+    <id>https://ddjsq2333.gitee.io/2020/05/16/%E6%9C%AB%E6%97%A5%E7%AE%97%E6%B3%95/</id>
+    <published>2020-05-16T11:45:20.000Z</published>
+    <updated>2020-05-17T09:06:24.914Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;末日是周几？&quot;&gt;&lt;a href=&quot;#末日是周几？&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="算法" scheme="https://ddjsq2333.gitee.io/categories/%E7%AE%97%E6%B3%95/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>格式化字符串漏洞之crack</title>
+    <link href="https://ddjsq2333.gitee.io/2020/05/16/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/"/>
+    <id>https://ddjsq2333.gitee.io/2020/05/16/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/</id>
+    <published>2020-05-16T10:34:14.000Z</published>
+    <updated>2020-07-17T03:11:57.468Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;crack&quot;&gt;&lt;a href=&quot;#crack&quot; class=&quot;headerlink&quot; title=&quot;crack&quot;&gt;&lt;/a&gt;crack&lt;/h2&gt;&lt;p&gt;这是一道格式化字符串题&lt;br&gt;打开IDA，看源码。&lt;/p&gt;
+&lt;p&gt;&lt;img
+        
+      
+    
+    </summary>
+    
+    
+      <category term="二进制" scheme="https://ddjsq2333.gitee.io/categories/%E4%BA%8C%E8%BF%9B%E5%88%B6/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>pwn3</title>
+    <link href="https://ddjsq2333.gitee.io/2020/04/16/pwn3/"/>
+    <id>https://ddjsq2333.gitee.io/2020/04/16/pwn3/</id>
+    <published>2020-04-16T14:23:53.000Z</published>
+    <updated>2020-07-17T03:26:15.754Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;pwn3&quot;&gt;&lt;a href=&quot;#pwn3&quot; class=&quot;headerlink&quot; title=&quot;pwn3&quot;&gt;&lt;/a&gt;pwn3&lt;/h2&gt;&lt;p&gt;二进制作业，来自Tamu19(不知道是啥来的)的一道题&lt;br&gt;打开IDA&lt;br&gt;&lt;img
+        
+      
+    
+    </summary>
+    
+    
+      <category term="二进制" scheme="https://ddjsq2333.gitee.io/categories/%E4%BA%8C%E8%BF%9B%E5%88%B6/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>just_do_it</title>
+    <link href="https://ddjsq2333.gitee.io/2020/04/16/just-do-it/"/>
+    <id>https://ddjsq2333.gitee.io/2020/04/16/just-do-it/</id>
+    <published>2020-04-16T14:23:47.000Z</published>
+    <updated>2020-07-17T03:22:33.057Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;just-do-it&quot;&gt;&lt;a href=&quot;#just-do-it&quot; class=&quot;headerlink&quot; title=&quot;just_do_it&quot;&gt;&lt;/a&gt;just_do_it&lt;/h2&gt;&lt;p&gt;二进制的作业，一道来自TokyoWesterns 2017
+        
+      
+    
+    </summary>
+    
+    
+      <category term="二进制" scheme="https://ddjsq2333.gitee.io/categories/%E4%BA%8C%E8%BF%9B%E5%88%B6/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>整数型溢出</title>
+    <link href="https://ddjsq2333.gitee.io/2020/04/04/%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/"/>
+    <id>https://ddjsq2333.gitee.io/2020/04/04/%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/</id>
+    <published>2020-04-04T06:42:59.000Z</published>
+    <updated>2020-07-17T03:17:17.553Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;参考xctf的一道整数型溢出&lt;br&gt;整数溢出三种类型：&lt;br&gt;1、溢出&lt;br&gt;只有有符号数才会发生溢出。有符号数最高位表示符号，在两正或两负相加时，有可能改变符号位的值，产生溢出。&lt;br&gt;溢出标志 OF 可检测有符号数的溢出。&lt;br&gt;2、回绕&lt;br&gt;无符号数 0-1
+        
+      
+    
+    </summary>
+    
+    
+      <category term="二进制" scheme="https://ddjsq2333.gitee.io/categories/%E4%BA%8C%E8%BF%9B%E5%88%B6/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>BUUCTF_warmup_csaw_2016_writeup</title>
+    <link href="https://ddjsq2333.gitee.io/2020/04/04/BUUCTF-warmup-csaw-2016-writeup/"/>
+    <id>https://ddjsq2333.gitee.io/2020/04/04/BUUCTF-warmup-csaw-2016-writeup/</id>
+    <published>2020-04-04T06:39:21.000Z</published>
+    <updated>2020-07-17T03:19:57.753Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;BUUCTF-warmup-csaw-2016&quot;&gt;&lt;a href=&quot;#BUUCTF-warmup-csaw-2016&quot; class=&quot;headerlink&quot; title=&quot;BUUCTF warmup_csaw_2016&quot;&gt;&lt;/a&gt;BUUCTF
+        
+      
+    
+    </summary>
+    
+    
+      <category term="二进制" scheme="https://ddjsq2333.gitee.io/categories/%E4%BA%8C%E8%BF%9B%E5%88%B6/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>哀悼·铭记</title>
+    <link href="https://ddjsq2333.gitee.io/2020/04/04/%E5%93%80%E6%82%BC%C2%B7%E9%93%AD%E8%AE%B0/"/>
+    <id>https://ddjsq2333.gitee.io/2020/04/04/%E5%93%80%E6%82%BC%C2%B7%E9%93%AD%E8%AE%B0/</id>
+    <published>2020-04-03T16:00:01.000Z</published>
+    <updated>2020-07-17T03:09:37.682Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;&lt;strong&gt;哀悼·铭记&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/.io//%E5%93%80%E6%82%BC%C2%B7%E9%93%AD%E8%AE%B0/1.png&quot;
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+</feed>

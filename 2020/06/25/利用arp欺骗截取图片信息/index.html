@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title> 利用arp欺骗截取图片信息 | ticker-tape timer&#39;s blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="blog" />
+  
+
+  <meta name="description" content="前言本文仅限于学习交流所用 arp欺诈什么是arp欺诈ARP协议是“Address Resolution Protocol”（地址解析协议）的缩写。在局域网中，网络中实际传输的是“帧”，帧里面是有目标主机的MAC地址的。在以太网中，一个主机要和另一个主机进行直接通信，必须要知道目标主机的MAC地址。但这个目标MAC地址是如何获得的呢？它就是通过地址解析协议获得的。所谓“地址解析”就是主机在发送帧前">
+<meta property="og:type" content="article">
+<meta property="og:title" content=" 利用arp欺骗截取图片信息">
+<meta property="og:url" content="https://ddjsq2333.gitee.io/2020/06/25/%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E6%88%AA%E5%8F%96%E5%9B%BE%E7%89%87%E4%BF%A1%E6%81%AF/index.html">
+<meta property="og:site_name" content="ticker-tape timer&#39;s blog">
+<meta property="og:description" content="前言本文仅限于学习交流所用 arp欺诈什么是arp欺诈ARP协议是“Address Resolution Protocol”（地址解析协议）的缩写。在局域网中，网络中实际传输的是“帧”，帧里面是有目标主机的MAC地址的。在以太网中，一个主机要和另一个主机进行直接通信，必须要知道目标主机的MAC地址。但这个目标MAC地址是如何获得的呢？它就是通过地址解析协议获得的。所谓“地址解析”就是主机在发送帧前">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ddjsq2333.gitee.io/.io//%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E6%88%AA%E5%8F%96%E5%9B%BE%E7%89%87%E4%BF%A1%E6%81%AF/1.png">
+<meta property="og:image" content="https://ddjsq2333.gitee.io/.io//%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E6%88%AA%E5%8F%96%E5%9B%BE%E7%89%87%E4%BF%A1%E6%81%AF/2.png">
+<meta property="og:image" content="https://ddjsq2333.gitee.io/.io//%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E6%88%AA%E5%8F%96%E5%9B%BE%E7%89%87%E4%BF%A1%E6%81%AF/3.png">
+<meta property="og:image" content="https://ddjsq2333.gitee.io/.io//%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E6%88%AA%E5%8F%96%E5%9B%BE%E7%89%87%E4%BF%A1%E6%81%AF/4.png">
+<meta property="og:image" content="https://ddjsq2333.gitee.io/.io//%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E6%88%AA%E5%8F%96%E5%9B%BE%E7%89%87%E4%BF%A1%E6%81%AF/5-1594955668718.png">
+<meta property="og:image" content="https://ddjsq2333.gitee.io/.io//%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E6%88%AA%E5%8F%96%E5%9B%BE%E7%89%87%E4%BF%A1%E6%81%AF/6.png">
+<meta property="article:published_time" content="2020-06-25T04:36:00.000Z">
+<meta property="article:modified_time" content="2020-07-17T03:14:42.960Z">
+<meta property="article:author" content="ticker-tape timer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ddjsq2333.gitee.io/.io//%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E6%88%AA%E5%8F%96%E5%9B%BE%E7%89%87%E4%BF%A1%E6%81%AF/1.png">
+
+  
+
+  
+    <link rel="icon" href="/1.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    
+<link rel="stylesheet" href="/css/personal-style.css">
+
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="ticker-tape timer's blog" type="application/atom+xml">
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">home</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">home</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">Posts List</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#arp欺诈"><span class="toc-text">arp欺诈</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是arp欺诈"><span class="toc-text">什么是arp欺诈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#arp欺诈的原理是什么"><span class="toc-text">arp欺诈的原理是什么</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用"><span class="toc-text">利用</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-利用arp欺骗截取图片信息" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title"> 利用arp欺骗截取图片信息</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2020.06.25</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>ticker-tape timer</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/%E7%BD%91%E7%BB%9C%E6%94%BB%E9%98%B2%E5%AE%9E%E6%88%98/">网络攻防实战</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><font color="red">本文仅限于学习交流所用</font></p>
+<h2 id="arp欺诈"><a href="#arp欺诈" class="headerlink" title="arp欺诈"></a>arp欺诈</h2><h3 id="什么是arp欺诈"><a href="#什么是arp欺诈" class="headerlink" title="什么是arp欺诈"></a>什么是arp欺诈</h3><p>ARP协议是“Address Resolution Protocol”（地址解析协议）的缩写。在局域网中，网络中实际传输的是“帧”，帧里面是有目标主机的MAC地址的。在以太网中，一个主机要和另一个主机进行直接通信，必须要知道目标主机的MAC地址。但这个目标MAC地址是如何获得的呢？它就是通过地址解析协议获得的。所谓“地址解析”就是主机在发送帧前将目标IP地址转换成目标MAC地址的过程。ARP协议的基本功能就是通过目标设备的IP地址，查询目标设备的MAC地址，以保证通信的顺利进行。所以说从某种意义上讲ARP协议是工作在更低于IP协议的协议层。这也是为什么ARP欺骗更能够让人在神不知鬼不觉的情况下出现网络故障，他的危害更加隐蔽。</p>
+<h3 id="arp欺诈的原理是什么"><a href="#arp欺诈的原理是什么" class="headerlink" title="arp欺诈的原理是什么"></a>arp欺诈的原理是什么</h3><p>首先我们可以肯定一点的就是发送ARP欺骗包是通过一个恶毒的程序自动发送的，正常的TCP/IP网络是不会有这样的错误包发送的，而人工发送又比较麻烦。也就是说当黑客没有运行这个恶毒程序的话，网络上通信应该是一切正常的，保留在各个连接网络计算机上的ARP缓存表也应该是正确的，只有程序启动开始发送错误ARP信息以及ARP欺骗包时才会让某些计算机访问网络出现问题。接下来我们来阐述下ARP欺骗的原理。</p>
+<p>第一步：假设这样一个网络，一个Hub或交换机连接了3台机器，依次是计算机A，B，C</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">A的地址为：IP：192.168.1.1 MAC: AA-AA-AA-AA-AA-AA</span><br><span class="line">B的地址为：IP：192.168.1.2 MAC: BB-BB-BB-BB-BB-BB</span><br><span class="line">C的地址为：IP：192.168.1.3 MAC: CC-CC-CC-CC-CC-CC</span><br></pre></td></tr></table></figure>
+<p>第二步：正常情况下在A计算机上运行ARP -A查询ARP缓存表应该出现如下信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Interface: 192.168.1.1 on Interface 0x1000003</span><br><span class="line">Internet Address Physical Address Type</span><br><span class="line">192.168.1.3 CC-CC-CC-CC-CC-CC dynamic</span><br></pre></td></tr></table></figure>
+<p>第三步：在计算机B上运行ARP欺骗程序，来发送ARP欺骗包</p>
+<p>B向A发送一个自己伪造的ARP应答，而这个应答中的数据为发送方IP地址是192.168.10.3（C的IP地址），MAC地址是DD-DD-DD-DD-DD-DD（C的MAC地址本来应该是CC-CC-CC-CC-CC-CC，这里被伪造了）。当A接收到B伪造的ARP应答，就会更新本地的ARP缓存（A可不知道被伪造了）。而且A不知道其实是从B发送过来的，A这里只有192.168.10.3（C的IP地址）和无效的DD-DD-DD-DD-DD-DD mac地址</p>
+<p>第四步：欺骗完毕我们在A计算机上运行ARP -A来查询ARP缓存信息。你会发现原来正确的信息现在已经出现了错误</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Interface: 192.168.1.1 on Interface 0x1000003</span><br><span class="line">Internet Address Physical Address Type</span><br><span class="line">192.168.1.3 DD-DD-DD-DD-DD-DD dynamic</span><br></pre></td></tr></table></figure>
+<p>从上面的介绍我们可以清楚的明白原来网络中传输数据包最后都是要根据MAC地址信息的，也就是说虽然我们日常通讯都是通过IP地址，但是最后还是需要通过ARP协议进行地址转换，将IP地址变为MAC地址。而上面例子中在计算机A上的关于计算机C的MAC地址已经错误了，所以即使以后从A计算机访问C计算机这个192.168.1.3这个地址也会被ARP协议错误的解析成MAC地址为DD-DD-DD-DD-DD-DD的。问题也会随着ARP欺骗包针对网关而变本加厉，当局域网中一台机器，反复向其他机器，特别是向网关，发送这样无效假冒的ARP应答信息包时，严重的网络堵塞就会开始。由于网关MAC地址错误，所以从网络中计算机发来的数据无法正常发到网关，自然无法正常上网。这就造成了无法访问外网的问题，另外由于很多时候网关还控制着我们的局域网LAN上网，所以这时我们的LAN访问也就出现问题了。</p>
+<p><font color="red">以上内容均摘录于网上</font></p>
+<h2 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h2><p>在kali中，打开ettercap<br><img src="/.io//%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E6%88%AA%E5%8F%96%E5%9B%BE%E7%89%87%E4%BF%A1%E6%81%AF/1.png" alt="1"><br>点开<code>sniff</code>，选择第一个，再选择网卡eth0<br><img src="/.io//%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E6%88%AA%E5%8F%96%E5%9B%BE%E7%89%87%E4%BF%A1%E6%81%AF/2.png" alt="2"><br>再点开<code>hosts</code>，选择<code>hosts list</code>，然后点击<code>scan for hosts</code>，即扫描hosts<br><img src="/.io//%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E6%88%AA%E5%8F%96%E5%9B%BE%E7%89%87%E4%BF%A1%E6%81%AF/3.png" alt="3"><br>然后选择网关，点击<code>Add to target 1</code>，再选择目标机IP，点击<code>Add to target 2</code>，然后选择<code>mitm</code>，点击<code>ARP poisoning</code><br><img src="/.io//%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E6%88%AA%E5%8F%96%E5%9B%BE%E7%89%87%E4%BF%A1%E6%81%AF/4.png" alt="4"><br>选择第一个，（第二个是单向转发，选择第二个会导致被截留机断网）<br><img src="/.io//%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E6%88%AA%E5%8F%96%E5%9B%BE%E7%89%87%E4%BF%A1%E6%81%AF/5-1594955668718.png" alt="5"><br>然后点击start开始，再打开新终端，输入<code>driftnet -i eth0</code>开始抓取图片<br><img src="/.io//%E5%88%A9%E7%94%A8arp%E6%AC%BA%E9%AA%97%E6%88%AA%E5%8F%96%E5%9B%BE%E7%89%87%E4%BF%A1%E6%81%AF/6.png" alt="6"><br>看到有抓到图片，但是感觉对不上，不知道是什么原因（还在研究）</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2020/06/24/ms12-020%E4%BB%A5%E5%8F%8Ams17-010%E4%BD%BF%E7%94%A8/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2020/07/02/C++%E8%AF%BE%E8%AE%BE/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">Close</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
