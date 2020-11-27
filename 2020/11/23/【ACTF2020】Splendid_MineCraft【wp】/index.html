@@ -22,23 +22,23 @@
 <meta property="og:site_name" content="ticker-tape timer&#39;s blog">
 <meta property="og:description" content="前言这道题在做的时候啥都不懂，就嗯调，调着调着发现这题贼有意思，在运行循环的时候，循环后面的汇编代码会改变，进而出现新的代码，后来百度知道这种操作叫SMC，这题的题目也告诉了我们，它和SMC有关，SMC的操作后文再叙 初步调试用x32dbg打开，发现在输入后，有N段判断，猜想它是通过这些判断去对比flag和你的输入，于是一段一段来 输入字符串长度先随便输入几个字符    第一个判断是一个位置和0x">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123130132675.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123130041000.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123130532552.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123130915566.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123131346221.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123131642247.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123132044006.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123162736192.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123163431208.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123163741808.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123164401337.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123164727544.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123130132675.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123130041000.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123130532552.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123130915566.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123131346221.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123131642247.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123132044006.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123162736192.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123163431208.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123163741808.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123164401337.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123164727544.png">
 <meta property="article:published_time" content="2020-11-23T04:47:00.000Z">
 <meta property="article:modified_time" content="2020-11-23T08:48:02.093Z">
 <meta property="article:author" content="ticker-tape timer">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://whyiamddjsq.icu/.icu//%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123130132675.png">
+<meta name="twitter:image" content="http://whyiamddjsq.icu/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123130132675.png">
 
   
 
@@ -196,43 +196,43 @@ ga('send', 'pageview');
       <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这道题在做的时候啥都不懂，就嗯调，调着调着发现这题贼有意思，在运行循环的时候，循环后面的汇编代码会改变，进而出现新的代码，后来百度知道这种操作叫SMC，这题的题目也告诉了我们，它和SMC有关，SMC的操作后文再叙</p>
 <h2 id="初步调试"><a href="#初步调试" class="headerlink" title="初步调试"></a>初步调试</h2><p>用x32dbg打开，发现在输入后，有N段判断，猜想它是通过这些判断去对比flag和你的输入，于是一段一段来</p>
 <h3 id="输入字符串长度"><a href="#输入字符串长度" class="headerlink" title="输入字符串长度"></a>输入字符串长度</h3><p>先随便输入几个字符</p>
-<img src="/.icu//【ACTF2020】Splendid_MineCraft【wp】/image-20201123130132675.png" alt="image-20201123130132675" style="zoom:80%;">
+<img src="/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/【ACTF2020】Splendid_MineCraft【wp】/image-20201123130132675.png" alt="image-20201123130132675" style="zoom:80%;">
 
-<p><img src="/.icu//%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123130041000.png" alt="image-20201123130041000"></p>
+<p><img src="/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123130041000.png" alt="image-20201123130041000"></p>
 <p>第一个判断是一个位置和<code>0x1A</code>做比较，如果不等于，则直接进入wrong，在ebp-64的位置查看，发现是我输入的字符长度，所以第一个wrong绕过方法为，输入的字符串长度为<code>0x1A</code>，输入了一下，发现过了第一个wrong</p>
 <h3 id="输入字符串头尾"><a href="#输入字符串头尾" class="headerlink" title="输入字符串头尾"></a>输入字符串头尾</h3><p>第二个判断通过看汇编可以知道，是对字符串的头尾进行比较，查看有没有<code>ACTF{    }</code>把字符串包起来，于是改头尾再输入，过</p>
-<img src="/.icu//【ACTF2020】Splendid_MineCraft【wp】/image-20201123130532552.png" alt="image-20201123130532552" style="zoom:80%;">
+<img src="/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/【ACTF2020】Splendid_MineCraft【wp】/image-20201123130532552.png" alt="image-20201123130532552" style="zoom:80%;">
 
 <h3 id="下划线分隔字符串"><a href="#下划线分隔字符串" class="headerlink" title="下划线分隔字符串"></a>下划线分隔字符串</h3><p>第三个判断之前，有三个<code>strtok</code>函数，百度可知该函数作用为检测特定分隔符，检测到后，将字符串用分隔符隔开，在该程序中，分隔符是下划线</p>
-<img src="/.icu//【ACTF2020】Splendid_MineCraft【wp】/image-20201123130915566.png" alt="image-20201123130915566" style="zoom:80%;">
+<img src="/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/【ACTF2020】Splendid_MineCraft【wp】/image-20201123130915566.png" alt="image-20201123130915566" style="zoom:80%;">
 
 <p>运用到三次<code>strtok</code>函数，说明字符串分成了三块，即有两个下划线，而在分隔符后，有一个判断，判断前调用了一个函数，这个函数是重头戏，在进入该函数时可以发现，该函数有一个循环，在这个循环后面我们会发现一些奇怪的汇编代码</p>
-<img src="/.icu//【ACTF2020】Splendid_MineCraft【wp】/image-20201123131346221.png" alt="image-20201123131346221" style="zoom:80%;">
+<img src="/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/【ACTF2020】Splendid_MineCraft【wp】/image-20201123131346221.png" alt="image-20201123131346221" style="zoom:80%;">
 
 <p>这种代码应该是毫无意义的，运行起来应该会报错才对，但是在执行循环的时候我们会发现，这些没有意义的代码在变化，这就是SMC的操作，在代码运行时改变其他代码，达到一个加密的作用，这也是我们难以对其进行静态调试的原因，循环结束后，代码变成了如下这样：</p>
-<img src="/.icu//【ACTF2020】Splendid_MineCraft【wp】/image-20201123131642247.png" alt="image-20201123131642247" style="zoom:80%;">
+<img src="/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/【ACTF2020】Splendid_MineCraft【wp】/image-20201123131642247.png" alt="image-20201123131642247" style="zoom:80%;">
 
 <p>WOW！接下来就可以进行下一步了，观察下一步</p>
-<img src="/.icu//【ACTF2020】Splendid_MineCraft【wp】/image-20201123132044006.png" alt="image-20201123132044006" style="zoom: 80%;">
+<img src="/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/【ACTF2020】Splendid_MineCraft【wp】/image-20201123132044006.png" alt="image-20201123132044006" style="zoom: 80%;">
 
 <p>发现有一个比较，先记着，再往下看，有一个将ebp-10的值传给eax的操作，在那个wrong前面的判断，可以发现wrong判断的正是eax，而在那个比较成立的情况下，edx会自增1，并且会传值给ebp-8，当ebp-8为6时，ebp-10会被赋1，进而eax会置1，绕过wrong，合理猜想，比较是比较字符串，而用来比较的字符串，应该就是flag的第一段，循环一次可以获得第一段flag的一个字符，总共会循环6次，第一段字符应该是六个，为<code>yOu0y*</code>，更改第一段字符再输入，成功绕过</p>
-<h3 id="SMC梅开二度"><a href="#SMC梅开二度" class="headerlink" title="SMC梅开二度"></a>SMC梅开二度</h3><img src="/.icu//【ACTF2020】Splendid_MineCraft【wp】/image-20201123162736192.png" alt="image-20201123162736192" style="zoom:80%;">
+<h3 id="SMC梅开二度"><a href="#SMC梅开二度" class="headerlink" title="SMC梅开二度"></a>SMC梅开二度</h3><img src="/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/【ACTF2020】Splendid_MineCraft【wp】/image-20201123162736192.png" alt="image-20201123162736192" style="zoom:80%;">
 
 <p>在查看后面的代码时，又发现了一个循环，而且还是一个循环次数相当大的循环，猜想又是一手SMC，查看循环后面紧跟着的代码，发现没啥变化，但是代码里面有将一个地址赋给eax，然后加上偏移量，然后jmp到那个地址的操作，查看那个地址时发现，是那个地址的代码发生了变化，循环结束后进入函数查看</p>
-<img src="/.icu//【ACTF2020】Splendid_MineCraft【wp】/image-20201123163431208.png" alt="image-20201123163431208" style="zoom:80%;">
+<img src="/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/【ACTF2020】Splendid_MineCraft【wp】/image-20201123163431208.png" alt="image-20201123163431208" style="zoom:80%;">
 
 <p>函数较为复杂，但还是可以看出有一个根据地址和偏移量取值的操作，然后在<code>jmp 165185</code>这一行，进入后可以发现有另一个根据地址和偏移量取值的操作，然后两者取得的值进行比较，猜想是偏移量要对的上</p>
-<img src="/.icu//【ACTF2020】Splendid_MineCraft【wp】/image-20201123163741808.png" alt="image-20201123163741808" style="zoom:80%;">
+<img src="/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/【ACTF2020】Splendid_MineCraft【wp】/image-20201123163741808.png" alt="image-20201123163741808" style="zoom:80%;">
 
 <p>再猜想，偏移量是不是根据我输入的值计算出来的，查看取值代码前面，发现有一个异或操作</p>
 <p>研究后得出结论，取值的操作为<code>eax+((你输入的flag的第二段字符[i])^(0x83+i))</code>，与<code>eax+i+0x166</code>比较，所以逆运算出第二段字符：knowo3</p>
 <h3 id="明文比较第三段"><a href="#明文比较第三段" class="headerlink" title="明文比较第三段"></a>明文比较第三段</h3><p>更改第二段字符后，也过了后面的wrong，现在就差一个wrong了，而这个wrong前面的函数是一个strcmp</p>
-<img src="/.icu//【ACTF2020】Splendid_MineCraft【wp】/image-20201123164401337.png" alt="image-20201123164401337" style="zoom:80%;">
+<img src="/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/【ACTF2020】Splendid_MineCraft【wp】/image-20201123164401337.png" alt="image-20201123164401337" style="zoom:80%;">
 
 <p>这个wrong直接白给，strcmp的对比字符串即为flag的第三段</p>
 <h3 id="综上"><a href="#综上" class="headerlink" title="综上"></a>综上</h3><p>拼接后得flag：ACTF{yOu0y*_knowo3_5mcsM&lt;}</p>
 <h2 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h2><p>这题，真的调了好久，因为是想要练习动态调试的操作，所以一直在x32dbg和它死磕，不过磕出来了还是很爽的，最后附上调试用时</p>
-<p><img src="/.icu//%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123164727544.png" alt="image-20201123164727544"></p>
+<p><img src="/2020/11/23/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/%E3%80%90ACTF2020%E3%80%91Splendid_MineCraft%E3%80%90wp%E3%80%91/image-20201123164727544.png" alt="image-20201123164727544"></p>
 <p>这好吗，这很好，这题还是很讲武德的</p>
 
     

@@ -22,18 +22,18 @@
 <meta property="og:site_name" content="ticker-tape timer&#39;s blog">
 <meta property="og:description" content="前言之前弄了一道逆向题，在研究的时候发现它使用了一项我没有见过的技术，现在学习了一波，写一下心得 简介在上一篇的WP里，谈及了一项技术，SMC，即Self Modifying Code，动态代码加密技术，指通过修改代码或数据，阻止别人直接静态分析，然后在动态运行程序时对代码进行解密，达到程序正常运行的效果，而计算机病毒通常也会采用SMC技术动态修改内存中的可执行代码来达到变形或对代码加密的目的，从">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/pefmt.gif">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/image-20201124202437984.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/image-20201124203327386.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/image-20201124203920978.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/image-20201124204111774.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/image-20201124204127677.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/image-20201124204229468.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/11/24/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/pefmt.gif">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/11/24/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/image-20201124202437984.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/11/24/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/image-20201124203327386.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/11/24/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/image-20201124203920978.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/11/24/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/image-20201124204111774.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/11/24/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/image-20201124204127677.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/11/24/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/image-20201124204229468.png">
 <meta property="article:published_time" content="2020-11-24T11:57:00.000Z">
 <meta property="article:modified_time" content="2020-11-27T03:28:00.965Z">
 <meta property="article:author" content="ticker-tape timer">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://whyiamddjsq.icu/.icu//SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/pefmt.gif">
+<meta name="twitter:image" content="http://whyiamddjsq.icu/2020/11/24/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/pefmt.gif">
 
   
 
@@ -195,7 +195,7 @@ ga('send', 'pageview');
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">IF .运行条件满足</span><br><span class="line">  CALL DecryptProc （Address of MyProc）;对某个函数代码解密</span><br><span class="line">  ........</span><br><span class="line">  CALL MyProc                           ;调用这个函数</span><br><span class="line">  ........</span><br><span class="line">  CALL EncryptProc （Address of MyProc）;再对代码进行加密，防止程序被Dump</span><br></pre></td></tr></table></figure>
 
 <h3 id="PE文件"><a href="#PE文件" class="headerlink" title="PE文件"></a>PE文件</h3><p>在程序中使用SMC最简单的方法就是修改（或加密）整个数据段或代码段，而想要修改段，我们就要了解PE文件结构， Microsoft为它的32位Windows系统设计了一种全新的可执行文件格式，被成为“Portable Executable”，也就是PE格式</p>
-<p><img src="/.icu//SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/pefmt.gif" alt="img"></p>
+<p><img src="/2020/11/24/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/pefmt.gif" alt="img"></p>
 <p>位于文件最开始部位的是一个MS-DOS头部和一段DOS stub代码，在PE文件中保留这一部分是为了DOS和Windows系统共存那一段时期设计的，当程序运行在DOS系统时，DOS系统按照DOS可执行文件的格式调用DOS stub代码，一个典型的DOS stub代码就是在控制台上输出一行提示：“This program cannot be run in MS-DOS mode”，当然不同的编译器产生的DOS stub代码也各不相同。曾经有一段时间很流行一种既可以在DOS系统上运行，又可以在Windows上运行的程序，其原理就是人为地替换这段DOS stub代码。紧跟在DOS stub代码之后的就是PE文件的内容了，首先是一个PE文件标志，这个标志有4个字节，也就是“PE/0/0”。这之后紧接着PE文件头（PE Header）和可选头部（Optional Header，也可以理解为这个PE文件的一些选项和参数）,这两个头结构存放PE文件的很多重要信息，比如文件包含的段（Sections）数、时间戳、装入基址和程序入口点等信息。这些之后是所有的段头部，段头部之后跟随着所有的段实体。PE文件的尾部还可能包含其它一些混杂的信息，包括重分配信息、调试符号表信息、行号信息等等，这些信息并不是一个PE文件必须的部分，比如正常发布的Release版本的程序就没有调试符号表信息和行号信息。</p>
 <p>（看得眼疼）</p>
 <h2 id="简单实现"><a href="#简单实现" class="headerlink" title="简单实现"></a>简单实现</h2><p>PE文件的段，是可以新增的，我们可以通过如下代码去新增一个段：</p>
@@ -206,10 +206,10 @@ ga('send', 'pageview');
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span>* b1 = (<span class="keyword">char</span>*)abc;</span><br><span class="line"><span class="keyword">char</span>* c1 = (<span class="keyword">char</span>*)d;</span><br><span class="line"><span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">for</span> (; b1 &lt; c1; b1++)</span><br><span class="line">&#123;</span><br><span class="line">	i++;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">void</span>* a1 = (<span class="keyword">char</span>*)abc;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i++)</span><br><span class="line">&#123;</span><br><span class="line">	*((BYTE*)a1 + i) ^= key;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>直接指针赋值可以找到它的地址，然后我这里的加密选择的是最简单无脑的异或，当我们异或后再跳转到该函数是，会发生报错</p>
-<img src="/.icu//SMC技术浅析/image-20201124202437984.png" alt="image-20201124202437984" style="zoom:80%;">
+<img src="/2020/11/24/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/SMC技术浅析/image-20201124202437984.png" alt="image-20201124202437984" style="zoom:80%;">
 
 <p>我们可以查看一下为什么会有异常，分别将异或前和异或后的机器码输出出来看看，我们会发现：</p>
-<img src="/.icu//SMC技术浅析/image-20201124203327386.png" alt="image-20201124203327386" style="zoom:80%;">
+<img src="/2020/11/24/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/SMC技术浅析/image-20201124203327386.png" alt="image-20201124203327386" style="zoom:80%;">
 
 <p>机器码发生了变化，这直接导致代码被改变，无法被识别而报错</p>
 <p>明白了这个，我们就可以去写一个简单的SMC了</p>
@@ -218,14 +218,14 @@ ga('send', 'pageview');
 
 <p>这个代码编译出来的程序，是还未经加密的，所以直接解密无法运行，我们要手改一下他的机器码，把他的机器码加密一下</p>
 <p>打开StudyPE+，查看段地址</p>
-<p><img src="/.icu//SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/image-20201124203920978.png" alt="image-20201124203920978"></p>
+<p><img src="/2020/11/24/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/image-20201124203920978.png" alt="image-20201124203920978"></p>
 <p>然后在winhex中寻找到相应的地址，将机器码改掉，我这里选择的是与0x2D异或，这样，0x2D就是我的key</p>
-<img src="/.icu//SMC技术浅析/image-20201124204111774.png" alt="image-20201124204111774" style="zoom:80%;">
+<img src="/2020/11/24/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/SMC技术浅析/image-20201124204111774.png" alt="image-20201124204111774" style="zoom:80%;">
 
-<img src="/.icu//SMC技术浅析/image-20201124204127677.png" alt="image-20201124204127677" style="zoom:80%;">
+<img src="/2020/11/24/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/SMC技术浅析/image-20201124204127677.png" alt="image-20201124204127677" style="zoom:80%;">
 
 <p>修改完数据后保存，打开程序，输入key，发现程序正常运行了</p>
-<p><img src="/.icu//SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/image-20201124204229468.png" alt="image-20201124204229468"></p>
+<p><img src="/2020/11/24/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/image-20201124204229468.png" alt="image-20201124204229468"></p>
 <p>整挺好</p>
 
     

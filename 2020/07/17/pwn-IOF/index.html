@@ -22,13 +22,13 @@
 <meta property="og:site_name" content="ticker-tape timer&#39;s blog">
 <meta property="og:description" content="首先看源码可以看到，v1给的范围有0x340的空间，而if语句要求v1要&lt;&#x3D;99，再看后面，发现有一句v4[v1]&#x3D;v3，而想要拿到flag，v2就必须&lt;&#x3D;0，我们再看看栈的情况。 在栈上，v4、v3、v2、v1按顺序依次排列为var_330、var_338、var_33c、var_340，因为v2已有初始值，所以我要想办法用一个负数覆盖v2，而仅有的可以输入的数里面，v1是v4数组的">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//pwn-IOF/IOF-1-1594955236992.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//pwn-IOF/2.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/07/17/pwn-IOF/pwn-IOF/IOF-1-1594955236992.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/07/17/pwn-IOF/pwn-IOF/2.png">
 <meta property="article:published_time" content="2020-07-17T00:49:00.000Z">
 <meta property="article:modified_time" content="2020-07-17T03:08:27.814Z">
 <meta property="article:author" content="ticker-tape timer">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://whyiamddjsq.icu/.icu//pwn-IOF/IOF-1-1594955236992.png">
+<meta name="twitter:image" content="http://whyiamddjsq.icu/2020/07/17/pwn-IOF/pwn-IOF/IOF-1-1594955236992.png">
 
   
 
@@ -183,8 +183,8 @@ ga('send', 'pageview');
 
   <div class="article-content">
     
-      <h3 id="首先看源码"><a href="#首先看源码" class="headerlink" title="首先看源码"></a>首先看源码</h3><p><img src="/.icu//pwn-IOF/IOF-1-1594955236992.png" alt="IOF-1">可以看到，v1给的范围有<code>0x340</code>的空间，而<code>if</code>语句要求v1要&lt;=99，再看后面，发现有一句<code>v4[v1]=v3</code>，而想要拿到flag，v2就必须&lt;=0，我们再看看栈的情况。</p>
-<p><img src="/.icu//pwn-IOF/2.png" alt="2"><br>在栈上，v4、v3、v2、v1按顺序依次排列为var_330、var_338、var_33c、var_340，因为v2已有初始值，所以我要想办法用一个负数覆盖v2，而仅有的可以输入的数里面，v1是v4数组的下标，应该无法用来覆盖，所以，唯一可以用来覆盖的值，就只有v3了。而v3想要覆盖到v2，v4的数组下标必须要指到v2的位置，于是v1输入-2，-2也小于99，<code>if</code>语句也可以通过，于是可以得到解题的payload，即：依次输入-2、任意负数、任意数。</p>
+      <h3 id="首先看源码"><a href="#首先看源码" class="headerlink" title="首先看源码"></a>首先看源码</h3><p><img src="/2020/07/17/pwn-IOF/pwn-IOF/IOF-1-1594955236992.png" alt="IOF-1">可以看到，v1给的范围有<code>0x340</code>的空间，而<code>if</code>语句要求v1要&lt;=99，再看后面，发现有一句<code>v4[v1]=v3</code>，而想要拿到flag，v2就必须&lt;=0，我们再看看栈的情况。</p>
+<p><img src="/2020/07/17/pwn-IOF/pwn-IOF/2.png" alt="2"><br>在栈上，v4、v3、v2、v1按顺序依次排列为var_330、var_338、var_33c、var_340，因为v2已有初始值，所以我要想办法用一个负数覆盖v2，而仅有的可以输入的数里面，v1是v4数组的下标，应该无法用来覆盖，所以，唯一可以用来覆盖的值，就只有v3了。而v3想要覆盖到v2，v4的数组下标必须要指到v2的位置，于是v1输入-2，-2也小于99，<code>if</code>语句也可以通过，于是可以得到解题的payload，即：依次输入-2、任意负数、任意数。</p>
 
     
   </div>

