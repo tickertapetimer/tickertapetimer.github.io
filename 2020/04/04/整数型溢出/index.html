@@ -18,19 +18,19 @@
   <meta name="description" content="参考xctf的一道整数型溢出整数溢出三种类型：1、溢出只有有符号数才会发生溢出。有符号数最高位表示符号，在两正或两负相加时，有可能改变符号位的值，产生溢出。溢出标志 OF 可检测有符号数的溢出。2、回绕无符号数 0-1 时会变成最大的数，如 1 字节的无符号数会变为 255，而 255+1 会变成最小数 0。进位标志 CF 可检测无符号数的回绕。3、截断将一个较大宽度的数存入一个宽度小的操作数中，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="整数型溢出">
-<meta property="og:url" content="https://ddjsq2333.gitee.io/2020/04/04/%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/index.html">
+<meta property="og:url" content="123.57.11.179/2020/04/04/%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/index.html">
 <meta property="og:site_name" content="ticker-tape timer&#39;s blog">
 <meta property="og:description" content="参考xctf的一道整数型溢出整数溢出三种类型：1、溢出只有有符号数才会发生溢出。有符号数最高位表示符号，在两正或两负相加时，有可能改变符号位的值，产生溢出。溢出标志 OF 可检测有符号数的溢出。2、回绕无符号数 0-1 时会变成最大的数，如 1 字节的无符号数会变为 255，而 255+1 会变成最小数 0。进位标志 CF 可检测无符号数的回绕。3、截断将一个较大宽度的数存入一个宽度小的操作数中，">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://ddjsq2333.gitee.io/.io//%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/1.png">
-<meta property="og:image" content="https://ddjsq2333.gitee.io/.io//%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/2.png">
-<meta property="og:image" content="https://ddjsq2333.gitee.io/.io//%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/3.png">
-<meta property="og:image" content="https://ddjsq2333.gitee.io/.io//%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/4.png">
+<meta property="og:image" content="/.179/2020/04//%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/1.png">
+<meta property="og:image" content="/.179/2020/04//%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/2.png">
+<meta property="og:image" content="/.179/2020/04//%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/3.png">
+<meta property="og:image" content="/.179/2020/04//%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/4.png">
 <meta property="article:published_time" content="2020-04-04T06:42:59.000Z">
 <meta property="article:modified_time" content="2020-07-17T03:17:17.553Z">
 <meta property="article:author" content="ticker-tape timer">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://ddjsq2333.gitee.io/.io//%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/1.png">
+<meta name="twitter:image" content="/.179/2020/04//%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/1.png">
 
   
 
@@ -186,7 +186,7 @@ ga('send', 'pageview');
   <div class="article-content">
     
       <p>参考xctf的一道整数型溢出<br>整数溢出三种类型：<br>1、溢出<br>只有有符号数才会发生溢出。有符号数最高位表示符号，在两正或两负相加时，有可能改变符号位的值，产生溢出。<br>溢出标志 OF 可检测有符号数的溢出。<br>2、回绕<br>无符号数 0-1 时会变成最大的数，如 1 字节的无符号数会变为 255，而 255+1 会变成最小数 0。<br>进位标志 CF 可检测无符号数的回绕。<br>3、截断<br>将一个较大宽度的数存入一个宽度小的操作数中，高位发生截断。</p>
-<h3 id="参考下图的回绕可有助于了解"><a href="#参考下图的回绕可有助于了解" class="headerlink" title="参考下图的回绕可有助于了解"></a>参考下图的回绕可有助于了解</h3><p><img src="/.io//%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/1.png" alt="1"><br>xctf的这道<code>int_overflow</code>就是利用了回绕<br>观察ida的<code>login</code>函数可以看到用来表示密码变量的buf设置的长度极长，这就提供了回绕的空间；<br><img src="/.io//%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/2.png" alt="2"><br><img src="/.io//%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/3.png" alt="3"><br>在<code>check_passwd</code>函数中更是发现了传递buf变量值的S变量是无符号整型，基本确定是回绕，ida中显示判断条件为3到8，所以构造字节大小应为<code>(256+3)~(256+8)</code>，且S覆盖到的<code>dest</code>变量的长度为<code>0x14</code>；<br>在整体观察函数时，发现一个<code>get_flag</code>函数，于是利用这个函数的返回地址构造<code>payload</code>；<br>PS：<code>get_flag</code>的返回地址不是<code>command</code>那个，而是在该函数的上层函数<code>what_is_this</code>里面的一个返回地址。<img src="/.io//%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/4.png" alt="4"><br>在观察这个地址时还发现了<code>leave</code>(出栈)，所以要在溢出时多分配四个字节，所以构造<code>payload</code>为<code>&#39;a&#39;*0x14+&#39;a&#39;*4+p32(get_flag address)+&#39;a&#39;*(256+(3~8)-0x14-4-4)</code>。</p>
+<h3 id="参考下图的回绕可有助于了解"><a href="#参考下图的回绕可有助于了解" class="headerlink" title="参考下图的回绕可有助于了解"></a>参考下图的回绕可有助于了解</h3><p><img src="/.179/2020/04//%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/1.png" alt="1"><br>xctf的这道<code>int_overflow</code>就是利用了回绕<br>观察ida的<code>login</code>函数可以看到用来表示密码变量的buf设置的长度极长，这就提供了回绕的空间；<br><img src="/.179/2020/04//%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/2.png" alt="2"><br><img src="/.179/2020/04//%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/3.png" alt="3"><br>在<code>check_passwd</code>函数中更是发现了传递buf变量值的S变量是无符号整型，基本确定是回绕，ida中显示判断条件为3到8，所以构造字节大小应为<code>(256+3)~(256+8)</code>，且S覆盖到的<code>dest</code>变量的长度为<code>0x14</code>；<br>在整体观察函数时，发现一个<code>get_flag</code>函数，于是利用这个函数的返回地址构造<code>payload</code>；<br>PS：<code>get_flag</code>的返回地址不是<code>command</code>那个，而是在该函数的上层函数<code>what_is_this</code>里面的一个返回地址。<img src="/.179/2020/04//%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/4.png" alt="4"><br>在观察这个地址时还发现了<code>leave</code>(出栈)，所以要在溢出时多分配四个字节，所以构造<code>payload</code>为<code>&#39;a&#39;*0x14+&#39;a&#39;*4+p32(get_flag address)+&#39;a&#39;*(256+(3~8)-0x14-4-4)</code>。</p>
 
     
   </div>
