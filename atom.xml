@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://whyiamddjsq.icu/"/>
-  <updated>2020-11-27T03:28:00.965Z</updated>
+  <updated>2020-11-29T13:40:58.557Z</updated>
   <id>http://whyiamddjsq.icu/</id>
   
   <author>
@@ -15,6 +15,55 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>逆向讲课</title>
+    <link href="http://whyiamddjsq.icu/2020/11/29/%E9%80%86%E5%90%91%E8%AE%B2%E8%AF%BE/"/>
+    <id>http://whyiamddjsq.icu/2020/11/29/%E9%80%86%E5%90%91%E8%AE%B2%E8%AF%BE/</id>
+    <published>2020-11-29T13:18:51.977Z</published>
+    <updated>2020-11-29T13:40:58.557Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;逆向&quot;&gt;&lt;a href=&quot;#逆向&quot; class=&quot;headerlink&quot; title=&quot;逆向&quot;&gt;&lt;/a&gt;逆向&lt;/h2&gt;&lt;p&gt;逆向，属于二进制的一部分，与PWN不同的是，它主要考察对软件的流程的分析，逆向常用于破解软件、游戏，或者是绿化&lt;/p&gt;
+&lt;h3
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>奇怪的知识增加了</title>
+    <link href="http://whyiamddjsq.icu/2020/11/27/%E5%A5%87%E6%80%AA%E7%9A%84%E7%9F%A5%E8%AF%86%E5%A2%9E%E5%8A%A0%E4%BA%86/"/>
+    <id>http://whyiamddjsq.icu/2020/11/27/%E5%A5%87%E6%80%AA%E7%9A%84%E7%9F%A5%E8%AF%86%E5%A2%9E%E5%8A%A0%E4%BA%86/</id>
+    <published>2020-11-27T08:20:25.000Z</published>
+    <updated>2020-11-28T06:49:10.054Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h3 id=&quot;寻找main函数&quot;&gt;&lt;a href=&quot;#寻找main函数&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="二进制" scheme="http://whyiamddjsq.icu/categories/%E4%BA%8C%E8%BF%9B%E5%88%B6/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>SMC技术浅析</title>
@@ -466,55 +515,6 @@
     
     
       <category term="二进制" scheme="http://whyiamddjsq.icu/categories/%E4%BA%8C%E8%BF%9B%E5%88%B6/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>BUUCTF_warmup_csaw_2016_writeup</title>
-    <link href="http://whyiamddjsq.icu/2020/04/04/BUUCTF-warmup-csaw-2016-writeup/"/>
-    <id>http://whyiamddjsq.icu/2020/04/04/BUUCTF-warmup-csaw-2016-writeup/</id>
-    <published>2020-04-04T06:39:21.000Z</published>
-    <updated>2020-07-17T03:19:57.753Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;h2 id=&quot;BUUCTF-warmup-csaw-2016&quot;&gt;&lt;a href=&quot;#BUUCTF-warmup-csaw-2016&quot; class=&quot;headerlink&quot; title=&quot;BUUCTF warmup_csaw_2016&quot;&gt;&lt;/a&gt;BUUCTF
-        
-      
-    
-    </summary>
-    
-    
-      <category term="二进制" scheme="http://whyiamddjsq.icu/categories/%E4%BA%8C%E8%BF%9B%E5%88%B6/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>哀悼·铭记</title>
-    <link href="http://whyiamddjsq.icu/2020/04/04/%E5%93%80%E6%82%BC%C2%B7%E9%93%AD%E8%AE%B0/"/>
-    <id>http://whyiamddjsq.icu/2020/04/04/%E5%93%80%E6%82%BC%C2%B7%E9%93%AD%E8%AE%B0/</id>
-    <published>2020-04-03T16:00:01.000Z</published>
-    <updated>2020-07-17T03:09:37.682Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;p&gt;&lt;strong&gt;哀悼·铭记&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/img/%E5%93%80%E6%82%BC%C2%B7%E9%93%AD%E8%AE%B0/1.png&quot;
-        
-      
-    
-    </summary>
-    
     
     
   </entry>

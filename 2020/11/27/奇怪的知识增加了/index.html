@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>奇怪的知识增加了 | ticker-tape timer&#39;s blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="blog" />
+  
+
+  <meta name="description" content="寻找main函数如果main函数找不到，反汇编出来一堆sub_xxxxxxxx，可以寻找exit函数，而exit函数的参数，一般是main函数的返回值。 shellcode的结构获取kernel32基址——TEB查找法在NT内核系统中，fs寄存器指向TEB结构，TEB+0x30偏移处指向PEB结构，PEB+0x0c偏移处指向PEB_LDR_DATA结构，PEB_LDR_DATA+0x1c偏移处存放">
+<meta property="og:type" content="article">
+<meta property="og:title" content="奇怪的知识增加了">
+<meta property="og:url" content="http://whyiamddjsq.icu/2020/11/27/%E5%A5%87%E6%80%AA%E7%9A%84%E7%9F%A5%E8%AF%86%E5%A2%9E%E5%8A%A0%E4%BA%86/index.html">
+<meta property="og:site_name" content="ticker-tape timer&#39;s blog">
+<meta property="og:description" content="寻找main函数如果main函数找不到，反汇编出来一堆sub_xxxxxxxx，可以寻找exit函数，而exit函数的参数，一般是main函数的返回值。 shellcode的结构获取kernel32基址——TEB查找法在NT内核系统中，fs寄存器指向TEB结构，TEB+0x30偏移处指向PEB结构，PEB+0x0c偏移处指向PEB_LDR_DATA结构，PEB_LDR_DATA+0x1c偏移处存放">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-11-27T08:20:25.000Z">
+<meta property="article:modified_time" content="2020-11-28T06:49:10.054Z">
+<meta property="article:author" content="ticker-tape timer">
+<meta name="twitter:card" content="summary">
+
+  
+
+  
+    <link rel="icon" href="/1.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    
+<link rel="stylesheet" href="/css/personal-style.css">
+
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="ticker-tape timer's blog" type="application/atom+xml">
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">home</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">home</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">Posts List</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#寻找main函数"><span class="toc-text">寻找main函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shellcode的结构"><span class="toc-text">shellcode的结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#获取kernel32基址——TEB查找法"><span class="toc-text">获取kernel32基址——TEB查找法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#获取API地址"><span class="toc-text">获取API地址</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-奇怪的知识增加了" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">奇怪的知识增加了</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2020.11.27</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>ticker-tape timer</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/%E4%BA%8C%E8%BF%9B%E5%88%B6/">二进制</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h3 id="寻找main函数"><a href="#寻找main函数" class="headerlink" title="寻找main函数"></a>寻找main函数</h3><p>如果main函数找不到，反汇编出来一堆sub_xxxxxxxx，可以寻找exit函数，而exit函数的参数，一般是main函数的返回值。</p>
+<h3 id="shellcode的结构"><a href="#shellcode的结构" class="headerlink" title="shellcode的结构"></a>shellcode的结构</h3><h4 id="获取kernel32基址——TEB查找法"><a href="#获取kernel32基址——TEB查找法" class="headerlink" title="获取kernel32基址——TEB查找法"></a>获取kernel32基址——TEB查找法</h4><p>在NT内核系统中，fs寄存器指向TEB结构，TEB+0x30偏移处指向PEB结构，PEB+0x0c偏移处指向PEB_LDR_DATA结构，PEB_LDR_DATA+0x1c偏移处存放着程序加载的动态链接库地址，第一个指向Ntdll.dll，第二个就是kernel32.dll的基地址。</p>
+<h4 id="获取API地址"><a href="#获取API地址" class="headerlink" title="获取API地址"></a>获取API地址</h4><p>从dll文件中获取API地址步骤如下：</p>
+<ol>
+<li>在DLL基址 + 3ch偏移处获取e_lfanew的地址，即可得到PE文件头。</li>
+<li>在PE文件头的78h偏移处得到函数导出表的地址。</li>
+<li>在导出表的1ch偏移处获取AddressOfFunctions的地址，在导出表的20h偏移处获取AddressOfNames的地址，在导出表的24h偏移处获取AddressOfNameOrdinalse的地址</li>
+<li>AddressOfFunctions函数地址数组和AddressOfNames函数名数组通过AddressOfNameOrdinalse一一对应。</li>
+</ol>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2020/11/24/SMC%E6%8A%80%E6%9C%AF%E6%B5%85%E6%9E%90/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2020/11/29/%E9%80%86%E5%90%91%E8%AE%B2%E8%AF%BE/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">Close</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
