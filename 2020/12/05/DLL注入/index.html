@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>DLL注入 | ticker-tape timer&#39;s blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="blog" />
+  
+
+  <meta name="description" content="什么是DLL注入Dll注入原理：简单来说，就是通过程序A控制程序B，让程序B加载含有payload的dll，该dll在加载的过程中会执行dll中的恶意代码，从而实现注入。 DLL注入分为以下几个步骤： （注入执行程序记为injector.py,要注入的程序记为aim.exe，注入的dll名为imhacker.dll）  获取注入目标进程句柄     在目标进程中分配内存，分配的内存能够下存放dll">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DLL注入">
+<meta property="og:url" content="http://whyiamddjsq.icu/2020/12/05/DLL%E6%B3%A8%E5%85%A5/index.html">
+<meta property="og:site_name" content="ticker-tape timer&#39;s blog">
+<meta property="og:description" content="什么是DLL注入Dll注入原理：简单来说，就是通过程序A控制程序B，让程序B加载含有payload的dll，该dll在加载的过程中会执行dll中的恶意代码，从而实现注入。 DLL注入分为以下几个步骤： （注入执行程序记为injector.py,要注入的程序记为aim.exe，注入的dll名为imhacker.dll）  获取注入目标进程句柄     在目标进程中分配内存，分配的内存能够下存放dll">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://whyiamddjsq.icu/img/DLL%E6%B3%A8%E5%85%A5/headImg.action">
+<meta property="og:image" content="http://whyiamddjsq.icu/img/DLL%E6%B3%A8%E5%85%A5/headImg.action">
+<meta property="og:image" content="http://whyiamddjsq.icu/img/DLL%E6%B3%A8%E5%85%A5/headImg.action">
+<meta property="og:image" content="http://whyiamddjsq.icu/img/DLL%E6%B3%A8%E5%85%A5/headImg.action">
+<meta property="og:image" content="http://whyiamddjsq.icu/img/DLL%E6%B3%A8%E5%85%A5/headImg.action">
+<meta property="article:published_time" content="2020-12-05T08:35:00.000Z">
+<meta property="article:modified_time" content="2020-12-10T03:46:30.601Z">
+<meta property="article:author" content="ticker-tape timer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://whyiamddjsq.icu/img/DLL%E6%B3%A8%E5%85%A5/headImg.action">
+
+  
+
+  
+    <link rel="icon" href="/1.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    
+<link rel="stylesheet" href="/css/personal-style.css">
+
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="ticker-tape timer's blog" type="application/atom+xml">
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">home</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">home</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">Posts List</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是DLL注入"><span class="toc-text">什么是DLL注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DllMain函数"><span class="toc-text">DllMain函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#制作DLL"><span class="toc-text">制作DLL</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#初步编写一个dll去作为payload"><span class="toc-text">初步编写一个dll去作为payload</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译"><span class="toc-text">编译</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#调用DLL"><span class="toc-text">调用DLL</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#获取句柄"><span class="toc-text">获取句柄</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#申请内存"><span class="toc-text">申请内存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#写入字符串"><span class="toc-text">写入字符串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#寻址"><span class="toc-text">寻址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建远程线程，触发payload"><span class="toc-text">创建远程线程，触发payload</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用"><span class="toc-text">使用</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-DLL注入" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">DLL注入</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2020.12.05</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>ticker-tape timer</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/%E9%80%86%E5%90%91/">逆向</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h2 id="什么是DLL注入"><a href="#什么是DLL注入" class="headerlink" title="什么是DLL注入"></a>什么是DLL注入</h2><p>Dll注入原理：简单来说，就是通过程序A控制程序B，让程序B加载含有payload的dll，该dll在加载的过程中会执行dll中的恶意代码，从而实现注入。</p>
+<p>DLL注入分为以下几个步骤：</p>
+<p>（注入执行程序记为injector.py,要注入的程序记为aim.exe，注入的dll名为imhacker.dll）</p>
+<ol>
+<li>获取注入目标进程句柄</li>
+</ol>
+<img src="/img/DLL注入/headImg.action" alt="img" style="zoom:50%;" />
+
+<ol start="2">
+<li>在目标进程中分配内存，分配的内存能够下存放dll完全路径字符串</li>
+</ol>
+<img src="/img/DLL注入/headImg.action" alt="img" style="zoom:50%;" />
+
+<ol start="3">
+<li>将dll路径字符串写入刚刚分配的目标程序的内存之中</li>
+</ol>
+<img src="/img/DLL注入/headImg.action" alt="img" style="zoom:50%;" />
+
+<ol start="4">
+<li>找到目标程序中LoadLibaray的入口地址</li>
+</ol>
+<img src="/img/DLL注入/headImg.action" alt="img" style="zoom:50%;" />
+
+<ol start="5">
+<li>创建远程线程，实现最终注入</li>
+</ol>
+<img src="/img/DLL注入/headImg.action" alt="img" style="zoom:50%;" />
+
+<h3 id="DllMain函数"><a href="#DllMain函数" class="headerlink" title="DllMain函数"></a>DllMain函数</h3><p>跟exe有个main或者WinMain入口函数一样，DLL也有一个入口函数，就是DllMain</p>
+<p>函数原型：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL APIENTRY <span class="title">DllMain</span><span class="params">( HMODULE hModule,</span></span></span><br><span class="line"><span class="function"><span class="params">                       DWORD  ul_reason_for_call,</span></span></span><br><span class="line"><span class="function"><span class="params">                       LPVOID lpReserved</span></span></span><br><span class="line"><span class="function"><span class="params">                     )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><code>hModule</code>参数：<u>指向DLL本身的实例句柄</u></li>
+<li><code>ul_reason_for_call</code>参数：<u>指明了DLL被调用的原因</u>，可以有以下4个取值：<ol>
+<li><code>DLL_PROCESS_ATTACH</code>：进程映射<br>当DLL被进程 &lt;&lt;第一次&gt;&gt; 调用时，导致DllMain函数被调用，同时ul_reason_for_call的值为DLL_PROCESS_ATTACH，如果同一个进程后来再次调用此DLL时，操作系统只会增加DLL的使用次数，不会再用DLL_PROCESS_ATTACH调用DLL的DllMain函数。</li>
+<li><code>DLL_PROCESS_DETACH</code>：进程卸载<br> 当DLL被从进程的地址空间解除映射时，系统调用了它的DllMain，传递的ul_reason_for_call值是DLL_PROCESS_DETACH。<br> 如果进程的终结是因为调用了TerminateProcess，系统就不会用DLL_PROCESS_DETACH来调用DLL的DllMain函数。这就意味着DLL在进程结束前没有机会执行任何清理工作。</li>
+<li><code>DLL_THREAD_ATTACH</code>：线程映射<br> 当进程创建一线程时，系统查看当前映射到进程地址空间中的所有DLL文件映像，并用值DLL_THREAD_ATTACH调用DLL的DllMain函数。 新创建的线程负责执行这次的DLL的DllMain函数，只有当所有的DLL都处理完这一通知后，系统才允许线程开始执行它的线程函数。</li>
+<li><code>DLL_THREAD_DETACH</code>：线程卸载<br> 如果线程调用了ExitThread来结束线程（线程函数返回时，系统也会自动调用ExitThread），系统查看当前映射到进程空间中的所有DLL文件映像，并用DLL_THREAD_DETACH来调用DllMain函数，通知所有的DLL去执行线程级的清理工作。</li>
+</ol>
+</li>
+</ol>
+<p>注意：如果线程的结束是因为系统中的一个线程调用了TerminateThread，系统就不会用值DLL_THREAD_DETACH来调用所有DLL的DllMain函数。</p>
+<h2 id="制作DLL"><a href="#制作DLL" class="headerlink" title="制作DLL"></a>制作DLL</h2><h3 id="初步编写一个dll去作为payload"><a href="#初步编写一个dll去作为payload" class="headerlink" title="初步编写一个dll去作为payload"></a>初步编写一个dll去作为payload</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"windows.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">BOOL WINAPI <span class="title">DllMain</span><span class="params">(HINSTANCE hMoudle,DWORD ul_reason_for_call,LPVOID lpReserved)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">switch</span>(ul_reason_for_call)</span><br><span class="line">	&#123;</span><br><span class="line">	<span class="keyword">case</span> DLL_PROCESS_ATTACH:</span><br><span class="line">		<span class="comment">//恶意代码存放</span></span><br><span class="line">	<span class="keyword">case</span> DLL_THREAD_ATTACH:</span><br><span class="line">	<span class="keyword">case</span> DLL_THREAD_DETACH:</span><br><span class="line">	<span class="keyword">case</span> DLL_PROCESS_DETACH:</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>之所以要在DLL_PROCESS_ATTACH下存放恶意代码，是因为：</p>
+<p>一个程序要调用Dll里的函数，首先要先把DLL文件映射到进程的地址空间。要把一个DLL文件映射到进程的地址空间，有两种方法：静态链接和动态链接的LoadLibrary或者LoadLibraryEx。<br>当一个DLL文件被映射到进程的地址空间时，系统调用该DLL的DllMain函数，传递的ul_reason_for_call参数为DLL_PROCESS_ATTACH，这种调用只会发生在第一次映射时。如果同一个进程后来为已经映射进来的DLL再次调用LoadLibrary或者LoadLibraryEx，操作系统只会增加DLL的使用次数，它不会再用DLL_PROCESS_ATTACH调用DLL的DllMain函数。不同进程用LoadLibrary同一个DLL时，每个进程的第一次映射都会用DLL_PROCESS_ATTACH调用DLL的DllMain函数。</p>
+<p>而注入是在DLL初次加载的时候执行操作，因此在DLL编写时，我们要将恶意代码放在DLL_PROCESS_ATTACH条件下去执行。</p>
+<h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><p>在release模式下将其编译组建为一个dll文件</p>
+<h2 id="调用DLL"><a href="#调用DLL" class="headerlink" title="调用DLL"></a>调用DLL</h2><p>制作好DLL文件后，我们要寻找一个可以调用DLL的操作，这里使用了python去帮助实现注入</p>
+<p>所需模块：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</span><br></pre></td></tr></table></figure>
+
+<p>注：ctypes是Python的外部函数库。它提供C兼容的数据类型，并允许在DLL或共享库中调用函数</p>
+<h3 id="获取句柄"><a href="#获取句柄" class="headerlink" title="获取句柄"></a>获取句柄</h3><p>根据原理，想要实现注入，我们要先获得注入进程的句柄，获取进程句柄使用的api是OpenProcess.该函数一共有三个参数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HANDLE WINAPI <span class="title">OpenProcess</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">_In_  DWORD dwDesiredAccess,</span></span></span><br><span class="line"><span class="function"><span class="params">_In_  BOOL bInheritHandle,</span></span></span><br><span class="line"><span class="function"><span class="params">_In_  DWORD dwProcessId</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>dwDesiredAccess参数是权限，我们需要获得所有操作的权限，即PROCESS_ALL_ACCESS，查阅后它的常量值为2035711，即1F0FFF</p>
+<p>bInheritHandle是是否继承句柄，填false就好</p>
+<p>dwProcessId是PID，是目标进程的进程标识符</p>
+<p>所以OpenProcess函数以及参数编写如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">PROCESS_ALL_ACCESS=<span class="number">0x001F0FFF</span></span><br><span class="line">AimPid =sys.argv[<span class="number">1</span>]</span><br><span class="line">handle_aim=kernel32.OpenProcess(PROCESS_ALL_ACCESS,<span class="literal">False</span>,int(AimPid))</span><br></pre></td></tr></table></figure>
+
+<h3 id="申请内存"><a href="#申请内存" class="headerlink" title="申请内存"></a>申请内存</h3><p>根据原理的第二步，我们需要在目标进程中申请一块内存去存放我们的DLL，这就需要两步，第一步是知道DLL的长度，第二步是申请一块这么大的内存，这时我们需要用到函数VirtualAllocEx。</p>
+<p>VirtualAllocEx的作用是在指定进程的虚拟空间保留或提交内存区域，除非指定MEM_RESET参数，否则将该内存区域置0。</p>
+<p>函数原形：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">LPVOID <span class="title">VirtualAllocEx</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">HANDLE hProcess,</span></span></span><br><span class="line"><span class="function"><span class="params">LPVOID lpAddress,</span></span></span><br><span class="line"><span class="function"><span class="params">SIZE_T dwSize,</span></span></span><br><span class="line"><span class="function"><span class="params">DWORD flAllocationType,</span></span></span><br><span class="line"><span class="function"><span class="params">DWORD flProtect</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>hProcess：句柄</p>
+<p>lpAddress：保留页面的内存地址；一般用NULL自动分配</p>
+<p>dwSize：分配的大小</p>
+<p>flAllocationType：分配方式，因为我们需要分配和提交修改到内存中，所以根据微软官方定义，将值设为MEM_COMMIT | MEM_RESERVE，宏定义即(0x1000|0x2000)</p>
+<p>flProtect：内存保护方式，可设为可读可写，即PAGE_READWRITE（0x04）</p>
+<p>所以构造如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">MEMORY_ALLC=(<span class="number">0x1000</span>|<span class="number">0x2000</span>)</span><br><span class="line">PAGE_READWRITE = <span class="number">0x04</span></span><br><span class="line">dll_path= sys.argv[<span class="number">2</span>]</span><br><span class="line">dll_path_len=len(dll_path)</span><br><span class="line">dll_address=kernel32.VirtualAllocEx(handle_aim,<span class="number">0</span>,dll_path_len,MEMORY_ALLC,PAGE_READWRITE)</span><br></pre></td></tr></table></figure>
+
+<h3 id="写入字符串"><a href="#写入字符串" class="headerlink" title="写入字符串"></a>写入字符串</h3><p>申请到内存后，我们要将字符串写进去，这时要使用WriteProcessMemory函数</p>
+<p>函数原型：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> <span class="function">BOOL WINAPI <span class="title">WriteProcessMemory</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">      _In_   HANDLE hProcess,</span></span></span><br><span class="line"><span class="function"><span class="params">      _In_   LPVOID lpBaseAddress,</span></span></span><br><span class="line"><span class="function"><span class="params">      _In_   LPCVOID lpBuffer,</span></span></span><br><span class="line"><span class="function"><span class="params">      _In_   SIZE_T nSize,</span></span></span><br><span class="line"><span class="function"><span class="params">      _Out_  SIZE_T *lpNumberOfBytesWritten</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>  第一个参数代表句柄，为handle_aim.</p>
+<p>   第二个参数为写入的起始地址，为刚刚申请下来的dll_address.</p>
+<p>   第三个参数为写入内容，填dll_path.</p>
+<p>   第四个参数为写入大小，即dll_path_len.</p>
+<p>   第五个参数为输出参数，该指针可选，不需要可填NULL。使用byref(0)转化为null指针。</p>
+<p>所以函数编写如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">null_zero=c_int(<span class="number">0</span>)</span><br><span class="line">kernel32.WriteProcessMemory(handle_aim,dll_address,dll_path,dll_path_len,byref(null_zero))</span><br></pre></td></tr></table></figure>
+
+<h3 id="寻址"><a href="#寻址" class="headerlink" title="寻址"></a>寻址</h3><p>要找到loadlibraryA的地址</p>
+<p>loadlibrary函数主要作用为载入指定的动态链接库，并将它映射到当前进程使用的地址空间。一旦载入，即可访问库内保存的资源，成功则返回库模块的句柄。想要调用注入的dll，就必须要找到loadlibrary函数的地址</p>
+<p>要找到loadlibrary函数，要从kernel32.dll着手，先用GetModuleHandle函数获取kernel32.dll的句柄，再通过GetProcAddress函数寻找loadlibrary函数的地址</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HMODULE WINAPI <span class="title">GetModuleHandle</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">_In_opt_LPCTSTR lpModuleName</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">FARPROC <span class="title">GetProcAddress</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">　　   HMODULE hModule, <span class="comment">// DLL模块句柄</span></span></span></span><br><span class="line"><span class="function"><span class="params">　　   LPCSTR lpProcName <span class="comment">// 函数名 )</span></span></span></span><br></pre></td></tr></table></figure>
+
+<p>函数编写如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">handle_kernel32=kernel32.GetModuleHandleA(<span class="string">"kernel32.dll"</span>)</span><br><span class="line">Load_address=kernel32.GetProcAddress(handle_kernel32,<span class="string">"LoadLibraryA"</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建远程线程，触发payload"><a href="#创建远程线程，触发payload" class="headerlink" title="创建远程线程，触发payload"></a>创建远程线程，触发payload</h3><p>使用的函数是CreateRemoteThread，该函数参数有7个。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">  <span class="function">HANDLE WINAPI <span class="title">CreateRemoteThread</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">_In_  HANDLE hProcess,</span></span></span><br><span class="line"><span class="function"><span class="params">_In_  LPSECURITY_ATTRIBUTES lpThreadAttributes,</span></span></span><br><span class="line"><span class="function"><span class="params">_In_  SIZE_T dwStackSize,</span></span></span><br><span class="line"><span class="function"><span class="params">_In_  LPTHREAD_START_ROUTINE lpStartAddress,</span></span></span><br><span class="line"><span class="function"><span class="params">_In_  LPVOID lpParameter,</span></span></span><br><span class="line"><span class="function"><span class="params">_In_  DWORD dwCreationFlags,</span></span></span><br><span class="line"><span class="function"><span class="params">_Out_ LPDWORD lpThreadId</span></span></span><br><span class="line"><span class="function"><span class="params">  )</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>   第一个参数，远程句柄，还是handle_aim.</p>
+<p>   第二个参数，线程属性，没有特别说明，可填NULL,加载默认属性。Python中用None表示。</p>
+<p>   第三个参数，栈大小，我们用不到，填写0表示加载默认大小</p>
+<p>   第四个参数，线程起始时执行的函数地址，即上一步获得的Load_address.</p>
+<p>   第五个参数，线程起始执行函数的参数，我们要执行的是loadlibraryA(“injected_dll_path”)</p>
+<p>   所以，这个参数为dll_address</p>
+<p>   第六个参数，表示线程创建后的操作。我们要让该线程一旦创建便立即执行，需要填0.</p>
+<p>   最后一个参数，表示接收创建的线程ID。是个double word类型，在ctypes中用c_ulong即可</p>
+<p>函数编写如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">thread_id=c_ulong(<span class="number">0</span>)</span><br><span class="line">kernel32.CreateRemoteThread(handle_aim,<span class="literal">None</span>,<span class="number">0</span>,Load_address,dll_address,<span class="number">0</span>,byref(thread_id))</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>运行python，参数输入想要注入的线程PID和DLL的地址，然后回车</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2020/11/29/%E9%80%86%E5%90%91%E8%AE%B2%E8%AF%BE/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">Close</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

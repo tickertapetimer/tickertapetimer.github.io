@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://whyiamddjsq.icu/"/>
-  <updated>2020-11-29T13:54:52.304Z</updated>
+  <updated>2020-12-10T03:46:30.601Z</updated>
   <id>http://whyiamddjsq.icu/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>DLL注入</title>
+    <link href="http://whyiamddjsq.icu/2020/12/05/DLL%E6%B3%A8%E5%85%A5/"/>
+    <id>http://whyiamddjsq.icu/2020/12/05/DLL%E6%B3%A8%E5%85%A5/</id>
+    <published>2020-12-05T08:35:00.000Z</published>
+    <updated>2020-12-10T03:46:30.601Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;什么是DLL注入&quot;&gt;&lt;a href=&quot;#什么是DLL注入&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="逆向" scheme="http://whyiamddjsq.icu/categories/%E9%80%86%E5%90%91/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>逆向讲课</title>
@@ -483,31 +508,6 @@
         
         
           &lt;h2 id=&quot;just-do-it&quot;&gt;&lt;a href=&quot;#just-do-it&quot; class=&quot;headerlink&quot; title=&quot;just_do_it&quot;&gt;&lt;/a&gt;just_do_it&lt;/h2&gt;&lt;p&gt;二进制的作业，一道来自TokyoWesterns 2017
-        
-      
-    
-    </summary>
-    
-    
-      <category term="二进制" scheme="http://whyiamddjsq.icu/categories/%E4%BA%8C%E8%BF%9B%E5%88%B6/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>整数型溢出</title>
-    <link href="http://whyiamddjsq.icu/2020/04/04/%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/"/>
-    <id>http://whyiamddjsq.icu/2020/04/04/%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/</id>
-    <published>2020-04-04T06:42:59.000Z</published>
-    <updated>2020-07-17T03:17:17.553Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;p&gt;参考xctf的一道整数型溢出&lt;br&gt;整数溢出三种类型：&lt;br&gt;1、溢出&lt;br&gt;只有有符号数才会发生溢出。有符号数最高位表示符号，在两正或两负相加时，有可能改变符号位的值，产生溢出。&lt;br&gt;溢出标志 OF 可检测有符号数的溢出。&lt;br&gt;2、回绕&lt;br&gt;无符号数 0-1
         
       
     
