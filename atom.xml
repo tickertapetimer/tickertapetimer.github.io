@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://whyiamddjsq.icu/"/>
-  <updated>2021-02-07T13:04:34.828Z</updated>
+  <updated>2021-03-05T07:02:41.930Z</updated>
   <id>http://whyiamddjsq.icu/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Windows异常处理机制</title>
+    <link href="http://whyiamddjsq.icu/2021/03/05/windows%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/"/>
+    <id>http://whyiamddjsq.icu/2021/03/05/windows%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/</id>
+    <published>2021-03-05T04:57:00.000Z</published>
+    <updated>2021-03-05T07:02:41.930Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;R3异常处理&quot;&gt;&lt;a href=&quot;#R3异常处理&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="逆向" scheme="http://whyiamddjsq.icu/categories/%E9%80%86%E5%90%91/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>python字节码初析</title>
@@ -490,31 +515,6 @@
     
     
       <category term="漏洞复现系列" scheme="http://whyiamddjsq.icu/categories/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E7%B3%BB%E5%88%97/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>末日算法</title>
-    <link href="http://whyiamddjsq.icu/2020/05/16/%E6%9C%AB%E6%97%A5%E7%AE%97%E6%B3%95/"/>
-    <id>http://whyiamddjsq.icu/2020/05/16/%E6%9C%AB%E6%97%A5%E7%AE%97%E6%B3%95/</id>
-    <published>2020-05-16T11:45:20.000Z</published>
-    <updated>2020-05-17T09:06:24.914Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;h1 id=&quot;末日是周几？&quot;&gt;&lt;a href=&quot;#末日是周几？&quot; class=&quot;headerlink&quot;
-        
-      
-    
-    </summary>
-    
-    
-      <category term="算法" scheme="http://whyiamddjsq.icu/categories/%E7%AE%97%E6%B3%95/"/>
     
     
   </entry>
