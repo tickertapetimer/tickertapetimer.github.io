@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<title>
+    blog
+</title>
+<!--[if lt IE 9]><script src="//cdn.bootcss.com/html5shiv/r29/html5.js"></script><![endif]-->
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+<meta http-equiv="x-dns-prefetch-control" content="on">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<meta name="author" content="ticker tape timer">
+<meta name="description" content="A CTFer loves RE and Misc">
+<meta name="keywords" content="">
+<script async src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+<link rel="stylesheet" href="https://tickertapetimer.github.io/styles/main.css" />
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.7.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/css/style.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/tocbot.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/script.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/icon.min.js"></script>
+    
+            <script src="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@1.0.12/CDN/js/Card/prism.min.js"></script>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@1.0.12/CDN/css/Card/prism.min.css" />
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css">
+            <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js"></script>
+            
+                            <script>
+                                (function() {
+                                    var bp = document.createElement('script');
+                                    var curProtocol = window.location.protocol.split(':')[0];
+                                    if (curProtocol === 'https') {
+                                        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+                                    } else {
+                                        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                                    }
+                                    var s = document.getElementsByTagName("script")[0];
+                                    s.parentNode.insertBefore(bp, s);
+                                })();
+                            </script>
+                            
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo">
+                <a href="https://tickertapetimer.github.io">
+                    blog
+                </a>
+            </div>
+
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">
+                        首页
+                    </a>
+                    
+                    <a class="menu-item" href="/archives">
+                        归档
+                    </a>
+                    
+                    <a class="menu-item" href="/tags">
+                        标签
+                    </a>
+                    
+                    <a class="menu-item" href="https://tickertapetimer.github.io/post/me">
+                        关于
+                    </a>
+                    
+                        <input id="switch_default" type="checkbox" class="switch_default">
+                        <label for="switch_default" class="toggleBtn"></label>
+            </div>
+            <form id="gridea-search-form" data-update="1629458619689" action="/search/index.html">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
+            </form>
+        </div>
+    </nav>
+
+    
+        <nav class="navbar-mobile" id="nav-mobile">
+            <div class="container">
+                <div class="navbar-header">
+                    <div>
+                        <a href="https://tickertapetimer.github.io">
+                            blog
+                        </a>
+                        <!--en-->
+                        <a id="mobile-toggle-theme-en" class="a en">&nbsp;Dark</a>
+                        <!--zh-->
+                        <a id="mobile-toggle-theme-zh" class="a zh">&nbsp;&#x6697;&#x9ED1;</a>
+                    </div>
+                    <form id="gridea-search-form" data-update="1629458619689" action="/search/index.html">
+                        <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
+                    </form>
+                    <!--en-->
+                    <div class="menu-toggle" id="menu-toggle-en" onclick="mobileBtn()">&#9776; Menu</div>
+                    <!--zh-->
+                    <div class="menu-toggle" id="menu-toggle-zh" onclick="mobileBtn()">&#9776; &#x83DC;&#x5355;</div>
+
+                </div>
+                <div class="menu" id="mobile-menu">
+                    
+                        <a class="menu-item" href="/">
+                            首页
+                        </a>
+                        
+                        <a class="menu-item" href="/archives">
+                            归档
+                        </a>
+                        
+                        <a class="menu-item" href="/tags">
+                            标签
+                        </a>
+                        
+                        <a class="menu-item" href="https://tickertapetimer.github.io/post/me">
+                            关于
+                        </a>
+                        
+                </div>
+            </div>
+        </nav>
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementById("menu-toggle-en");
+        var toggleMenu_zh = document.getElementById("menu-toggle-zh");
+
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.display != "none") {
+            if (toggleMenu.classList.contains("active")) {
+                toggleMenu.classList.remove("active")
+                mobileMenu.classList.remove("active")
+            } else {
+                toggleMenu.classList.add("active")
+                mobileMenu.classList.add("active")
+            }
+        } else if (toggleMenu_zh.display != "none") {
+            if (toggleMenu_zh.classList.contains("active")) {
+                toggleMenu_zh.classList.remove("active")
+                mobileMenu.classList.remove("active")
+            } else {
+                toggleMenu_zh.classList.add("active")
+                mobileMenu.classList.add("active")
+            }
+        }
+
+    }
+</script>
+            <div class="main">
+                <div class="container">
+                    <article class="post-wrap">
+                        <header class="post-header">
+                            <h1 class="post-title">
+                                 辩论队一面辩题资料
+                            </h1>
+                            
+                                    <!--zh-->
+                                    <div class="post-meta zh">
+                                        &#x4F5C;&#x8005;:
+                                        <a itemprop="author" rel="author" href="/">
+                                            blog
+                                        </a>
+                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-07-29</a></span>
+                                        <span class="post-readtime">&#x9605;&#x8BFB;&#x65F6;&#x95F4;:<a
+                                    href="#">4.2
+                                    &#x5206;&#x949F;</a></span>
+                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">1244</a></span>
+                                        
+                                            <span class="post-category">&#x5206;&#x7C7B;:
+                                
+                                <a href="https://tickertapetimer.github.io/tag/NpOlg1WrO/">其他</a>
+                                
+                            </span>
+                                            
+                                    </div>
+                                    
+                        </header>
+                        
+                        <div class="post-content">
+                            <h4 id="微博热搜榜与互联网信息服务的规制">《微博“热搜榜”与互联网信息服务的规制》</h4>
+<p>据《2018微博用户发展报告》显示，<code>新浪微博月活跃用户达到4.62亿，日活跃用户达到2亿，被公认是国内最有影响力的社交媒体平台之一。</code>微博还是新闻媒体实现媒介融合的重要平台。据人民网研究院对全国主要媒体融合传播情况的考察，<code>2018年报纸、广播和电视台的微博入驻率已分别达到93.3%、67.8%和97.1%。</code></p>
+<p>“微博热搜”是新浪微博上线以后推出的一项应用功能，它显示的是新浪微博在特定时间段内被大量搜索和关注的热点事件或热点词汇。微博“热搜榜”会实时显示50条热搜内容，并按照热度，即搜索量进行排名；每分钟更新一次。<code>由于新浪微博庞大的用户群体，以及几乎囊括了最重要的新闻媒体，因此其显示的用户最新关注的热点信息具有相当的代表性。</code></p>
+<p>在微博上搜索相关信息，本来只是用户获取信息的行为。但“微博热搜”利用信息技术将用户的搜索内容进行统计排列，形成了“热搜榜”，用户获取信息的行为被信息化，搜索行为就具有了信息生产的属性。用户行为在无意识中成为“热搜榜”的信息来源，产生了“热搜榜”这样的网络信息新样态。在传统媒介环境下，议程设置都由媒体完成；而“热搜榜”通过对用户搜索行为的大数据运算，即时告知用户目前哪些信息是用户搜索最多也就是最为关注的议题，从而在用户集体无意识的状态下向用户提供了他们自己产生的议程设置，具有公众议程（public agenda）的属性。</p>
+<p>在传统媒介环境中，人们通常从两个方面判断、了解和感知哪些事件是社会热点，一是媒体大量报道，二是人际传播中高频出现，即被社会热议，但后者通常只能借助一定手段感知。到了人们都“以屏为媒”了解世界的背景下，人们很少再通过人际互动寻求和获取更多相关信息，而是选择在信息平台进行搜索。于是，微博热搜给公众打开了另一个信息渠道，<code>它以信息被用户主动搜索的频率作为考察该事件是否为社会热点的标准，通过对海量用户搜索行为的统计，即时生成热点排行榜。</code>尽管用户搜索什么也在很大程度上受到其最近接收到什么信息的影响，但在去中心化的信息传播背景下，相比媒体报道情况（通常是其所认为的公众欲知、应知的事），<code>这种反向的对公众主动、实时的信息搜索活动的考察，往往更能反映公众最真实的关注点。</code>而热搜榜可以吸引更多用户从榜上直接进入所链接的页面，又会对上榜的信息形成了某种“马太效应”。于是，“上热搜”成为公众尤其是青年一代判断某个事件、现象、人物的被关注度的重要依据。据调查，微博热搜已成为大学生获取新闻信息的重要渠道。我们也时而见到有的文章把上了热搜榜作为所引资料重要性的依据。而且，它也可以成为有关业务机构观察舆情的一个窗口。<code>可见，微博热搜是在媒介议程之外为公众议程设置提供了一个平台，成为媒介议程的重要补充。</code></p>
+<h4 id="高校调查-热搜成为大学生获取新闻资讯主渠道">《高校调查 热搜成为大学生获取新闻资讯主渠道》</h4>
+<p>这是杭州电子科技大学(简称“杭电”)青少年大数据研究中心下辖JAVA5.0调查团队，对全国各地各类高校542名大学生问卷调查得出结论：三成学生经常关注微博热搜；三成以上学生对微博热搜持肯定态度，认为“能快速传播社会新闻”。让调查小组印象深刻的还有，“大学生对微博热搜的娱乐性有充分认识，他们更加理性，对所谓热搜事件，大多选择“不轻信”。</p>
+<h4 id="热搜的不良影响">热搜的不良影响（</h4>
+<h5 id="热搜的本质及议程定式理论">《热搜”的本质及议程定式理论》</h5>
+<figure data-type="image" tabindex="1"><img src="https://tickertapetimer.github.io/post-images/%E8%BE%A9%E8%AE%BA%E9%98%9F%E4%B8%80%E9%9D%A2%E8%BE%A9%E9%A2%98%E8%B5%84%E6%96%99/image-20200729145313510.png" alt="image-20200729145313510" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://tickertapetimer.github.io/post-images/%E8%BE%A9%E8%AE%BA%E9%98%9F%E4%B8%80%E9%9D%A2%E8%BE%A9%E9%A2%98%E8%B5%84%E6%96%99/image-20200729145228665.png" alt="image-20200729145228665" loading="lazy"></figure>
+<h3 id="微博热搜的好处">微博热搜的好处（</h3>
+<h5 id="浅析发展传播学视域下微博热搜的社会功能">《浅析发展传播学视域下微博热搜的社会功能》</h5>
+<figure data-type="image" tabindex="3"><img src="https://tickertapetimer.github.io/post-images/%E8%BE%A9%E8%AE%BA%E9%98%9F%E4%B8%80%E9%9D%A2%E8%BE%A9%E9%A2%98%E8%B5%84%E6%96%99/image-20200729150721866.png" alt="image-20200729150721866" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://tickertapetimer.github.io/post-images/%E8%BE%A9%E8%AE%BA%E9%98%9F%E4%B8%80%E9%9D%A2%E8%BE%A9%E9%A2%98%E8%B5%84%E6%96%99/image-20200729150646051.png" alt="image-20200729150646051" loading="lazy"></figure>
+<h5 id="浅析微博热搜对公众舆论的影响以乐清女孩乘滴滴顺风车遇害案为例">《浅析微博热搜对公众舆论的影响——以乐清女孩乘滴滴顺风车遇害案为例》</h5>
+<figure data-type="image" tabindex="5"><img src="https://tickertapetimer.github.io/post-images/%E8%BE%A9%E8%AE%BA%E9%98%9F%E4%B8%80%E9%9D%A2%E8%BE%A9%E9%A2%98%E8%B5%84%E6%96%99/image-20200729151616539.png" alt="image-20200729151616539" loading="lazy"></figure>
+
+                        </div>
+                        
+                            <div class="post-toc">
+                                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%BE%AE%E5%8D%9A%E7%83%AD%E6%90%9C%E6%A6%9C%E4%B8%8E%E4%BA%92%E8%81%94%E7%BD%91%E4%BF%A1%E6%81%AF%E6%9C%8D%E5%8A%A1%E7%9A%84%E8%A7%84%E5%88%B6">《微博“热搜榜”与互联网信息服务的规制》</a></li>
+<li><a href="#%E9%AB%98%E6%A0%A1%E8%B0%83%E6%9F%A5-%E7%83%AD%E6%90%9C%E6%88%90%E4%B8%BA%E5%A4%A7%E5%AD%A6%E7%94%9F%E8%8E%B7%E5%8F%96%E6%96%B0%E9%97%BB%E8%B5%84%E8%AE%AF%E4%B8%BB%E6%B8%A0%E9%81%93">《高校调查 热搜成为大学生获取新闻资讯主渠道》</a></li>
+<li><a href="#%E7%83%AD%E6%90%9C%E7%9A%84%E4%B8%8D%E8%89%AF%E5%BD%B1%E5%93%8D">热搜的不良影响（</a>
+<ul>
+<li><a href="#%E7%83%AD%E6%90%9C%E7%9A%84%E6%9C%AC%E8%B4%A8%E5%8F%8A%E8%AE%AE%E7%A8%8B%E5%AE%9A%E5%BC%8F%E7%90%86%E8%AE%BA">《热搜”的本质及议程定式理论》</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%BE%AE%E5%8D%9A%E7%83%AD%E6%90%9C%E7%9A%84%E5%A5%BD%E5%A4%84">微博热搜的好处（</a><br>
+*
+<ul>
+<li><a href="#%E6%B5%85%E6%9E%90%E5%8F%91%E5%B1%95%E4%BC%A0%E6%92%AD%E5%AD%A6%E8%A7%86%E5%9F%9F%E4%B8%8B%E5%BE%AE%E5%8D%9A%E7%83%AD%E6%90%9C%E7%9A%84%E7%A4%BE%E4%BC%9A%E5%8A%9F%E8%83%BD">《浅析发展传播学视域下微博热搜的社会功能》</a></li>
+<li><a href="#%E6%B5%85%E6%9E%90%E5%BE%AE%E5%8D%9A%E7%83%AD%E6%90%9C%E5%AF%B9%E5%85%AC%E4%BC%97%E8%88%86%E8%AE%BA%E7%9A%84%E5%BD%B1%E5%93%8D%E4%BB%A5%E4%B9%90%E6%B8%85%E5%A5%B3%E5%AD%A9%E4%B9%98%E6%BB%B4%E6%BB%B4%E9%A1%BA%E9%A3%8E%E8%BD%A6%E9%81%87%E5%AE%B3%E6%A1%88%E4%B8%BA%E4%BE%8B">《浅析微博热搜对公众舆论的影响——以乐清女孩乘滴滴顺风车遇害案为例》</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                            </div>
+                            
+                                
+                                    
+                                            <!--zh-->
+                                            <section class="post-copyright zh">
+                                                <p class="copyright-item ">
+                                                    <span>&#x4F5C;&#x8005;:</span>
+                                                    <span>blog</span>
+                                                </p>
+
+                                                <p class="copyright-item">
+                                                    <span>&#x6C38;&#x4E45;&#x94FE;&#x63A5;:</span>
+                                                    <span><a href="https://tickertapetimer.github.io/post/辩论队一面辩题资料/">https://tickertapetimer.github.io/post/辩论队一面辩题资料/</a></span>
+                                                </p>
+
+                                                <p class="copyright-item">
+                                                    <span>&#x534F;&#x8BAE;:</span>
+                                                    <span>MIT License</span>
+                                                </p>
+                                            </section>
+                                            
+                                                
+                                                    
+                                                                    <!--Share-->
+                                                                    <span style="margin-right:15px">
+                        <i class="post-share"></i>
+                        <span>&#x5206;&#x4EAB;:</span>
+                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tickertapetimer.github.io/post/辩论队一面辩题资料/"><i class="fa fa-qrcode"></i></a>
+                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tickertapetimer.github.io/post/辩论队一面辩题资料/&sharesource=qzone&title= 辩论队一面辩题资料&pics=https://tickertapetimer.github.io/images/avatar.png?v=1629458619689&summary="><i class="fa fa-qq"></i></a>
+                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tickertapetimer.github.io/post/辩论队一面辩题资料/&sharesource=weibo&title= 辩论队一面辩题资料 + " - " + &pic="https://tickertapetimer.github.io/images/avatar.png?v=1629458619689 "><i class="fa fa-weibo "></i></a>
+
+                                                                    </span>
+                                                                    
+                                                                            <!--zh-->
+                                                                            <section class="post-tags zh ">
+                                                                                <div>
+                                                                                    <span>&#x6807;&#x7B7E;:</span>
+                                                                                    <span class="tag ">
+                        
+                        
+                        <a href="https://tickertapetimer.github.io/tag/NpOlg1WrO/">#
+                    其他
+                        </a>
+                        
+                            
+                                </span>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <a href="javascript:window.history.back();">
+                        &#x8FD4;&#x56DE;</a>
+                                                                                    <span>&dot;</span>
+                                                                                    <a href="#">&#x4E3B;&#x9875;</a>
+                                                                                </div>
+                                                                            </section>
+
+                                                                            
+                                                                                <!---->
+                                                                                <section class="post-nav">
+                                                                                    
+                                                                                        <a class="prev" rel="prev" href="https://tickertapetimer.github.io/post/基于badusb实现的基础渗透/">
+                                                                                            基于badusb实现的基础渗透
+                                                                                        </a>
+                                                                                        
+                                                                                            
+                                                                                                <a class="next" rel="next" href="https://tickertapetimer.github.io/post/CVE-2017-11882漏洞复现及分析/">
+                                                                                                    CVE-2017-11882漏洞分析及利用
+                                                                                                </a>
+                                                                                                
+                                                                                </section>
+                    </article>
+                </div>
+                
+                                            
+            </div>
+    </div>
+    </div>
+    </div>
+    
+        <footer id="footer" class="footer">
+            <div class="copyright">
+                
+                        
+                            
+                                        <svg viewBox="0 0 1024 1024" style="margin-left: 5px;margin-right: 5px;" version="1.0" width="8" height="8" class="my-face">
+            <path
+                d="M863.597631 513.574282l-271.33965-140.213484L729.783667 81.926656c3.583731-7.87141 7.167462-15.742819 7.167462-25.214109C736.887134 25.226908 708.345275 0.012799 672.635953 0.012799a63.611229 63.611229 0 0 0-39.293053 12.607055c-1.791866 1.59988-3.519736 3.19976-5.311602 3.19976L147.87531 418.925381a55.547834 55.547834 0 0 0-19.646527 47.356448c1.791866 17.278704 14.27093 33.021523 32.125591 42.492813l271.33965 141.749369L292.504463 945.221908c-12.479064 25.214109-1.791866 53.563983 23.166262 69.306802 10.751194 6.335525 23.230258 9.47129 35.709322 9.47129 16.062795 0 32.125591-4.735645 44.604655-15.742819l480.091993-403.297753a55.547834 55.547834 0 0 0 19.646526-47.228458 61.243407 61.243407 0 0 0-32.12559-44.156688z"
+                fill="#93b5cf"></path>
+        </svg>
+                                        blog &copy;Copyright
+                                            <script>
+                                                var date = new Date();
+                                                document.write("" + date.getFullYear());
+                                            </script>
+                                            | Powered by
+                                            <a href="https://coding.net" target="_blank">
+                                                Coding.net
+                                            </a>
+            </div>
+            <div id="update" style="display:none;">
+                off
+            </div>
+            
+                    <script>
+                        var pat = '';
+                        
+                        document.write('<div id="home_path" style="display:none;">' + document.location.protocol + '//' + window.document.location.hostname + pat + '</div>')
+                    </script>
+        </footer>
+        
+                <script>
+                    
+                    
+                    
+                    getStar();
+                    hljs.initHighlighting();
+                    console.clear();
+                    
+                    var newDate = new Date();
+                    newDate.setTime(1629458619689);
+                    console.log(" Blog Update Time: " + newDate.toLocaleDateString());
+                    console.log("\n %c \u26a1Theme:Chic Author's Blog:https://blog.itjoker.cn  Write By ITJoker  \n\n", "color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;");
+                </script>
+                
+        </div>
+</body>
+<script>
+    scroll();
+</script>
+
+</html>

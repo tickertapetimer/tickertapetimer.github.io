@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://tickertapetimer.github.io</id>
     <title>blog</title>
-    <updated>2021-08-20T09:59:48.292Z</updated>
+    <updated>2021-08-20T11:24:07.324Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://tickertapetimer.github.io"/>
     <link rel="self" href="https://tickertapetimer.github.io/atom.xml"/>
@@ -11,8 +11,8 @@
     <rights>All rights reserved 2021, blog</rights>
     <entry>
         <title type="html"><![CDATA[ring3注入学习(1)导入表注入]]></title>
-        <id>https://tickertapetimer.github.io/ring3注入学习(1)导入表注入/</id>
-        <link href="https://tickertapetimer.github.io/ring3注入学习(1)导入表注入/">
+        <id>https://tickertapetimer.github.io/post/ring3注入学习(1)导入表注入/</id>
+        <link href="https://tickertapetimer.github.io/post/ring3注入学习(1)导入表注入/">
         </link>
         <updated>2021-08-16T09:59:00.000Z</updated>
         <content type="html"><![CDATA[<h2 id="原理">原理</h2>
@@ -417,8 +417,8 @@ int main()
     </entry>
     <entry>
         <title type="html"><![CDATA[Windows挖矿样本分析]]></title>
-        <id>https://tickertapetimer.github.io/一个Windows挖矿样本/</id>
-        <link href="https://tickertapetimer.github.io/一个Windows挖矿样本/">
+        <id>https://tickertapetimer.github.io/post/一个Windows挖矿样本/</id>
+        <link href="https://tickertapetimer.github.io/post/一个Windows挖矿样本/">
         </link>
         <updated>2021-08-08T08:45:00.000Z</updated>
         <content type="html"><![CDATA[<h2 id="前言">前言</h2>
@@ -438,8 +438,8 @@ int main()
     </entry>
     <entry>
         <title type="html"><![CDATA[防御病毒经验]]></title>
-        <id>https://tickertapetimer.github.io/服务器防御病毒经验/</id>
-        <link href="https://tickertapetimer.github.io/服务器防御病毒经验/">
+        <id>https://tickertapetimer.github.io/post/服务器防御病毒经验/</id>
+        <link href="https://tickertapetimer.github.io/post/服务器防御病毒经验/">
         </link>
         <updated>2021-08-06T11:22:00.000Z</updated>
         <content type="html"><![CDATA[<h2 id="前言">前言</h2>
@@ -477,8 +477,8 @@ int main()
     </entry>
     <entry>
         <title type="html"><![CDATA[Linux挖矿病毒分析]]></title>
-        <id>https://tickertapetimer.github.io/一个Linux挖矿样本分析/</id>
-        <link href="https://tickertapetimer.github.io/一个Linux挖矿样本分析/">
+        <id>https://tickertapetimer.github.io/post/一个Linux挖矿样本分析/</id>
+        <link href="https://tickertapetimer.github.io/post/一个Linux挖矿样本分析/">
         </link>
         <updated>2021-08-06T11:21:00.000Z</updated>
         <content type="html"><![CDATA[<h2 id="前言">前言</h2>
@@ -514,8 +514,8 @@ int main()
     </entry>
     <entry>
         <title type="html"><![CDATA[壳的自我修养]]></title>
-        <id>https://tickertapetimer.github.io/壳的自我修养/</id>
-        <link href="https://tickertapetimer.github.io/壳的自我修养/">
+        <id>https://tickertapetimer.github.io/post/壳的自我修养/</id>
+        <link href="https://tickertapetimer.github.io/post/壳的自我修养/">
         </link>
         <updated>2021-07-23T15:22:00.000Z</updated>
         <content type="html"><![CDATA[<h2 id="前言">前言</h2>
@@ -898,8 +898,8 @@ void Start()
     </entry>
     <entry>
         <title type="html"><![CDATA[利用PEB寻找kernel32.dll的基地址]]></title>
-        <id>https://tickertapetimer.github.io/利用PEB寻找kernel32.dll的基地址/</id>
-        <link href="https://tickertapetimer.github.io/利用PEB寻找kernel32.dll的基地址/">
+        <id>https://tickertapetimer.github.io/post/利用PEB寻找kernel32.dll的基地址/</id>
+        <link href="https://tickertapetimer.github.io/post/利用PEB寻找kernel32.dll的基地址/">
         </link>
         <updated>2021-06-28T07:16:00.000Z</updated>
         <content type="html"><![CDATA[<h2 id="前言">前言</h2>
@@ -933,14 +933,13 @@ PEB的地址计算有两种：<br>
     </entry>
     <entry>
         <title type="html"><![CDATA[免杀转载]]></title>
-        <id>https://tickertapetimer.github.io/免杀转载/</id>
-        <link href="https://tickertapetimer.github.io/免杀转载/">
+        <id>https://tickertapetimer.github.io/post/免杀转载/</id>
+        <link href="https://tickertapetimer.github.io/post/免杀转载/">
         </link>
         <updated>2021-06-22T04:45:00.000Z</updated>
         <content type="html"><![CDATA[<h2 id="文章来源">文章来源</h2>
 <p>https://github.com/zer0yu/Awesome-CobaltStrike</p>
 <h3 id="本转载只为方便自己查看无任何其他用途">本转载只为方便自己查看，无任何其他用途</h3>
-<h2 id="awesome-cobaltstrike">Awesome CobaltStrike <img src="https://img.shields.io/badge/awesome-cobaltstrike-red.svg" alt="Awesome CobaltStrike" loading="lazy"> <img src="https://img.shields.io/badge/awesome-community-green.svg" alt="Awesome community" loading="lazy"></h2>
 <h4 id="contents">Contents</h4>
 <ul>
 <li><a href="#0x00-introduction">0x00 Introduction</a></li>
@@ -2504,8 +2503,8 @@ PEB的地址计算有两种：<br>
     </entry>
     <entry>
         <title type="html"><![CDATA[彩虹猫病毒分析]]></title>
-        <id>https://tickertapetimer.github.io/彩虹猫病毒分析/</id>
-        <link href="https://tickertapetimer.github.io/彩虹猫病毒分析/">
+        <id>https://tickertapetimer.github.io/post/彩虹猫病毒分析/</id>
+        <link href="https://tickertapetimer.github.io/post/彩虹猫病毒分析/">
         </link>
         <updated>2021-03-07T07:20:25.000Z</updated>
         <content type="html"><![CDATA[<p>参考文章：<a href="https://bbs.pediy.com/thread-262873.htm">[原创]最适合新手的病毒分析——彩虹猫病毒</a></p>
@@ -2628,8 +2627,8 @@ PEB的地址计算有两种：<br>
     </entry>
     <entry>
         <title type="html"><![CDATA[Windows异常处理机制]]></title>
-        <id>https://tickertapetimer.github.io/windows异常处理机制/</id>
-        <link href="https://tickertapetimer.github.io/windows异常处理机制/">
+        <id>https://tickertapetimer.github.io/post/windows异常处理机制/</id>
+        <link href="https://tickertapetimer.github.io/post/windows异常处理机制/">
         </link>
         <updated>2021-03-05T04:57:00.000Z</updated>
         <content type="html"><![CDATA[<h2 id="r3异常处理">R3异常处理</h2>
@@ -2659,8 +2658,8 @@ PEB的地址计算有两种：<br>
     </entry>
     <entry>
         <title type="html"><![CDATA[python字节码初析]]></title>
-        <id>https://tickertapetimer.github.io/python字节码初析/</id>
-        <link href="https://tickertapetimer.github.io/python字节码初析/">
+        <id>https://tickertapetimer.github.io/post/python字节码初析/</id>
+        <link href="https://tickertapetimer.github.io/post/python字节码初析/">
         </link>
         <updated>2021-02-07T12:44:00.000Z</updated>
         <content type="html"><![CDATA[<h2 id="什么是python字节码">什么是python字节码</h2>

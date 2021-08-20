@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<title>
+    blog
+</title>
+<!--[if lt IE 9]><script src="//cdn.bootcss.com/html5shiv/r29/html5.js"></script><![endif]-->
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+<meta http-equiv="x-dns-prefetch-control" content="on">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<meta name="author" content="ticker tape timer">
+<meta name="description" content="A CTFer loves RE and Misc">
+<meta name="keywords" content="">
+<script async src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+<link rel="stylesheet" href="https://tickertapetimer.github.io/styles/main.css" />
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.7.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/css/style.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/tocbot.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/script.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/icon.min.js"></script>
+    
+            <script src="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@1.0.12/CDN/js/Card/prism.min.js"></script>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@1.0.12/CDN/css/Card/prism.min.css" />
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css">
+            <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js"></script>
+            
+                            <script>
+                                (function() {
+                                    var bp = document.createElement('script');
+                                    var curProtocol = window.location.protocol.split(':')[0];
+                                    if (curProtocol === 'https') {
+                                        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+                                    } else {
+                                        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                                    }
+                                    var s = document.getElementsByTagName("script")[0];
+                                    s.parentNode.insertBefore(bp, s);
+                                })();
+                            </script>
+                            
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo">
+                <a href="https://tickertapetimer.github.io">
+                    blog
+                </a>
+            </div>
+
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">
+                        首页
+                    </a>
+                    
+                    <a class="menu-item" href="/archives">
+                        归档
+                    </a>
+                    
+                    <a class="menu-item" href="/tags">
+                        标签
+                    </a>
+                    
+                    <a class="menu-item" href="https://tickertapetimer.github.io/post/me">
+                        关于
+                    </a>
+                    
+                        <input id="switch_default" type="checkbox" class="switch_default">
+                        <label for="switch_default" class="toggleBtn"></label>
+            </div>
+            <form id="gridea-search-form" data-update="1629458619689" action="/search/index.html">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
+            </form>
+        </div>
+    </nav>
+
+    
+        <nav class="navbar-mobile" id="nav-mobile">
+            <div class="container">
+                <div class="navbar-header">
+                    <div>
+                        <a href="https://tickertapetimer.github.io">
+                            blog
+                        </a>
+                        <!--en-->
+                        <a id="mobile-toggle-theme-en" class="a en">&nbsp;Dark</a>
+                        <!--zh-->
+                        <a id="mobile-toggle-theme-zh" class="a zh">&nbsp;&#x6697;&#x9ED1;</a>
+                    </div>
+                    <form id="gridea-search-form" data-update="1629458619689" action="/search/index.html">
+                        <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
+                    </form>
+                    <!--en-->
+                    <div class="menu-toggle" id="menu-toggle-en" onclick="mobileBtn()">&#9776; Menu</div>
+                    <!--zh-->
+                    <div class="menu-toggle" id="menu-toggle-zh" onclick="mobileBtn()">&#9776; &#x83DC;&#x5355;</div>
+
+                </div>
+                <div class="menu" id="mobile-menu">
+                    
+                        <a class="menu-item" href="/">
+                            首页
+                        </a>
+                        
+                        <a class="menu-item" href="/archives">
+                            归档
+                        </a>
+                        
+                        <a class="menu-item" href="/tags">
+                            标签
+                        </a>
+                        
+                        <a class="menu-item" href="https://tickertapetimer.github.io/post/me">
+                            关于
+                        </a>
+                        
+                </div>
+            </div>
+        </nav>
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementById("menu-toggle-en");
+        var toggleMenu_zh = document.getElementById("menu-toggle-zh");
+
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.display != "none") {
+            if (toggleMenu.classList.contains("active")) {
+                toggleMenu.classList.remove("active")
+                mobileMenu.classList.remove("active")
+            } else {
+                toggleMenu.classList.add("active")
+                mobileMenu.classList.add("active")
+            }
+        } else if (toggleMenu_zh.display != "none") {
+            if (toggleMenu_zh.classList.contains("active")) {
+                toggleMenu_zh.classList.remove("active")
+                mobileMenu.classList.remove("active")
+            } else {
+                toggleMenu_zh.classList.add("active")
+                mobileMenu.classList.add("active")
+            }
+        }
+
+    }
+</script>
+            <div class="main">
+                <div class="container">
+                    <article class="post-wrap">
+                        <header class="post-header">
+                            <h1 class="post-title">
+                                末日算法
+                            </h1>
+                            
+                                    <!--zh-->
+                                    <div class="post-meta zh">
+                                        &#x4F5C;&#x8005;:
+                                        <a itemprop="author" rel="author" href="/">
+                                            blog
+                                        </a>
+                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-05-16</a></span>
+                                        <span class="post-readtime">&#x9605;&#x8BFB;&#x65F6;&#x95F4;:<a
+                                    href="#">3.9
+                                    &#x5206;&#x949F;</a></span>
+                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">1118</a></span>
+                                        
+                                            <span class="post-category">&#x5206;&#x7C7B;:
+                                
+                                <a href="https://tickertapetimer.github.io/tag/OI2yF9Mjr/">学习</a>
+                                
+                            </span>
+                                            
+                                    </div>
+                                    
+                        </header>
+                        
+                        <div class="post-content">
+                            <h2 id="末日是周几">末日是周几？</h2>
+<p>假设你知道若干年后的某一天是末日，你想要知道那一天是不是星期四，以便于去抢购肯德基，你会怎么做？<br>
+通常，我们应该会<s>打开手机查</s>，如果有妹子也想知道，那你这时如果手算出来，岂不是能装一波逼(妙哉)</p>
+<h2 id="那么我们要怎么手算呢">那么我们要怎么手算呢？</h2>
+<p>我们最容易想到的一种方法是：根据今天的日期，求得末日当天距离今天的天数，然后取余7得到那天是周几。<br>
+但是那样子很麻烦，要算过去的这么多年里面有多少个闰年，然后全部加起来后取余7，计算量可能有亿点点大。</p>
+<h2 id="末日算法">末日算法</h2>
+<p>美国的约翰·康威教授给出了一个相对优化的算法，即末日算法。<br>
+PS:康威教授也是生命游戏的创建者，在数学领域有很多贡献。</p>
+<p><strong>末日算法：假设每一年2月的最后一天是末日，因此每一年的3月7日，4月4日，5月9日，6月6日，7月11日，8月8日，9月5日，10月10日，11月7日，12月12日的星期必然和末日的星期相同，因为这些日期和末日相差的天数正好是7的倍数。除此之外，因为平年一年365天，闰年一年366天，所以每过一个平年，末日的星期数加1，每过一个闰年，末日的星期数加2（365 % 7 = 1， 366 % 7 = 2）。这样一来，只要我们知道某一年的末日是星期几，就可以按照末日算法的思路快速地计算出目标日期是星期几。</strong></p>
+<p>当然，这样子计算量只简化了一丢丢，但是这很有趣，不是吗。</p>
+<p>但同时，我们要知道这个算法的一个关键地方：闰年。</p>
+<p>笔者曾以为闰年是指被4整除的年份，但后来查资料发现，闰年并不是这样规定的</p>
+<p>我们先来了解一下。“年”代表地球围绕太阳公转一周所耗的时间，“月”代表从一个满月到下一个满月所耗的时间，“日‘代表地球自转一周所耗的时间，这些都是需要准确掌握季节变化的的农耕文化为中心发展的”刻度“。但是令人可恼的是，无论如何精确制作这种刻度，都不能与太阳、地球、月球三者的运动100%吻合。</p>
+<p>例如，两个满月之间的实际平均时间为 29.5 日。若将所有月份都定义为29.5日，那么一年应该是364日。如果制作一年为354日的日历，那么随着时间的流逝，会发生月份和季节不相符的现象。为了弥补这个缺陷。埃及天文学家最早设计了我们今天所用的 365 天、每 4 年 增加 1天的 ”算法“。虽然这种月历使用了相当长的时间，但还是会有微小的误差。微小的误差累计到1582年时，月历与季节相差了6日。最终，当初的教皇格雷戈里十三世宣布，一个新世纪开始的年份（即能被100整除的年份）若不能被400整除，则不是闰年。</p>
+<p>上述规则总结为：</p>
+<p>1、如果年份能够被 4 整除，那么该年份是2月份需要添加 1 日的 “闰年”。因闰年多出 1 日，所以当年为 366 日。<br>
+2、如果年份能被 100 整除（即新世纪开始的年份）但不能被 400 整除，那么该年不是闰年。</p>
+<p>所以，2100这类不算是闰年。</p>
+<p><strong>Q：已知2020年2月最后一天为周六，2175年2月15日为末日，那么在那天你能不能吃一顿美味的肯德基呢？</strong><br>
+<s>虽然你也活不到那时候</s><br>
+A：根据末日算法，年份差为2175-2020=155，闰年数为155/4=38余3，因为2100年不是闰年，所以闰年数减一，加的星期数为155+37=192，192%7=3，周六加三天等于周二，所以2175年的3月7日为周二，倒推可得2175年的2月15日为周三，真是一个悲伤的故事，那天是周三</p>
+<p>令人惋惜的是，这个算法的创建者，康威教授，在4月11日因为新冠肺炎去世了。<br>
+逝者安息</p>
+
+                        </div>
+                        
+                            <div class="post-toc">
+                                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E6%9C%AB%E6%97%A5%E6%98%AF%E5%91%A8%E5%87%A0">末日是周几？</a></li>
+<li><a href="#%E9%82%A3%E4%B9%88%E6%88%91%E4%BB%AC%E8%A6%81%E6%80%8E%E4%B9%88%E6%89%8B%E7%AE%97%E5%91%A2">那么我们要怎么手算呢？</a></li>
+<li><a href="#%E6%9C%AB%E6%97%A5%E7%AE%97%E6%B3%95">末日算法</a></li>
+</ul>
+</li>
+</ul>
+
+                            </div>
+                            
+                                
+                                    
+                                            <!--zh-->
+                                            <section class="post-copyright zh">
+                                                <p class="copyright-item ">
+                                                    <span>&#x4F5C;&#x8005;:</span>
+                                                    <span>blog</span>
+                                                </p>
+
+                                                <p class="copyright-item">
+                                                    <span>&#x6C38;&#x4E45;&#x94FE;&#x63A5;:</span>
+                                                    <span><a href="https://tickertapetimer.github.io/post/末日算法/">https://tickertapetimer.github.io/post/末日算法/</a></span>
+                                                </p>
+
+                                                <p class="copyright-item">
+                                                    <span>&#x534F;&#x8BAE;:</span>
+                                                    <span>MIT License</span>
+                                                </p>
+                                            </section>
+                                            
+                                                
+                                                    
+                                                                    <!--Share-->
+                                                                    <span style="margin-right:15px">
+                        <i class="post-share"></i>
+                        <span>&#x5206;&#x4EAB;:</span>
+                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tickertapetimer.github.io/post/末日算法/"><i class="fa fa-qrcode"></i></a>
+                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tickertapetimer.github.io/post/末日算法/&sharesource=qzone&title=末日算法&pics=https://tickertapetimer.github.io/images/avatar.png?v=1629458619689&summary="><i class="fa fa-qq"></i></a>
+                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tickertapetimer.github.io/post/末日算法/&sharesource=weibo&title=末日算法 + " - " + &pic="https://tickertapetimer.github.io/images/avatar.png?v=1629458619689 "><i class="fa fa-weibo "></i></a>
+
+                                                                    </span>
+                                                                    
+                                                                            <!--zh-->
+                                                                            <section class="post-tags zh ">
+                                                                                <div>
+                                                                                    <span>&#x6807;&#x7B7E;:</span>
+                                                                                    <span class="tag ">
+                        
+                        
+                        <a href="https://tickertapetimer.github.io/tag/OI2yF9Mjr/">#
+                    学习
+                        </a>
+                        
+                            
+                                </span>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <a href="javascript:window.history.back();">
+                        &#x8FD4;&#x56DE;</a>
+                                                                                    <span>&dot;</span>
+                                                                                    <a href="#">&#x4E3B;&#x9875;</a>
+                                                                                </div>
+                                                                            </section>
+
+                                                                            
+                                                                                <!---->
+                                                                                <section class="post-nav">
+                                                                                    
+                                                                                        <a class="prev" rel="prev" href="https://tickertapetimer.github.io/post/ms12-020以及ms17-010使用/">
+                                                                                            ms12-020以及ms17-010使用
+                                                                                        </a>
+                                                                                        
+                                                                                            
+                                                                                                <a class="next" rel="next" href="https://tickertapetimer.github.io/post/格式化字符串漏洞之crack/">
+                                                                                                    格式化字符串漏洞之crack
+                                                                                                </a>
+                                                                                                
+                                                                                </section>
+                    </article>
+                </div>
+                
+                                            
+            </div>
+    </div>
+    </div>
+    </div>
+    
+        <footer id="footer" class="footer">
+            <div class="copyright">
+                
+                        
+                            
+                                        <svg viewBox="0 0 1024 1024" style="margin-left: 5px;margin-right: 5px;" version="1.0" width="8" height="8" class="my-face">
+            <path
+                d="M863.597631 513.574282l-271.33965-140.213484L729.783667 81.926656c3.583731-7.87141 7.167462-15.742819 7.167462-25.214109C736.887134 25.226908 708.345275 0.012799 672.635953 0.012799a63.611229 63.611229 0 0 0-39.293053 12.607055c-1.791866 1.59988-3.519736 3.19976-5.311602 3.19976L147.87531 418.925381a55.547834 55.547834 0 0 0-19.646527 47.356448c1.791866 17.278704 14.27093 33.021523 32.125591 42.492813l271.33965 141.749369L292.504463 945.221908c-12.479064 25.214109-1.791866 53.563983 23.166262 69.306802 10.751194 6.335525 23.230258 9.47129 35.709322 9.47129 16.062795 0 32.125591-4.735645 44.604655-15.742819l480.091993-403.297753a55.547834 55.547834 0 0 0 19.646526-47.228458 61.243407 61.243407 0 0 0-32.12559-44.156688z"
+                fill="#93b5cf"></path>
+        </svg>
+                                        blog &copy;Copyright
+                                            <script>
+                                                var date = new Date();
+                                                document.write("" + date.getFullYear());
+                                            </script>
+                                            | Powered by
+                                            <a href="https://coding.net" target="_blank">
+                                                Coding.net
+                                            </a>
+            </div>
+            <div id="update" style="display:none;">
+                off
+            </div>
+            
+                    <script>
+                        var pat = '';
+                        
+                        document.write('<div id="home_path" style="display:none;">' + document.location.protocol + '//' + window.document.location.hostname + pat + '</div>')
+                    </script>
+        </footer>
+        
+                <script>
+                    
+                    
+                    
+                    getStar();
+                    hljs.initHighlighting();
+                    console.clear();
+                    
+                    var newDate = new Date();
+                    newDate.setTime(1629458619689);
+                    console.log(" Blog Update Time: " + newDate.toLocaleDateString());
+                    console.log("\n %c \u26a1Theme:Chic Author's Blog:https://blog.itjoker.cn  Write By ITJoker  \n\n", "color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;");
+                </script>
+                
+        </div>
+</body>
+<script>
+    scroll();
+</script>
+
+</html>

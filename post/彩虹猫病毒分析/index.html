@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<title>
+    blog
+</title>
+<!--[if lt IE 9]><script src="//cdn.bootcss.com/html5shiv/r29/html5.js"></script><![endif]-->
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+<meta http-equiv="x-dns-prefetch-control" content="on">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<meta name="author" content="ticker tape timer">
+<meta name="description" content="A CTFer loves RE and Misc">
+<meta name="keywords" content="">
+<script async src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+<link rel="stylesheet" href="https://tickertapetimer.github.io/styles/main.css" />
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.7.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/css/style.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/tocbot.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/script.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/icon.min.js"></script>
+    
+            <script src="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@1.0.12/CDN/js/Card/prism.min.js"></script>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@1.0.12/CDN/css/Card/prism.min.css" />
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css">
+            <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js"></script>
+            
+                            <script>
+                                (function() {
+                                    var bp = document.createElement('script');
+                                    var curProtocol = window.location.protocol.split(':')[0];
+                                    if (curProtocol === 'https') {
+                                        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+                                    } else {
+                                        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                                    }
+                                    var s = document.getElementsByTagName("script")[0];
+                                    s.parentNode.insertBefore(bp, s);
+                                })();
+                            </script>
+                            
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo">
+                <a href="https://tickertapetimer.github.io">
+                    blog
+                </a>
+            </div>
+
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">
+                        首页
+                    </a>
+                    
+                    <a class="menu-item" href="/archives">
+                        归档
+                    </a>
+                    
+                    <a class="menu-item" href="/tags">
+                        标签
+                    </a>
+                    
+                    <a class="menu-item" href="https://tickertapetimer.github.io/post/me">
+                        关于
+                    </a>
+                    
+                        <input id="switch_default" type="checkbox" class="switch_default">
+                        <label for="switch_default" class="toggleBtn"></label>
+            </div>
+            <form id="gridea-search-form" data-update="1629458619689" action="/search/index.html">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
+            </form>
+        </div>
+    </nav>
+
+    
+        <nav class="navbar-mobile" id="nav-mobile">
+            <div class="container">
+                <div class="navbar-header">
+                    <div>
+                        <a href="https://tickertapetimer.github.io">
+                            blog
+                        </a>
+                        <!--en-->
+                        <a id="mobile-toggle-theme-en" class="a en">&nbsp;Dark</a>
+                        <!--zh-->
+                        <a id="mobile-toggle-theme-zh" class="a zh">&nbsp;&#x6697;&#x9ED1;</a>
+                    </div>
+                    <form id="gridea-search-form" data-update="1629458619689" action="/search/index.html">
+                        <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
+                    </form>
+                    <!--en-->
+                    <div class="menu-toggle" id="menu-toggle-en" onclick="mobileBtn()">&#9776; Menu</div>
+                    <!--zh-->
+                    <div class="menu-toggle" id="menu-toggle-zh" onclick="mobileBtn()">&#9776; &#x83DC;&#x5355;</div>
+
+                </div>
+                <div class="menu" id="mobile-menu">
+                    
+                        <a class="menu-item" href="/">
+                            首页
+                        </a>
+                        
+                        <a class="menu-item" href="/archives">
+                            归档
+                        </a>
+                        
+                        <a class="menu-item" href="/tags">
+                            标签
+                        </a>
+                        
+                        <a class="menu-item" href="https://tickertapetimer.github.io/post/me">
+                            关于
+                        </a>
+                        
+                </div>
+            </div>
+        </nav>
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementById("menu-toggle-en");
+        var toggleMenu_zh = document.getElementById("menu-toggle-zh");
+
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.display != "none") {
+            if (toggleMenu.classList.contains("active")) {
+                toggleMenu.classList.remove("active")
+                mobileMenu.classList.remove("active")
+            } else {
+                toggleMenu.classList.add("active")
+                mobileMenu.classList.add("active")
+            }
+        } else if (toggleMenu_zh.display != "none") {
+            if (toggleMenu_zh.classList.contains("active")) {
+                toggleMenu_zh.classList.remove("active")
+                mobileMenu.classList.remove("active")
+            } else {
+                toggleMenu_zh.classList.add("active")
+                mobileMenu.classList.add("active")
+            }
+        }
+
+    }
+</script>
+            <div class="main">
+                <div class="container">
+                    <article class="post-wrap">
+                        <header class="post-header">
+                            <h1 class="post-title">
+                                彩虹猫病毒分析
+                            </h1>
+                            
+                                    <!--zh-->
+                                    <div class="post-meta zh">
+                                        &#x4F5C;&#x8005;:
+                                        <a itemprop="author" rel="author" href="/">
+                                            blog
+                                        </a>
+                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2021-03-07</a></span>
+                                        <span class="post-readtime">&#x9605;&#x8BFB;&#x65F6;&#x95F4;:<a
+                                    href="#">6.2
+                                    &#x5206;&#x949F;</a></span>
+                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">1759</a></span>
+                                        
+                                            <span class="post-category">&#x5206;&#x7C7B;:
+                                
+                                <a href="https://tickertapetimer.github.io/tag/lPO99KDRN/">逆向</a>
+                                
+                                <a href="https://tickertapetimer.github.io/tag/AFFv1xmrf/">实战</a>
+                                
+                            </span>
+                                            
+                                    </div>
+                                    
+                        </header>
+                        
+                        <div class="post-content">
+                            <p>参考文章：<a href="https://bbs.pediy.com/thread-262873.htm">[原创]最适合新手的病毒分析——彩虹猫病毒</a></p>
+<h2 id="初步观察">初步观察</h2>
+<p>先拍个快照，再运行病毒程序，观察发生了什么</p>
+<p>发现运行后存在以下现象：</p>
+<ol>
+<li>会弹出浏览器窗口</li>
+<li>鼠标开始不规律的闪动</li>
+<li>有大量三角形感叹号，圆圈状叉号图标出现</li>
+<li>电脑反色，怀疑是对比度的问题</li>
+</ol>
+<p>最后在任务管理器发现了6个MEMZ.exe的进程，任意关闭一个，虚拟机直接卡死，关机重启失败，开机界面为一串大意为电脑已被攻击的英文，然后出现彩虹猫GIF</p>
+<h2 id="初步分析">初步分析</h2>
+<p>在百度以及查阅参考文章后，得到相关现象对应的函数：</p>
+<ol>
+<li>会弹出浏览器窗口 —— ShellExecute</li>
+<li>鼠标开始不规律的闪动 —— SetCursorPos、GetCursorPos</li>
+<li>有大量三角形感叹号，圆圈状叉号图标出现 —— DrawIcon</li>
+<li>电脑反色，怀疑是对比度的问题 —— BitBlt、StretchBlt</li>
+<li>6个MEMZ进程 —— ShellExecute</li>
+<li>由于没有连接声音所以没发现的系统提示音现象 —— PlaySoundA</li>
+</ol>
+<p>这些函数都可以在StudyPE+中查看导入表时发现</p>
+<h2 id="ida">IDA</h2>
+<p>再进一步，打开IDA分析</p>
+<figure data-type="image" tabindex="1"><img src="https://tickertapetimer.github.io/post-images/1629435238110.png" alt="" loading="lazy"></figure>
+<p>一开始就调用了GetCommandLineW()以及CommandLineToArgvW()，这两个函数的作用分别是获取命令行参数，解析命令行参数</p>
+<p>但我们运行它的时候是不存在参数的，所以 <code>pNumArgs &gt; 1</code>可以不看，直接往后看</p>
+<h3 id="无参数部分">无参数部分</h3>
+<figure data-type="image" tabindex="2"><img src="https://tickertapetimer.github.io/post-images/1629435247856.png" alt="" loading="lazy"></figure>
+<p>这里有弹窗，而在我们运行程序时，也会弹出两个一模一样的弹窗，合理推断这里才是程序入口点</p>
+<figure data-type="image" tabindex="3"><img src="https://tickertapetimer.github.io/post-images/1629435253079.png" alt="" loading="lazy"></figure>
+<p>进入入口点后，就可以看到前面说的生成6个MEMZ进程的函数了</p>
+<figure data-type="image" tabindex="4"><img src="https://tickertapetimer.github.io/post-images/1629435259724.png" alt="" loading="lazy"></figure>
+<p>利用do-while循环，以&quot;/watchdog&quot;为参数创建5个MEMZ进程，再用&quot;/main&quot;参数创建一个MEMZ进程</p>
+<p>以main参数创建进程的代码中，还有一个函数 <code>SetPriorityClass()</code>，这个函数是一个给进程设置优先级的函数，目测应该属于提权操作，而该函数的参数0x80，意味着该&quot;/main&quot;进程的优先级被设至最高（应该是）</p>
+<p>创建完线程后调用 <code>ExitProcess</code>退出进程</p>
+<h3 id="watchdog参数">/watchdog参数</h3>
+<p>在添加参数创建的进程中，根据参数的不同，也可以分为两部分代码，即&quot;/watchdog&quot;和&quot;/main&quot;两个参数</p>
+<figure data-type="image" tabindex="5"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307204338336.png" alt="image-20210307204338336" loading="lazy"></figure>
+<p>这段代码有熟悉的 <code>CreateThread</code>创建线程函数，还有 <code>RegisterClassExA</code>函数，作用为注册一个窗口类，供以后在对<a href="https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-createwindowa">CreateWindow</a>或<a href="https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-createwindowexa">CreateWindowEx</a>函数的调用中使用、<code>CreateWindowExA</code>函数，用于创建窗口</p>
+<p>在<code>CreateWindowExA</code>函数下面的while循环，可以看到有三个与message相关的函数，一个是检索消息，另外两个是调度或发布消息，可以推断这是一个消息循环，作用未知</p>
+<p><code>CreateThread</code>有利用到sub_40114A函数去作为参数，点进去查看该函数干了什么</p>
+<h4 id="sub_40114a">sub_40114A</h4>
+<figure data-type="image" tabindex="6"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307205420821.png" alt="image-20210307205420821" loading="lazy"></figure>
+<p>一个申请空间，一个获取句柄，一个获取进程名</p>
+<figure data-type="image" tabindex="7"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307205632817.png" alt="image-20210307205632817" loading="lazy"></figure>
+<p>下面的while循环，看个人感觉大概有几个关键点</p>
+<ol>
+<li>这是永真循环</li>
+<li>这个循环会比较两个变量，相同后v5会自增</li>
+<li>一旦v5&lt;v8，就会进入另一个函数</li>
+<li>v5每次循环都会置0</li>
+<li>v8每次循环都会被赋值为v5的值</li>
+</ol>
+<p>结合彩虹猫病毒的特性，合理猜想，这是在检测进程数，一旦进程数小于6个，即关闭了一个进程，就会触发下面的<code>sub_401021</code>函数，直接蓝屏</p>
+<p>点进去<code>sub_401021</code>函数</p>
+<figure data-type="image" tabindex="8"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307210853672.png" alt="image-20210307210853672" loading="lazy"></figure>
+<p>看到<code>RtlAdjustPrivilege</code>和<code>NtRaiseHardError</code>，这两个东西放在一起，就是一个经典蓝屏手段，前者提权，后者触发蓝屏</p>
+<p>再往下看</p>
+<figure data-type="image" tabindex="9"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307211326958.png" alt="image-20210307211326958" loading="lazy"></figure>
+<p>还有一个退出系统的操作，<code>SeShutdownPrivilege</code>，这个东西和上半部分一起，保证关机，这个进程的参数真的没给错，&quot;/watchdog&quot;，看门狗</p>
+<p>上述是关闭进程后的触发手段，现在回到关闭进程前，看看它有没有别的操作，毕竟开了5个参数为看门狗的进程，不可能就做这点事情</p>
+<figure data-type="image" tabindex="10"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307204338336.png" alt="image-20210307204338336" loading="lazy"></figure>
+<p>有一个sub_401000函数，点进去</p>
+<figure data-type="image" tabindex="11"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307212210133.png" alt="image-20210307212210133" loading="lazy"></figure>
+<p>检测消息常量值，百度后发现，值为16或22的系统消息为WM_CLOSE和WM_ENDSESSION，这两个都是系统在关机时会发送给各个程序或窗口的消息，所以sub_401000的作用也清楚了，在用户主动关机时，也会调用sub_401021，产生蓝屏或关机，看来真就看门狗了，只要进程被杀或者自动关机，就会触发蓝屏或者退出系统</p>
+<h3 id="main参数">/main参数</h3>
+<p>/main参数部分的代码分两块，一块是打开物理磁盘覆盖MBR，达到开机出现GIF的效果，一块是调用若干函数，去实现运行彩虹猫时出现的异象</p>
+<h4 id="mbr">MBR</h4>
+<figure data-type="image" tabindex="12"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210309134334276.png" alt="image-20210309134334276" loading="lazy"></figure>
+<p>先用CreateFileA打开主硬盘，即PhysicalDrive0，再用do-while循环去覆盖数据，byte_402118以及byte_402248中的数据应该就是要用来覆盖的内容</p>
+<p>由于对MBR不熟，所以详情可参考 参考文章：<a href="https://bbs.pediy.com/thread-262873.htm">[原创]最适合新手的病毒分析——彩虹猫病毒</a></p>
+<h4 id="函数">函数</h4>
+<p>在覆盖MBR后，程序调用了notepad去宣告攻击成功，然后开始调用后面的代码去产生各种花里胡哨的异象</p>
+<figure data-type="image" tabindex="13"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210309134946309.png" alt="image-20210309134946309" loading="lazy"></figure>
+<p>代码中出现了产生线程的CreateThread，并且用函数sub_401A2B去作为参数，点进去看它的代码</p>
+<figure data-type="image" tabindex="14"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210309135117187.png" alt="image-20210309135117187" loading="lazy"></figure>
+<p>不太能看懂，跳回去看，参数中除了函数外，还有一个v9，而v9的值一开始就被赋为一个地址，off_405130，这个地址里面存着一个数组，数组中的元素有10个函数，以及10个函数各对应的一个值</p>
+<figure data-type="image" tabindex="15"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210309135524598.png" alt="image-20210309135524598" loading="lazy"></figure>
+<p>在前面代码的循环中，出现一个sleep函数，该函数的参数是v9[1]，这是那10个函数下面的整数值，由此可知，这十个整数值都是时间值，而循环中最后的v9+=2也证实了这一点，由于v9的类型为dword，它每次自增2，实际上都是增加8个字节，这恰好与之对应</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>第一次循环</th>
+<th>第二次循环</th>
+<th>第三次循环</th>
+<th>第四次循环</th>
+<th>......</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v9的值</td>
+<td>0x00405130</td>
+<td>0x00405138</td>
+<td>0x00405140</td>
+<td>0x00405148</td>
+<td>......</td>
+</tr>
+<tr>
+<td>v9[1]的值</td>
+<td>0x00405134</td>
+<td>0x0040513c</td>
+<td>0x00405144</td>
+<td>0x0040514c</td>
+<td>......</td>
+</tr>
+</tbody>
+</table>
+<p>所以后面的代码的作用也大概清楚了，通过设置时间值去触发各个函数引起异象，而时间值的不同可以让事件发生的随机</p>
+<h2 id="小结">小结</h2>
+<p>到这里，这个病毒基本分析完了，但它还有许多细节值得探究，本文只是粗浅分析，那10个函数的具体作用、覆盖MBR的原理等等都没有研究</p>
+<p>在分析完这个病毒后，也许可以试试改造它一下，例如更改它的GIF，或者写一个可以修改win10内存的彩虹猫plus</p>
+<p>再次感谢大佬的文章<a href="https://bbs.pediy.com/thread-262873.htm">[原创]最适合新手的病毒分析——彩虹猫病毒</a></p>
+<p>病毒分析还挺有趣的</p>
+
+                        </div>
+                        
+                            <div class="post-toc">
+                                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%88%9D%E6%AD%A5%E8%A7%82%E5%AF%9F">初步观察</a></li>
+<li><a href="#%E5%88%9D%E6%AD%A5%E5%88%86%E6%9E%90">初步分析</a></li>
+<li><a href="#ida">IDA</a>
+<ul>
+<li><a href="#%E6%97%A0%E5%8F%82%E6%95%B0%E9%83%A8%E5%88%86">无参数部分</a></li>
+<li><a href="#watchdog%E5%8F%82%E6%95%B0">/watchdog参数</a>
+<ul>
+<li><a href="#sub_40114a">sub_40114A</a></li>
+</ul>
+</li>
+<li><a href="#main%E5%8F%82%E6%95%B0">/main参数</a>
+<ul>
+<li><a href="#mbr">MBR</a></li>
+<li><a href="#%E5%87%BD%E6%95%B0">函数</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%B0%8F%E7%BB%93">小结</a></li>
+</ul>
+</li>
+</ul>
+
+                            </div>
+                            
+                                
+                                    
+                                            <!--zh-->
+                                            <section class="post-copyright zh">
+                                                <p class="copyright-item ">
+                                                    <span>&#x4F5C;&#x8005;:</span>
+                                                    <span>blog</span>
+                                                </p>
+
+                                                <p class="copyright-item">
+                                                    <span>&#x6C38;&#x4E45;&#x94FE;&#x63A5;:</span>
+                                                    <span><a href="https://tickertapetimer.github.io/post/彩虹猫病毒分析/">https://tickertapetimer.github.io/post/彩虹猫病毒分析/</a></span>
+                                                </p>
+
+                                                <p class="copyright-item">
+                                                    <span>&#x534F;&#x8BAE;:</span>
+                                                    <span>MIT License</span>
+                                                </p>
+                                            </section>
+                                            
+                                                
+                                                    
+                                                                    <!--Share-->
+                                                                    <span style="margin-right:15px">
+                        <i class="post-share"></i>
+                        <span>&#x5206;&#x4EAB;:</span>
+                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tickertapetimer.github.io/post/彩虹猫病毒分析/"><i class="fa fa-qrcode"></i></a>
+                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tickertapetimer.github.io/post/彩虹猫病毒分析/&sharesource=qzone&title=彩虹猫病毒分析&pics=https://tickertapetimer.github.io/images/avatar.png?v=1629458619689&summary="><i class="fa fa-qq"></i></a>
+                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tickertapetimer.github.io/post/彩虹猫病毒分析/&sharesource=weibo&title=彩虹猫病毒分析 + " - " + &pic="https://tickertapetimer.github.io/images/avatar.png?v=1629458619689 "><i class="fa fa-weibo "></i></a>
+
+                                                                    </span>
+                                                                    
+                                                                            <!--zh-->
+                                                                            <section class="post-tags zh ">
+                                                                                <div>
+                                                                                    <span>&#x6807;&#x7B7E;:</span>
+                                                                                    <span class="tag ">
+                        
+                        
+                        <a href="https://tickertapetimer.github.io/tag/lPO99KDRN/">#
+                    逆向
+                        </a>
+                        
+                        <a href="https://tickertapetimer.github.io/tag/AFFv1xmrf/">#
+                    实战
+                        </a>
+                        
+                            
+                                </span>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <a href="javascript:window.history.back();">
+                        &#x8FD4;&#x56DE;</a>
+                                                                                    <span>&dot;</span>
+                                                                                    <a href="#">&#x4E3B;&#x9875;</a>
+                                                                                </div>
+                                                                            </section>
+
+                                                                            
+                                                                                <!---->
+                                                                                <section class="post-nav">
+                                                                                    
+                                                                                        <a class="prev" rel="prev" href="https://tickertapetimer.github.io/post/免杀转载/">
+                                                                                            免杀转载
+                                                                                        </a>
+                                                                                        
+                                                                                            
+                                                                                                <a class="next" rel="next" href="https://tickertapetimer.github.io/post/windows异常处理机制/">
+                                                                                                    Windows异常处理机制
+                                                                                                </a>
+                                                                                                
+                                                                                </section>
+                    </article>
+                </div>
+                
+                                            
+            </div>
+    </div>
+    </div>
+    </div>
+    
+        <footer id="footer" class="footer">
+            <div class="copyright">
+                
+                        
+                            
+                                        <svg viewBox="0 0 1024 1024" style="margin-left: 5px;margin-right: 5px;" version="1.0" width="8" height="8" class="my-face">
+            <path
+                d="M863.597631 513.574282l-271.33965-140.213484L729.783667 81.926656c3.583731-7.87141 7.167462-15.742819 7.167462-25.214109C736.887134 25.226908 708.345275 0.012799 672.635953 0.012799a63.611229 63.611229 0 0 0-39.293053 12.607055c-1.791866 1.59988-3.519736 3.19976-5.311602 3.19976L147.87531 418.925381a55.547834 55.547834 0 0 0-19.646527 47.356448c1.791866 17.278704 14.27093 33.021523 32.125591 42.492813l271.33965 141.749369L292.504463 945.221908c-12.479064 25.214109-1.791866 53.563983 23.166262 69.306802 10.751194 6.335525 23.230258 9.47129 35.709322 9.47129 16.062795 0 32.125591-4.735645 44.604655-15.742819l480.091993-403.297753a55.547834 55.547834 0 0 0 19.646526-47.228458 61.243407 61.243407 0 0 0-32.12559-44.156688z"
+                fill="#93b5cf"></path>
+        </svg>
+                                        blog &copy;Copyright
+                                            <script>
+                                                var date = new Date();
+                                                document.write("" + date.getFullYear());
+                                            </script>
+                                            | Powered by
+                                            <a href="https://coding.net" target="_blank">
+                                                Coding.net
+                                            </a>
+            </div>
+            <div id="update" style="display:none;">
+                off
+            </div>
+            
+                    <script>
+                        var pat = '';
+                        
+                        document.write('<div id="home_path" style="display:none;">' + document.location.protocol + '//' + window.document.location.hostname + pat + '</div>')
+                    </script>
+        </footer>
+        
+                <script>
+                    
+                    
+                    
+                    getStar();
+                    hljs.initHighlighting();
+                    console.clear();
+                    
+                    var newDate = new Date();
+                    newDate.setTime(1629458619689);
+                    console.log(" Blog Update Time: " + newDate.toLocaleDateString());
+                    console.log("\n %c \u26a1Theme:Chic Author's Blog:https://blog.itjoker.cn  Write By ITJoker  \n\n", "color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;");
+                </script>
+                
+        </div>
+</body>
+<script>
+    scroll();
+</script>
+
+</html>
