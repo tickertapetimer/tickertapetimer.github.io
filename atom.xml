@@ -1,0 +1,2698 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://tickertapetimer.github.io</id>
+    <title>blog</title>
+    <updated>2021-08-20T07:10:40.703Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://tickertapetimer.github.io"/>
+    <link rel="self" href="https://tickertapetimer.github.io/atom.xml"/>
+    <logo>https://tickertapetimer.github.io/images/avatar.png</logo>
+    <icon>https://tickertapetimer.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2021, blog</rights>
+    <entry>
+        <title type="html"><![CDATA[ring3注入学习(1)导入表注入]]></title>
+        <id>https://tickertapetimer.github.io/ring3注入学习(1)导入表注入/</id>
+        <link href="https://tickertapetimer.github.io/ring3注入学习(1)导入表注入/">
+        </link>
+        <updated>2021-08-16T09:59:00.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="原理">原理</h2>
+<h3 id="导入表的结构">导入表的结构</h3>
+<p>在编程中常常用到“导入函数”(Import functions),导入函数就是被程序调用但其执行代码又不在程序中的函数，这些函数的代码位于一个或者多个DLL中，在调用者程序中只保留一些函数信息，包括函数名及其驻留的DLL名等。</p>
+<p>于磁盘上的PE 文件来说，它无法得知这些输入函数在内存中的地址，只有当PE 文件被装入内存后，Windows 加载器才将相关DLL 装入，并将调用输入函数的指令和函数实际所处的地址联系起来。这就是“动态链接”的概念。动态链接是通过PE 文件中定义的“导入表”来完成的，导入表中保存的正是函数名和其驻留的DLL 名等。</p>
+<p>导入表由一系列IMAGE_IMPORT_DESCRIPTOR结构体组成：</p>
+<figure data-type="image" tabindex="1"><img src="https://tickertapetimer.github.io/post-images/dll%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0(1)%E5%AF%BC%E5%85%A5%E8%A1%A8%E6%B3%A8%E5%85%A5/image-20210818140915785.png" alt="image-20210818140915785" loading="lazy"></figure>
+<p>结构的数量取决于程序要使用的DLL文件的数量，每一个结构对应一个DLL文件</p>
+<p>该结构体的定义如下：</p>
+<pre><code class="language-c++">struct _IMAGE_IMPORT_DESCRIPTOR {
+    union {
+        DWORD   Characteristics; 
+        DWORD   OriginalFirstThunk;         
+    } DUMMYUNIONNAME;
+    DWORD   TimeDateStamp; 
+    DWORD   ForwarderChain;         
+    DWORD   Name;//导入模块名的RVA
+    DWORD   FirstThunk;              
+} IMAGE_IMPORT_DESCRIPTOR;
+</code></pre>
+<p>具体在PE文件中，就像这个样子：</p>
+<figure data-type="image" tabindex="2"><img src="https://tickertapetimer.github.io/post-images/dll%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0(1)%E5%AF%BC%E5%85%A5%E8%A1%A8%E6%B3%A8%E5%85%A5/image-20210818141436232.png" alt="image-20210818141436232" loading="lazy"></figure>
+<p>在IMAGE_IMPORT_DESCRIPTOR的结构体的最后面，附带着许多小结构体，里面记录的信息是该导入表的DLL要导入使用的API</p>
+<pre><code class="language-c++">typedef struct _IMAGE_IMPORT_BY_NAME {
+    WORD    Hint;
+    BYTE    Name[1];
+} IMAGE_IMPORT_BY_NAME, *PIMAGE_IMPORT_BY_NAME;
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://tickertapetimer.github.io/post-images/dll%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0(1)%E5%AF%BC%E5%85%A5%E8%A1%A8%E6%B3%A8%E5%85%A5/image-20210818141729847.png" alt="image-20210818141729847" loading="lazy"></figure>
+<p>以上便是导入表的基础结构</p>
+<h3 id="导入表的注入">导入表的注入</h3>
+<figure data-type="image" tabindex="4"><img src="https://tickertapetimer.github.io/post-images/dll%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0(1)%E5%AF%BC%E5%85%A5%E8%A1%A8%E6%B3%A8%E5%85%A5/image-20210818142936958.png" alt="image-20210818142936958" loading="lazy"></figure>
+<p>由《加密与解密》中得知。Windows装载PE文件时，会检查导入表，将导入表所包含要使用的DLL加载进程序中，这也就产生了一个DLL注入的点，如果将恶意DLL写入导入表中，就可以让程序在运行时调用恶意DLL中的代码，达到DLL注入的效果</p>
+<h2 id="实现">实现</h2>
+<p>要实现导入表注入，需要把要注入的DLL构造的结构体塞进导入表里，但是由于导入表默认不是在PE文件的最后，所以导入表原来所在的位置不一定有足够大的空间塞入一个新的结构体，这时我们就需要把导入表移动到新的足够大的位置，有两种办法，扩大最后一个节和直接新增一个节，比较方便的方法是选择新增一个节，在新增节后将原导入表放进去，如何在最后写入自己的导入表，再新增8字节的INT和8字节IAT，至于为什么要增加8字节的INT表和8字节的IAT表，可以这样解释：</p>
+<figure data-type="image" tabindex="5"><img src="https://tickertapetimer.github.io/post-images/dll%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0(1)%E5%AF%BC%E5%85%A5%E8%A1%A8%E6%B3%A8%E5%85%A5/t65HBV4.png" alt="iat1" loading="lazy"></figure>
+<p>如图，当我们新写入一个IMAGE_IMPORT_DESCRIPTOR结构，我们就需要建立INT和IAT对于该结构的映射，此时就需要扩充IAT和INT表</p>
+<p>具体实现步骤如下：</p>
+<ol>
+<li>找到原导入表</li>
+<li>在程序最后开辟一个新节（也可扩大最后一个节）</li>
+<li>拷贝原来的导入表到新节中</li>
+<li>在新节拷贝的导入表后新增一个导入表</li>
+<li>增加8字节的INT表和8字节的IAT表</li>
+<li>存储要注入的dll的名称</li>
+<li>增加一个_IMAGE_IMPORT_BY_NAME结构，并将函数名称存进结构体第一个变量后的内存中_</li>
+<li>将_IMAGE_IMPORT_BY_NAME结构的地址的RVA赋值给INT表和IAT表第一项</li>
+<li>将dll名称所在位置的首地址的RVA赋值给新增导入表的Name</li>
+<li>修改IMAGE_DATA_DIRECTORY结构的VirtualAddress和Size</li>
+</ol>
+<h2 id="代码">代码</h2>
+<h3 id="dll代码">DLL代码</h3>
+<pre><code class="language-c++">// dllmain.cpp : 定义 DLL 应用程序的入口点。
+#include &quot;pch.h&quot;
+
+
+extern &quot;C&quot; __declspec(dllexport) void puts()
+{
+    MessageBoxA(0, &quot;hi&quot;, &quot;hello&quot;, 0);
+    return;
+}
+
+BOOL APIENTRY DllMain( HMODULE hModule,
+                       DWORD  ul_reason_for_call,
+                       LPVOID lpReserved
+                     )
+{
+    switch (ul_reason_for_call)
+    {
+    case DLL_PROCESS_ATTACH:
+        puts();
+        break;
+    case DLL_THREAD_ATTACH:
+    case DLL_THREAD_DETACH:
+    case DLL_PROCESS_DETACH:
+        break;
+    }
+    return TRUE;
+}
+</code></pre>
+<h3 id="注入程序代码">注入程序代码</h3>
+<pre><code class="language-c++">#include&lt;Windows.h&gt;
+#include&lt;stdio.h&gt;
+#define DLLNAMELENGTH 0xE
+#define FUNCTIONNAMELENGTH 0xF
+#define FUNCTIONNAME &quot;puts&quot;
+#define DLLNAME &quot;Dll1.dll&quot;
+
+//获取DOS头
+PIMAGE_DOS_HEADER GetDosHeader(_In_ char* pBase) {
+	return PIMAGE_DOS_HEADER(pBase);
+}
+
+//获取NT头
+PIMAGE_NT_HEADERS GetNtHeader(_In_ char* pBase) {
+	return PIMAGE_NT_HEADERS(GetDosHeader(pBase)-&gt;e_lfanew + (SIZE_T)pBase);
+}
+
+//获取文件头
+PIMAGE_FILE_HEADER GetFileHeader(_In_ char* pBase) {
+	return &amp;(GetNtHeader(pBase)-&gt;FileHeader);
+}
+
+//获取OPT头
+PIMAGE_OPTIONAL_HEADER32 GetOptHeader(_In_ char* pBase) {
+	return &amp;(GetNtHeader(pBase)-&gt;OptionalHeader);
+}
+
+PIMAGE_SECTION_HEADER GetSecByName(_In_ char* pBase, _In_ const char* name) {
+	DWORD Secnum = GetFileHeader(pBase)-&gt;NumberOfSections;
+	PIMAGE_SECTION_HEADER Section = IMAGE_FIRST_SECTION(GetNtHeader(pBase));
+	char buf[10] = { 0 };
+	for (DWORD i = 0; i &lt; Secnum; i++) {
+		memcpy_s(buf, 8, (char*)Section[i].Name, 8);
+		if (!strcmp(buf, name)) {
+			return Section + i;
+		}
+	}
+	return nullptr;
+}
+
+//获取最后一个区段
+PIMAGE_SECTION_HEADER GetLastSec(_In_ char* PeBase) {
+	DWORD SecNum = GetFileHeader(PeBase)-&gt;NumberOfSections;
+	PIMAGE_SECTION_HEADER FirstSec = IMAGE_FIRST_SECTION(GetNtHeader(PeBase));
+	PIMAGE_SECTION_HEADER LastSec = FirstSec + SecNum - 1;
+	return LastSec;
+}
+
+char* OpenPeFiles(_In_ const char* Path, _Out_opt_ DWORD* nFileSize)
+{
+	//读文件
+	HANDLE hFile = CreateFileA(Path,
+		GENERIC_READ,
+		FILE_SHARE_READ,
+		NULL,
+		OPEN_ALWAYS,
+		FILE_ATTRIBUTE_NORMAL,
+		NULL);
+	if (hFile == INVALID_HANDLE_VALUE)
+	{
+		//printf(&quot;打开文件失败&quot;);
+		return NULL;
+	}
+	DWORD PeSize = GetFileSize(hFile, NULL);
+	if (nFileSize)
+		*nFileSize = PeSize;
+	DWORD ReadSize = 0;
+	char* PeBase = new CHAR[PeSize]{ 0 };
+	ReadFile(hFile, PeBase, PeSize, &amp;ReadSize, NULL);
+
+	PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER)PeBase;
+	//检测DOS头和NT头
+	if (pDosHeader-&gt;e_magic != IMAGE_DOS_SIGNATURE)
+	{
+		//printf(&quot;不是PE文件\n&quot;);
+		//system(&quot;pause&quot;);
+		return NULL;
+	}
+	PIMAGE_NT_HEADERS pNtHeader = (PIMAGE_NT_HEADERS)(PeBase + pDosHeader-&gt;e_lfanew);
+	if (pNtHeader-&gt;Signature != IMAGE_NT_SIGNATURE)
+	{
+		//printf(&quot;不是PE文件\n&quot;);
+		//system(&quot;pause&quot;);
+		return NULL;
+	}
+
+	CloseHandle(hFile);
+	return PeBase;
+}
+
+//粒度对齐处理
+int AlignMent(_In_ int size, _In_ int alignment) {
+	return (size) % (alignment) == 0 ? (size) : ((size) / alignment + 1) * (alignment);
+}
+
+//新增节
+char* AddSection(_In_ char*&amp; PeBase, _In_ DWORD&amp; PeSize, _In_ const char* Section_name, _In_ const int Section_size)
+{
+	GetFileHeader(PeBase)-&gt;NumberOfSections++;
+	PIMAGE_SECTION_HEADER LastPeSection = GetLastSec(PeBase);
+
+	memcpy(LastPeSection-&gt;Name, Section_name, 8);
+	LastPeSection-&gt;Misc.VirtualSize = Section_size;
+	LastPeSection-&gt;VirtualAddress = (LastPeSection - 1)-&gt;VirtualAddress + AlignMent((LastPeSection - 1)-&gt;SizeOfRawData, GetOptHeader(PeBase)-&gt;SectionAlignment);
+	LastPeSection-&gt;SizeOfRawData = AlignMent(Section_size, GetOptHeader(PeBase)-&gt;FileAlignment);
+	LastPeSection-&gt;PointerToRawData = AlignMent(PeSize, GetOptHeader(PeBase)-&gt;FileAlignment);
+	LastPeSection-&gt;Characteristics = 0xc0000040;//节表属性设为该值，意为该节表可读可写且包含已初始化的数据
+
+	GetOptHeader(PeBase)-&gt;SizeOfImage = LastPeSection-&gt;VirtualAddress + LastPeSection-&gt;SizeOfRawData;
+
+	int NewSize = LastPeSection-&gt;PointerToRawData + LastPeSection-&gt;SizeOfRawData;
+
+	char* NewPeBase = new char [NewSize] {0};
+	//向新缓冲区录入数据
+	memcpy(NewPeBase, PeBase, PeSize);
+	//缓存区更替
+	delete PeBase;
+	PeSize = NewSize;
+	return NewPeBase;
+}
+
+//保存文件
+void SaveFile(_In_ const char* path, _In_ const char* data, _In_ int FileSize) {
+	HANDLE hFile = CreateFileA(
+		path,
+		GENERIC_WRITE,
+		FILE_SHARE_READ,
+		NULL,
+		CREATE_ALWAYS,
+		FILE_ATTRIBUTE_NORMAL,
+		NULL
+	);
+	DWORD Buf = 0;
+	WriteFile(hFile, data, FileSize, &amp;Buf, NULL);
+	CloseHandle(hFile);
+}
+
+//将RVA的值转换成FOA
+LPVOID RvaToFoa(LPVOID pFileBuffer, LPSTR virtualAddress) {
+	LPSTR sectionAddress = NULL;//记录距离节头的距离
+	LPSTR fileAddress = NULL;//记录文件中的偏移
+	PIMAGE_DOS_HEADER pDosHeader = NULL;
+	PIMAGE_NT_HEADERS pNTHeader = NULL;
+	PIMAGE_FILE_HEADER pPEHeader = NULL;
+	PIMAGE_OPTIONAL_HEADER32 pOptionHeader = NULL;
+	PIMAGE_SECTION_HEADER pSectionHeader = NULL;
+
+	if (pFileBuffer == NULL) {
+		printf(&quot;文件写入内存失败!\n&quot;);
+		return NULL;
+	}
+
+	pDosHeader = (PIMAGE_DOS_HEADER)pFileBuffer;
+	pNTHeader = (PIMAGE_NT_HEADERS)((DWORD)pFileBuffer + pDosHeader-&gt;e_lfanew);
+	pPEHeader = (PIMAGE_FILE_HEADER)((DWORD)pNTHeader + 4);
+	pOptionHeader = (PIMAGE_OPTIONAL_HEADER32)((DWORD)pPEHeader + 20);
+	pSectionHeader = (PIMAGE_SECTION_HEADER)((DWORD)pOptionHeader + pPEHeader-&gt;SizeOfOptionalHeader);
+
+	if ((DWORD)virtualAddress &lt;= pOptionHeader-&gt;SizeOfHeaders) {
+		return virtualAddress;
+	}
+
+	for (DWORD i = 1; i &lt;= pPEHeader-&gt;NumberOfSections; i++) {
+		if ((DWORD)virtualAddress &lt; pSectionHeader-&gt;VirtualAddress) {
+			pSectionHeader--;
+			break;
+		}
+		else if (i == pPEHeader-&gt;NumberOfSections) {
+			break;
+		}
+		else {
+			pSectionHeader++;
+		}
+
+	}
+
+	//距离该节头的距离
+	sectionAddress = virtualAddress - pSectionHeader-&gt;VirtualAddress;
+	fileAddress = pSectionHeader-&gt;PointerToRawData + sectionAddress;
+
+	return (LPVOID)fileAddress;
+}
+
+//将FOA的值转换成RVA
+LPVOID FoaToRva(LPVOID pFileBuffer, LPSTR fileaddress) {
+	LPSTR sectionAddress = NULL;//记录距离节头的距离
+	LPSTR virtualaddress = NULL;//记录内存中的偏移
+	PIMAGE_DOS_HEADER pDosHeader = NULL;
+	PIMAGE_NT_HEADERS pNTHeader = NULL;
+	PIMAGE_FILE_HEADER pPEHeader = NULL;
+	PIMAGE_OPTIONAL_HEADER32 pOptionHeader = NULL;
+	PIMAGE_SECTION_HEADER pSectionHeader = NULL;
+
+	if (pFileBuffer == NULL) {
+		printf(&quot;文件写入内存失败!\n&quot;);
+		return NULL;
+	}
+
+	pDosHeader = (PIMAGE_DOS_HEADER)pFileBuffer;
+	pNTHeader = (PIMAGE_NT_HEADERS)((DWORD)pFileBuffer + pDosHeader-&gt;e_lfanew);
+	pPEHeader = (PIMAGE_FILE_HEADER)((DWORD)pNTHeader + 4);
+	pOptionHeader = (PIMAGE_OPTIONAL_HEADER32)((DWORD)pPEHeader + 20);
+	pSectionHeader = (PIMAGE_SECTION_HEADER)((DWORD)pOptionHeader + pPEHeader-&gt;SizeOfOptionalHeader);
+
+	if ((DWORD)fileaddress &lt;= pOptionHeader-&gt;SizeOfHeaders) {
+		return fileaddress;
+	}
+
+	for (DWORD i = 1; i &lt;= pPEHeader-&gt;NumberOfSections; i++) {
+		if ((DWORD)fileaddress &lt; pSectionHeader-&gt;PointerToRawData) {
+			pSectionHeader--;
+			break;
+		}
+		else if (i == pPEHeader-&gt;NumberOfSections) {
+			break;
+		}
+		else {
+			pSectionHeader++;
+		}
+
+	}
+
+	//距离该节头的距离
+	sectionAddress = fileaddress - pSectionHeader-&gt;PointerToRawData;
+	virtualaddress = pSectionHeader-&gt;VirtualAddress + sectionAddress;
+
+	return (LPVOID)virtualaddress;
+}
+
+char* inject_dll(_In_ char*&amp; PeBase, _In_ DWORD&amp; PeSize)
+{
+	PIMAGE_DATA_DIRECTORY pDataDirectory = NULL;//定位表目录
+	PIMAGE_IMPORT_DESCRIPTOR importTableAddress = NULL;//定位导入表的真正位置
+	LPVOID returnAddress = NULL;//记录RVAtoFOA的返回值
+
+	//定位到新节的位置和导入表的位置
+	pDataDirectory = (PIMAGE_DATA_DIRECTORY)GetOptHeader(PeBase)-&gt;DataDirectory;
+	pDataDirectory += 0x1;
+
+	DWORD sectionLength = pDataDirectory-&gt;Size + 0x28 + +0x10 + DLLNAMELENGTH + FUNCTIONNAMELENGTH + 0x2;
+	sectionLength = AlignMent(sectionLength, GetOptHeader(PeBase)-&gt;FileAlignment);
+
+	char SecName[] = &quot;.ddjsq&quot;;
+	char* NewPeBase = AddSection(PeBase, PeSize, SecName, sectionLength);
+
+	pDataDirectory = (PIMAGE_DATA_DIRECTORY)GetOptHeader(NewPeBase)-&gt;DataDirectory;
+	pDataDirectory += 0x1;
+
+	PDWORD pNewSection = (PDWORD)(GetLastSec(NewPeBase)-&gt;PointerToRawData + (DWORD)NewPeBase);
+	returnAddress = RvaToFoa(NewPeBase, (LPSTR)pDataDirectory-&gt;VirtualAddress);
+	importTableAddress = (PIMAGE_IMPORT_DESCRIPTOR)((DWORD)returnAddress + (DWORD)NewPeBase);
+
+	//复制原导入表，在原导入表后新增一个导入表
+	memcpy(pNewSection, importTableAddress, pDataDirectory-&gt;Size);
+	importTableAddress = (PIMAGE_IMPORT_DESCRIPTOR)((DWORD)pNewSection + pDataDirectory-&gt;Size - 0x14);
+
+	//增加8字节INT表
+	PIMAGE_THUNK_DATA32 pIntTable = (PIMAGE_THUNK_DATA32)((DWORD)importTableAddress + 0x28);//保留20字节的0
+	PIMAGE_THUNK_DATA32 repairIntTable = pIntTable;
+	pIntTable++;
+	pIntTable-&gt;u1.Ordinal = 0x0;
+	pIntTable++;
+
+	//增加8字节IAT表
+	PIMAGE_THUNK_DATA32 pIatTable = (PIMAGE_THUNK_DATA32)(pIntTable);
+	PIMAGE_THUNK_DATA32 repairIatTable = pIatTable;
+	pIatTable++;
+	pIatTable-&gt;u1.Ordinal = 0x0;
+	pIatTable++;
+
+	//分配空间存储DLL名称字符串
+	PDWORD dllNameAddress = (PDWORD)pIatTable;
+	memcpy(dllNameAddress, DLLNAME, DLLNAMELENGTH);
+
+	//增加IMAGE_IMPORT_BY_NAME 结构
+	PIMAGE_IMPORT_BY_NAME functionNameAddress = (PIMAGE_IMPORT_BY_NAME)((DWORD)dllNameAddress + DLLNAMELENGTH);
+	PDWORD pFunctionName = (PDWORD)((DWORD)functionNameAddress + 0x2);
+	memcpy(pFunctionName, FUNCTIONNAME, FUNCTIONNAMELENGTH);
+
+	//将IMAGE_IMPORT_BY_NAME结构的RVA赋值给INT和IAT表中的第一项
+	repairIntTable-&gt;u1.AddressOfData = (DWORD)FoaToRva(NewPeBase, (LPSTR)((DWORD)functionNameAddress - (DWORD)NewPeBase));
+	repairIatTable-&gt;u1.AddressOfData = repairIntTable-&gt;u1.Ordinal;
+
+	//修正导入表Name、OriginalFirstThunk、FirstThunk
+	importTableAddress-&gt;Name = (DWORD)FoaToRva(NewPeBase, (LPSTR)((DWORD)dllNameAddress - (DWORD)NewPeBase));
+	importTableAddress-&gt;OriginalFirstThunk = (DWORD)FoaToRva(NewPeBase, (LPSTR)((DWORD)repairIntTable - (DWORD)NewPeBase));
+	importTableAddress-&gt;FirstThunk = (DWORD)FoaToRva(NewPeBase, (LPSTR)((DWORD)repairIatTable - (DWORD)NewPeBase));
+
+	//修正IMAGE_DATA_DIRECTORY结构的VirtualAddress和Size
+	pDataDirectory-&gt;VirtualAddress = (DWORD)FoaToRva(NewPeBase, (LPSTR)((DWORD)pNewSection - (DWORD)NewPeBase));
+	pDataDirectory-&gt;Size += 0x14;
+
+	return NewPeBase;
+}
+
+int main()
+{
+	char path[] = &quot;路径&quot;;
+	DWORD pesize;
+	char* PeBase = OpenPeFiles(path, &amp;pesize);
+	if (!PeBase)
+	{
+		printf(&quot;wrong&quot;);
+		return 0;
+	}
+	char* NewPeBase = inject_dll(PeBase, pesize);
+	SaveFile(&quot;路径&quot;, NewPeBase, pesize);
+}
+</code></pre>
+<h3 id="运行结果">运行结果</h3>
+<p>注入前</p>
+<figure data-type="image" tabindex="6"><img src="https://tickertapetimer.github.io/post-images/dll%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0(1)%E5%AF%BC%E5%85%A5%E8%A1%A8%E6%B3%A8%E5%85%A5/image-20210818201529967.png" alt="image-20210818201529967" loading="lazy"></figure>
+<p>注入后</p>
+<figure data-type="image" tabindex="7"><img src="https://tickertapetimer.github.io/post-images/dll%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0(1)%E5%AF%BC%E5%85%A5%E8%A1%A8%E6%B3%A8%E5%85%A5/image-20210818201600590.png" alt="image-20210818201600590" loading="lazy"></figure>
+<p>运行时</p>
+<figure data-type="image" tabindex="8"><img src="https://tickertapetimer.github.io/post-images/dll%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0(1)%E5%AF%BC%E5%85%A5%E8%A1%A8%E6%B3%A8%E5%85%A5/image-20210818201757468.png" alt="image-20210818201757468" loading="lazy"></figure>
+<h2 id="防范手段">防范手段</h2>
+<p>由于是静态注入，直接修改了exe文件，所以可使用校验的方式去检测有无被注入</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Windows挖矿样本分析]]></title>
+        <id>https://tickertapetimer.github.io/一个Windows挖矿样本/</id>
+        <link href="https://tickertapetimer.github.io/一个Windows挖矿样本/">
+        </link>
+        <updated>2021-08-08T08:45:00.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="前言">前言</h2>
+<p>又搞到一个挖矿样本，是Windows的，看看里面有啥</p>
+<h2 id="云沙箱">云沙箱</h2>
+<p>先丢微步云沙箱分析一手</p>
+<figure data-type="image" tabindex="1"><img src="https://tickertapetimer.github.io/post-images/1629434951109.png" alt="" loading="lazy"></figure>
+<p>沙箱检测有壳</p>
+<figure data-type="image" tabindex="2"><img src="https://tickertapetimer.github.io/post-images/1629434963434.png" alt="" loading="lazy"></figure>
+<p>拖exeinfo看看</p>
+<figure data-type="image" tabindex="3"><img src="https://tickertapetimer.github.io/post-images/%E4%B8%80%E4%B8%AAWindows%E6%8C%96%E7%9F%BF%E6%A0%B7%E6%9C%AC/image-20210808164909614.png" alt="image-20210808164909614" loading="lazy"></figure>
+<p>好嘛，是个大壳，先放一边，接着看沙箱检测结果</p>
+<figure data-type="image" tabindex="4"><img src="https://tickertapetimer.github.io/post-images/%E4%B8%80%E4%B8%AAWindows%E6%8C%96%E7%9F%BF%E6%A0%B7%E6%9C%AC/image-20210808165146054.png" alt="image-20210808165146054" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://tickertapetimer.github.io/post-images/1629434981282.png" alt="" loading="lazy"></figure>
+<p>矿池啊，那没事了</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[防御病毒经验]]></title>
+        <id>https://tickertapetimer.github.io/服务器防御病毒经验/</id>
+        <link href="https://tickertapetimer.github.io/服务器防御病毒经验/">
+        </link>
+        <updated>2021-08-06T11:22:00.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="前言">前言</h2>
+<p>今天打比赛，要用到我的服务器，所以我时隔一个多月，再一次打开宝塔，不看不知道，一看吓一跳，好家伙，CPU直接拉满，看一眼监控，连续拉满十多天了，这波被白嫖给人挖了两星期的矿，而在删挖矿病毒的时候，我也学到了一些基本的挖矿病毒排查应对的技巧，记录一下</p>
+<h2 id="基础操作">基础操作</h2>
+<h3 id="列出进程">列出进程</h3>
+<p>对于一般的挖矿病毒，直接<code>top</code>，就可以看到它排在最上面，但是对于一些高级病毒，它可能会有相对应的隐藏操作，比如说修改你的top命令的源代码，让你不能用top找到它，这个时候就要用到一些第三方工具，比如说htop之类的</p>
+<h3 id="删除进程一般是没用的">删除进程（一般是没用的</h3>
+<p>删除进程<code>killall -9 &lt;name&gt;</code></p>
+<p>一般来说，找到进程之后，就是删除进程，然后删除文件，但对于挖矿病毒来说，它们基本上都很难删掉，因为它们有守护进程</p>
+<h4 id="守护进程">守护进程</h4>
+<p>守护进程(daemon)是生存期长的一种进程,没有控制终端.它们常常在系统引导装入时启动,仅在系统关闭时才终止.UNIX系统有很多守护进程,守护进程程序的名称通常以字母“d”结尾:例如,syslogd 就是指管理系统日志的守护进程.</p>
+<p>守护进程的存在，使得我们在删除主进程的时候，它会再次唤起主进程，接着挖</p>
+<p>那把守护进程删了呢？这有用吗？</p>
+<p>答案大多数时候也是没有的，因为它可能还有一层保护，计划任务</p>
+<h3 id="计划任务">计划任务</h3>
+<p>Linux查看计划任务的命令是<code>crontab -u &lt;用户名&gt;</code>,该命令可以显示出当前用户或者指定用户的计划任务，想要删除病毒，就必须要将计划任务删干净，<code>crontab -e</code>是负责删除计划任务的命令</p>
+<p>删除了计划任务、守护进程、主进程后，基本就算成功删除这个病毒了</p>
+<h2 id="花操作">花操作</h2>
+<h3 id="病毒自删">病毒自删</h3>
+<p>一些高级的病毒，会在病毒启动后，把文件给删掉，这个时候你去看对应的进程对应的文件，会发现它已经删掉了</p>
+<p>就像这样</p>
+<figure data-type="image" tabindex="1"><img src="https://tickertapetimer.github.io/post-images/1629435064302.png" alt="" loading="lazy"></figure>
+<p>这就导致删除文件不能防御病毒，只能通过删除进程去杀毒</p>
+<h3 id="定时任务有副本">定时任务有副本</h3>
+<p>对于一些更高级的病毒，删除定时任务的操作已经不能完全将它们删掉，因为它们在渗透进服务器启动病毒的时候，可能会将定时任务复制出来一个副本，用那个副本去定时刷新转移它自身，再删除自己，导致清除难度加大</p>
+<p>但这种操作有一个小漏洞可以利用，那就是它们复制转移的文件大小都是固定的，只要将它的大小用<code>du -b &lt;定时任务文件路径&gt;</code>记录下来，用<code>find / -size &lt;文件大小&gt;c -type f -exec rm {} \;</code>搜索全盘，一把梭全删了就可以，删除之后，就可以着手删除主进程和守护进程</p>
+<h2 id="ld_preload隐藏进程">LD_PRELOAD隐藏进程</h2>
+<p>这个病毒操作还没见到，但是查资料看到这个操作，记录一下</p>
+<p><a href="https://www.freebuf.com/articles/web/271281.html">「应急响应：记一次花样贼多的挖矿病毒」</a></p>
+<figure data-type="image" tabindex="2"><img src="https://tickertapetimer.github.io/post-images/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%98%B2%E5%BE%A1%E7%97%85%E6%AF%92%E7%BB%8F%E9%AA%8C/3154387877.png" alt="截屏" loading="lazy"></figure>
+<h1 id="windows挖矿病毒">Windows挖矿病毒</h1>
+<p>对于Windows的挖矿病毒，一般都可以用杀毒软件直接粉碎掉，但是如果没有杀毒软件，且防火墙检测不到，那就要手动删了，一些病毒会放置在C盘，且你没有办法删除，因为它在被进程占用，这个时候，可以通过更改文件名的方法删除它，将其更改后缀，然后结束进程，这样程序就不能再次启动，然后就可以删除病毒文件了。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Linux挖矿病毒分析]]></title>
+        <id>https://tickertapetimer.github.io/一个Linux挖矿样本分析/</id>
+        <link href="https://tickertapetimer.github.io/一个Linux挖矿样本分析/">
+        </link>
+        <updated>2021-08-06T11:21:00.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="前言">前言</h2>
+<p>给服务器清除挖矿病毒的时候，顺手把定时任务下下来了，逆向一手看看</p>
+<h2 id="初步分析">初步分析</h2>
+<h3 id="脱壳">脱壳</h3>
+<p>是64位elf文件，拖进IDA，有壳</p>
+<figure data-type="image" tabindex="1"><img src="https://tickertapetimer.github.io/post-images/1629435160039.png" alt="" loading="lazy"></figure>
+<p>看起来是压缩壳，尝试一手upx</p>
+<figure data-type="image" tabindex="2"><img src="https://tickertapetimer.github.io/post-images/%E9%80%86%E5%90%91%E6%8C%96%E7%9F%BF%E7%97%85%E6%AF%92/image-20210806203033513.png" alt="image-20210806203033513" loading="lazy"></figure>
+<p>还真是，彳亍吧</p>
+<h3 id="逆向分析">逆向分析</h3>
+<p>再次拖进IDA</p>
+<p>进入主函数</p>
+<figure data-type="image" tabindex="3"><img src="https://tickertapetimer.github.io/post-images/1629435179232.png" alt="" loading="lazy"></figure>
+<p>一连串的CPUID汇编指令，且每一串的指令的初始值（即指令上方的_RAX参数）都不同</p>
+<p>三个CPUID指令的初始值分别为0、1、7</p>
+<p>他们分别返回的值为：</p>
+<ol>
+<li>
+<p>EAX=0：获取CPU的Vendor ID</p>
+<p>Vendor ID是制造商的标识，用下面的方法执行该功能：</p>
+<p>执行CPUID指令后，AX中返回的内容前面已经说过了，返回的Vendor ID固定为12个ASCII字符依次存放在EBX、EDX、ECX中，对于Intel的CPU，返回的字符串永远是：GenuineIntel</p>
+</li>
+<li>
+<p>EAX=1：处理器签名（Processor Signiture）和功能（Feature）位</p>
+<p>执行完成后，处理器签名放在EAX中，功能位及其它杂七杂八的内容分别放在EBX、ECX和EDX中</p>
+<p>通过处理器签名，可以确定CPU的具体型号</p>
+</li>
+<li></li>
+</ol>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[壳的自我修养]]></title>
+        <id>https://tickertapetimer.github.io/壳的自我修养/</id>
+        <link href="https://tickertapetimer.github.io/壳的自我修养/">
+        </link>
+        <updated>2021-07-23T15:22:00.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="前言">前言</h2>
+<h2 id="代码流程">代码流程</h2>
+<ol>
+<li>加载要加壳的PE文件到内存</li>
+<li>加载壳代码（通常为DLL文件）到内存</li>
+<li>查找PE文件各数据段</li>
+<li>新增段</li>
+<li>往段里写入壳代码数据</li>
+<li>设置程序入口点</li>
+</ol>
+<h3 id="代码">代码</h3>
+<p>main.cpp</p>
+<pre><code class="language-c++">#include&lt;Windows.h&gt;
+#include&lt;stdio.h&gt;
+#include &lt;tchar.h&gt;
+#include&quot;PE.h&quot;
+
+int main()
+{
+	char path[] = &quot;D:\\桌面\\壳\\010手动加壳\\Project1.exe&quot;;
+	//char path[] = &quot;D:\\桌面\\壳\\010手动加壳\\test.docx&quot;;
+	DWORD pesize;
+	char* PeBase = OpenPeFiles(path, &amp;pesize);
+	if (!PeBase)
+	{
+		printf(&quot;wrong&quot;);
+		return 0;
+	}
+
+	DLLinfo dll = { 0 };
+	LoadDLL(&amp;dll);
+
+	DWORD textRVA = GetSecByName(PeBase, &quot;.text&quot;)-&gt;VirtualAddress;
+	DWORD textSize = GetSecByName(PeBase, &quot;.text&quot;)-&gt;Misc.VirtualSize;
+	//Encry(PeBase, dll);
+
+	char SecName[] = &quot;.ddjsq&quot;;
+	char* NewPeBase = AddSection(PeBase, pesize, SecName, GetSecByName(dll.dllbase, &quot;.text&quot;)-&gt;Misc.VirtualSize);
+
+	FixDLL(GetOptHeader(NewPeBase)-&gt;ImageBase,
+		(DWORD)dll.dllbase,
+		GetLastSec(NewPeBase)-&gt;VirtualAddress,
+		GetSecByName(dll.dllbase, &quot;.text&quot;)-&gt;VirtualAddress);
+
+	dll.pStubConf-&gt;srcOep = GetOptHeader(NewPeBase)-&gt;AddressOfEntryPoint;
+	printf(&quot;入 口 点:\t%08X\t&quot;, dll.pStubConf-&gt;srcOep);
+
+	memcpy(GetLastSec(NewPeBase)-&gt;PointerToRawData + NewPeBase,
+		GetSecByName(dll.dllbase, &quot;.text&quot;)-&gt;VirtualAddress + dll.dllbase,
+		GetSecByName(dll.dllbase, &quot;.text&quot;)-&gt;Misc.VirtualSize);
+
+	GetOptHeader(NewPeBase)-&gt;AddressOfEntryPoint =
+		dll.pfnStart - (DWORD)dll.dllbase - GetSecByName(dll.dllbase, &quot;.text&quot;)-&gt;VirtualAddress + GetLastSec(NewPeBase)-&gt;VirtualAddress;
+	printf(&quot;入 口 点:\t%08X\t&quot;, GetOptHeader(NewPeBase)-&gt;AddressOfEntryPoint);
+
+	GetOptHeader(NewPeBase)-&gt;DllCharacteristics &amp;= (~0x40);
+
+	SaveFile(&quot;D:\\桌面\\壳\\010手动加壳\\test000.exe&quot;, NewPeBase, pesize);
+
+	return 0;
+}
+</code></pre>
+<p>PE.h</p>
+<pre><code class="language-c++">#include &lt;Windows.h&gt;
+
+//获取DOS头
+PIMAGE_DOS_HEADER GetDosHeader(_In_ char* pBase) {
+	return PIMAGE_DOS_HEADER(pBase);
+}
+
+//获取NT头
+PIMAGE_NT_HEADERS GetNtHeader(_In_ char* pBase) {
+	return PIMAGE_NT_HEADERS(GetDosHeader(pBase)-&gt;e_lfanew + (SIZE_T)pBase);
+}
+
+//获取文件头
+PIMAGE_FILE_HEADER GetFileHeader(_In_ char* pBase) {
+	return &amp;(GetNtHeader(pBase)-&gt;FileHeader);
+}
+
+//获取OPT头
+PIMAGE_OPTIONAL_HEADER32 GetOptHeader(_In_ char* pBase) {
+	return &amp;(GetNtHeader(pBase)-&gt;OptionalHeader);
+}
+
+PIMAGE_SECTION_HEADER GetSecByName(_In_ char* pBase, _In_ const char* name) {
+	DWORD Secnum = GetFileHeader(pBase)-&gt;NumberOfSections;
+	PIMAGE_SECTION_HEADER Section = IMAGE_FIRST_SECTION(GetNtHeader(pBase));
+	char buf[10] = { 0 };
+	for (DWORD i = 0; i &lt; Secnum; i++) {
+		memcpy_s(buf, 8, (char*)Section[i].Name, 8);
+		if (!strcmp(buf, name)) {
+			return Section + i;
+		}
+	}
+	return nullptr;
+}
+
+//加载加壳的pe
+char* OpenPeFiles(_In_ const char* Path, _Out_opt_ DWORD* nFileSize)
+{
+	//读文件
+	HANDLE hFile = CreateFileA(Path,
+		GENERIC_READ,
+		FILE_SHARE_READ,
+		NULL,
+		OPEN_ALWAYS,
+		FILE_ATTRIBUTE_NORMAL,
+		NULL);
+	if (hFile == INVALID_HANDLE_VALUE)
+	{
+		//printf(&quot;打开文件失败&quot;);
+		return NULL;
+	}
+	DWORD PeSize = GetFileSize(hFile, NULL);
+	if (nFileSize)
+		*nFileSize = PeSize;
+	DWORD ReadSize = 0;
+	char* PeBase = new CHAR[PeSize]{ 0 };
+	ReadFile(hFile, PeBase, PeSize, &amp;ReadSize, NULL);
+
+	PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER)PeBase;
+	//检测DOS头和NT头
+	if (pDosHeader-&gt;e_magic != IMAGE_DOS_SIGNATURE)
+	{
+		//printf(&quot;不是PE文件\n&quot;);
+		//system(&quot;pause&quot;);
+		return NULL;
+	}
+	PIMAGE_NT_HEADERS pNtHeader = (PIMAGE_NT_HEADERS)(PeBase + pDosHeader-&gt;e_lfanew);
+	if (pNtHeader-&gt;Signature != IMAGE_NT_SIGNATURE)
+	{
+		//printf(&quot;不是PE文件\n&quot;);
+		//system(&quot;pause&quot;);
+		return NULL;
+	}
+
+	CloseHandle(hFile);
+	return PeBase;
+}
+
+//粒度对齐处理
+int AlignMent(_In_ int size, _In_ int alignment) {
+	return (size) % (alignment) == 0 ? (size) : ((size) / alignment + 1) * (alignment);
+}
+
+//获取最后一个区段
+PIMAGE_SECTION_HEADER GetLastSec(_In_ char* PeBase) {
+	DWORD SecNum = GetFileHeader(PeBase)-&gt;NumberOfSections;
+	PIMAGE_SECTION_HEADER FirstSec = IMAGE_FIRST_SECTION(GetNtHeader(PeBase));
+	PIMAGE_SECTION_HEADER LastSec = FirstSec + SecNum - 1;
+	return LastSec;
+}
+
+//新增区段
+char* AddSection(_In_ char*&amp; PeBase, _In_ DWORD&amp; PeSize, _In_ const char* Section_name, _In_ const int Section_size)
+{
+	GetFileHeader(PeBase)-&gt;NumberOfSections++;
+	PIMAGE_SECTION_HEADER LastPeSection = GetLastSec(PeBase);
+
+	memcpy(LastPeSection-&gt;Name, Section_name, 8);
+	LastPeSection-&gt;Misc.VirtualSize = Section_size;
+	LastPeSection-&gt;VirtualAddress = (LastPeSection - 1)-&gt;VirtualAddress + AlignMent((LastPeSection - 1)-&gt;SizeOfRawData, GetOptHeader(PeBase)-&gt;SectionAlignment);
+	LastPeSection-&gt;SizeOfRawData = AlignMent(Section_size, GetOptHeader(PeBase)-&gt;FileAlignment);
+	LastPeSection-&gt;PointerToRawData = AlignMent(PeSize, GetOptHeader(PeBase)-&gt;FileAlignment);
+	LastPeSection-&gt;Characteristics = 0xE00000E0;
+
+	GetOptHeader(PeBase)-&gt;SizeOfImage = LastPeSection-&gt;VirtualAddress + LastPeSection-&gt;SizeOfRawData;
+
+	int NewSize = LastPeSection-&gt;PointerToRawData + LastPeSection-&gt;SizeOfRawData;
+
+	char* NewPeBase = new char [NewSize] {0};
+	//向新缓冲区录入数据
+	memcpy(NewPeBase, PeBase, PeSize);
+	//缓存区更替
+	delete PeBase;
+	PeSize = NewSize;
+	return NewPeBase;
+}
+
+//保存文件
+void SaveFile(_In_ const char* path, _In_ const char* data, _In_ int FileSize) {
+	HANDLE hFile = CreateFileA(
+		path,
+		GENERIC_WRITE,
+		FILE_SHARE_READ,
+		NULL,
+		CREATE_ALWAYS,
+		FILE_ATTRIBUTE_NORMAL,
+		NULL
+	);
+	DWORD Buf = 0;
+	WriteFile(hFile, data, FileSize, &amp;Buf, NULL);
+	CloseHandle(hFile);
+}
+
+typedef struct _DLLconf
+{
+	DWORD srcOep;		//入口点
+	DWORD textScnRVA;	//代码段RVA
+	DWORD textScnSize;	//代码段的大小
+	DWORD key;			//解密密钥
+}DLLconf;
+
+struct DLLinfo
+{
+	char* dllbase;			//stub.dll的加载基址
+	DWORD pfnStart;			//stub.dll(start)导出函数的地址
+	DLLconf* pStubConf;	//stub.dll(g_conf)导出全局变量的地址
+};
+
+//加载DLL
+void LoadDLL(_In_ DLLinfo* dll)
+{
+	dll-&gt;dllbase = (char*)LoadLibraryEx(L&quot;D:\\桌面\\壳\\Dll1\\Release\\DLL1.dll&quot;, NULL, DONT_RESOLVE_DLL_REFERENCES);
+
+	dll-&gt;pfnStart = (DWORD)GetProcAddress((HMODULE)dll-&gt;dllbase, &quot;Start&quot;);
+
+	dll-&gt;pStubConf = (DLLconf*)GetProcAddress((HMODULE)dll-&gt;dllbase, &quot;g_conf&quot;);
+}
+
+//修复dll的重定位
+void FixDLL(DWORD targetDllbase, DWORD stubDllbase, DWORD targetNewScnRva, DWORD stubTextRva)
+{
+	//找到stub.dll的重定位表
+	DWORD dwRelRva = GetOptHeader((char*)stubDllbase)-&gt;DataDirectory[5].VirtualAddress;
+	IMAGE_BASE_RELOCATION* pRel = (IMAGE_BASE_RELOCATION*)(dwRelRva + stubDllbase);
+
+	//遍历重定位表
+	while (pRel-&gt;SizeOfBlock)
+	{
+		struct TypeOffset
+		{
+			WORD offset : 12;
+			WORD type : 4;
+
+		};
+		TypeOffset* pTypeOffset = (TypeOffset*)(pRel + 1);
+		DWORD dwCount = (pRel-&gt;SizeOfBlock - 8) / 2;	//需要重定位的数量
+		for (int i = 0; i &lt; dwCount; i++)
+		{
+			if (pTypeOffset[i].type != 3)
+			{
+				continue;
+			}
+			//需要重定位的地址
+			DWORD* pFixAddr = (DWORD*)(pRel-&gt;VirtualAddress + pTypeOffset[i].offset + stubDllbase);
+
+			DWORD dwOld;
+			//修改属性为可写
+			VirtualProtect(pFixAddr, 4, PAGE_READWRITE, &amp;dwOld);
+			//去掉dll当前加载基址
+			*pFixAddr -= stubDllbase;
+			//去掉默认的段首RVA
+			*pFixAddr -= stubTextRva;
+			//换上目标文件的加载基址
+			*pFixAddr += targetDllbase;
+			//加上新区段的段首RVA
+			*pFixAddr += targetNewScnRva;
+			//把属性修改回去
+			VirtualProtect(pFixAddr, 4, dwOld, &amp;dwOld);
+		}
+		//切换到下一个重定位块
+		pRel = (IMAGE_BASE_RELOCATION*)((DWORD)pRel + pRel-&gt;SizeOfBlock);
+	}
+
+}
+</code></pre>
+<p>dll.cpp</p>
+<pre><code class="language-c++">// dllmain.cpp : 定义 DLL 应用程序的入口点。
+#pragma comment(linker, &quot;/merge:.data=.text&quot;)
+#pragma comment(linker, &quot;/merge:.rdata=.text&quot;)
+#pragma comment(linker, &quot;/section:.text,RWE&quot;)
+#include&lt;Windows.h&gt;
+#include&quot;pch.h&quot;
+//#include&quot;D:\\桌面\\壳\\loadpack\\PE.h&quot;
+
+typedef struct _DLLconf
+{
+	DWORD srcOep;		//入口点
+	DWORD textScnRVA;	//代码段RVA
+	DWORD textScnSize;	//代码段的大小
+	DWORD key;			//解密密钥
+}DLLconf;
+
+//导出一个全局变量
+extern &quot;C&quot; __declspec(dllexport)DLLconf g_conf = { 0 };
+
+//定义函数指针和变量
+typedef void* (WINAPI* FnGetProcAddress)(HMODULE, const char*);
+FnGetProcAddress MyGetProcAddress;
+
+typedef void* (WINAPI* FnLoadLibraryA)(char*);
+FnLoadLibraryA MyLoadLibraryA;
+
+typedef void* (WINAPI* FnVirtualProtect)(LPVOID, SIZE_T, DWORD, PDWORD);
+FnVirtualProtect MyVirtualProtect;
+
+void GetApis()
+{
+	HMODULE hKernel32;
+
+	_asm
+	{
+		pushad;
+		; //获取kernel32.dll的加载基址;
+		;// 1. 找到PEB的首地址;
+		mov eax, fs: [0x30] ;
+		mov eax, [eax + 0ch];
+		mov eax, [eax + 0ch];
+		mov eax, [eax];
+		mov eax, [eax];
+		mov eax, [eax + 018h];
+		mov hKernel32, eax;
+		mov ebx, [eax + 03ch];
+		add ebx, eax;
+		add ebx, 078h;
+		mov ebx, [ebx];
+		add ebx, eax;
+		lea ecx, [ebx + 020h];
+		mov ecx, [ecx]; // ecx =&gt; 名称表的首地址(rva);
+		add ecx, eax; // ecx =&gt; 名称表的首地址(va);
+		xor edx, edx; // 作为index来使用.
+	_WHILE:;
+		mov esi, [ecx + edx * 4];
+		lea esi, [esi + eax];
+		cmp dword ptr[esi], 050746547h; 47657450 726F6341 64647265 7373;
+		jne _LOOP;
+		cmp dword ptr[esi + 4], 041636f72h;
+		jne _LOOP;
+		cmp dword ptr[esi + 8], 065726464h;
+		jne _LOOP;
+		cmp word  ptr[esi + 0ch], 07373h;
+		jne _LOOP;
+		mov edi, [ebx + 024h];
+		add edi, eax;
+
+		mov di, [edi + edx * 2];
+		and edi, 0FFFFh;
+		mov edx, [ebx + 01ch];
+		add edx, eax;
+		mov edi, [edx + edi * 4];
+		add edi, eax; ;
+		mov MyGetProcAddress, edi;
+		jmp _ENDWHILE;
+	_LOOP:;
+		inc edx; // ++index;
+		jmp _WHILE;
+	_ENDWHILE:;
+		popad;
+	}
+
+	MyLoadLibraryA = (FnLoadLibraryA)MyGetProcAddress(hKernel32, &quot;LoadLibrary&quot;);
+	MyVirtualProtect = (FnVirtualProtect)MyGetProcAddress(hKernel32, &quot;VirtualProtect&quot;);
+
+
+}
+extern &quot;C&quot; __declspec(dllexport) __declspec(naked)
+
+void Start()
+{
+	//获取函数的API地址
+	//GetApis();
+	//跳转到原始OEP
+	__asm
+	{
+		mov eax, g_conf.srcOep;
+		//mov eax, 0x15490
+		add eax, 0x400000
+			jmp eax
+	}
+}
+
+
+</code></pre>
+<p>有bug，但是不想弄了，先放着</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[利用PEB寻找kernel32.dll的基地址]]></title>
+        <id>https://tickertapetimer.github.io/利用PEB寻找kernel32.dll的基地址/</id>
+        <link href="https://tickertapetimer.github.io/利用PEB寻找kernel32.dll的基地址/">
+        </link>
+        <updated>2021-06-28T07:16:00.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="前言">前言</h2>
+<p>最近在尝试入门免杀，于是打算开始学习一手shellcode编写，而想要运行shellcode，就必须要明白shellcode的实现原理。</p>
+<h3 id="shellcode">shellcode</h3>
+<p>shellcode是一段独立于正常代码的数据，甚至可以把它放进数组里，然后去call它，这个特点既提高了它的灵活性，也加大了编写的难度。</p>
+<p>因为shellcode只是一段二进制数据，所以它没有调用DLL获取api的简单操作，想要让shellcode在运行时可以使用kernel32.dll里面的api，我们就需要使用PEB，在说PEB前，我们需要先明白TEB</p>
+<h3 id="teb">TEB</h3>
+<p>TEB对应的全称是Thread Environment Block ，直译过来是线程环绕块。<br>
+TEB结构体存储了线程相关的一些关键信息。<br>
+在介绍TEB之前，先简单介绍一下进程和线程的概念。<br>
+简单来说，进程可以理解为一个程序，比如启动微信，启动cmd.exe都是启动了一个进程。<br>
+线程在进程内部，可以理解为真正干活的东西。一个进程至少要完成一个任务，所以一个进程至少有一个线程。当然一个进程可以有很多个线程，这些线程可以是顺序执行的，也可以是并发执行的（多线程）<br>
+线程是程序执行的最小单元。<br>
+系统会在TEB中保存线程的一些相关数据。TEB位于用户地址空间，比PEB所在地址低。<br>
+进程中的每一个线程都有属于自己的一个TEB，进程中的所有TEB都以堆栈的方式存放在0x7FFDE000开始的线性内存中，每个TEB的大小为4kb。<br>
+所以在用户模式下，当前线程的TEB拥有4kb的空间，可以通过CPU的FS寄存器来访问该段。<br>
+TEB的起始地址一般是FS:[0]<br>
+在windbg中可以使用$thread取得TEB的地址。</p>
+<h3 id="peb">PEB</h3>
+<p>PEB全称是Process Environment Block 进程环境块。<br>
+通过上面的介绍已经说了每个线程都有自己的TEB，其实每个进程也有自己的PEB信息。<br>
+PEB也存放在用户态的地址空间。<br>
+在以前的操作系统中，PEB的默认地址在0x7FFDF000处。<br>
+PEB的地址计算有两种：<br>
+1 通过EPROCESS偏移0x1b0得到，但是EPROCESS是系统地址空间，访问EPROCESS需要R0的权限<br>
+2 通过TEB结构偏移0x30获取PEB<br>
+之前已经讲过，通过FS:[0] 可以获取到当前TEB 的起始地址<br>
+所以通过fs:[0x30] 就可以获取到PEB的地址</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[免杀转载]]></title>
+        <id>https://tickertapetimer.github.io/免杀转载/</id>
+        <link href="https://tickertapetimer.github.io/免杀转载/">
+        </link>
+        <updated>2021-06-22T04:45:00.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="文章来源">文章来源</h2>
+<p>https://github.com/zer0yu/Awesome-CobaltStrike</p>
+<h3 id="本转载只为方便自己查看无任何其他用途">本转载只为方便自己查看，无任何其他用途</h3>
+<h2 id="awesome-cobaltstrike">Awesome CobaltStrike <img src="https://img.shields.io/badge/awesome-cobaltstrike-red.svg" alt="Awesome CobaltStrike" loading="lazy"> <img src="https://img.shields.io/badge/awesome-community-green.svg" alt="Awesome community" loading="lazy"></h2>
+<h4 id="contents">Contents</h4>
+<ul>
+<li><a href="#0x00-introduction">0x00 Introduction</a></li>
+<li><a href="#0x01-articles--videos">0x01 Articles &amp; Videos</a>
+<ul>
+<li><a href="#1-basic-knowledge">1. Basic Knowledge</a></li>
+<li><a href="#2-crack-and-customisation">2. Crack and Customisation</a></li>
+<li><a href="#3-useful-trick">3. Useful Trick</a></li>
+<li><a href="#4-cobaltstrike-hide">4. CobaltStrike Hide</a></li>
+<li><a href="#5-cobaltstrike-analysis">5. CobaltStrike Analysis</a></li>
+<li><a href="#6-cobaltstrike-video">6. CobaltStrike Video</a></li>
+</ul>
+</li>
+<li><a href="#0x02-c2-profiles">0x02 C2 Profiles</a></li>
+<li><a href="#0x03-bof">0x03 BOF</a></li>
+<li><a href="#0x04-aggressor-script">0x04 Aggressor Script</a></li>
+<li><a href="#0x05-related-tools">0x05 Related Tools</a></li>
+<li><a href="#0x06-related-resources">0x06 Related Resources</a></li>
+</ul>
+<h4 id="0x00-introduction">0x00 Introduction</h4>
+<ol>
+<li>The first part is a collection of quality articles about CobaltStrike</li>
+<li>The third part is about the integration of the new features BOF resources</li>
+<li>This project is to solve the problem of not finding the right aggressor script or BOF when it is needed</li>
+<li>If there is quality content that is not covered in this repo, welcome to submit pr</li>
+</ol>
+<h4 id="0x01-articles-videos">0x01 Articles &amp; Videos</h4>
+<h5 id="1-basic-knowledge">1. Basic Knowledge</h5>
+<ol>
+<li><a href="https://github.com/aleenzz/Cobalt_Strike_wiki">Cobalt_Strike_wiki</a></li>
+<li><a href="https://wbglil.gitbook.io/cobalt-strike/">Cobalt Strike Book</a></li>
+<li><a href="https://github.com/Snowming04/CobaltStrike4.0_related">CobaltStrike4.0笔记</a></li>
+<li><a href="https://4hou.win/wordpress/?cat=306">CobaltStrike相关网络文章集合</a></li>
+<li><a href="http://blog.leanote.com/post/snowming/50448511de58">Cobalt Strike 外部 C2 之原理篇</a></li>
+<li><a href="http://blog.leanote.com/post/snowming/32fabf2deae1">Cobalt Strike 桌面控制问题的解决（以及屏幕截图等后渗透工具）</a></li>
+<li><a href="http://blog.leanote.com/post/snowming/43cef4b64cbd">Cobalt Strike &amp; MetaSploit 联动</a></li>
+<li><a href="https://github.com/S1ckB0y1337/Cobalt-Strike-CheatSheet">Cobalt-Strike-CheatSheet</a></li>
+<li><a href="https://github.com/MichaelKoczwara/Awesome-CobaltStrike-Defence">Cobalt Strike MITRE TTPs</a></li>
+</ol>
+<h5 id="2-crack-and-customisation">2. Crack and Customisation</h5>
+<ol>
+<li><a href="https://pingmaoer.github.io/2020/06/08/IntelliJ-IDEA%E4%BF%AE%E6%94%B9cobaltstrike/">IntelliJ-IDEA修改cobaltstrike</a></li>
+<li><a href="https://pingmaoer.github.io/2020/06/24/CobaltStrike%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87/">CobaltStrike二次开发环境准备</a></li>
+<li><a href="https://evi1cg.me/archives/Custom_Oneliner.html">Cobal Strike 自定义OneLiner</a></li>
+<li><a href="https://payloads.online/archivers/2020-03-02/1">通过反射DLL注入来构建后渗透模块（第一课）</a></li>
+<li><a href="https://payloads.online/archivers/2020-03-02/4">Cobalt Strike Aggressor Script （第一课）</a></li>
+<li><a href="https://payloads.online/archivers/2020-03-02/5">Cobalt Strike Aggressor Script （第二课）</a></li>
+<li><a href="https://br-sn.github.io/Implementing-Syscalls-In-The-CobaltStrike-Artifact-Kit/">Implementing Syscalls In The Cobaltstrike Artifact Kit</a></li>
+<li><a href="https://xz.aliyun.com/t/8557">Cobalt Strike 4.0 认证及修补过程</a></li>
+<li><a href="https://mp.weixin.qq.com/s/-Inh6uWV9YCz0zQYfitceA">使用ReflectiveDLLInjection武装你的CobaltStrike</a></li>
+<li><a href="https://mp.weixin.qq.com/s/fhcTTWV4Ddz4h9KxHVRcnw">Bypass cobaltstrike beacon config scan</a></li>
+<li><a href="https://blog.xpnsec.com/tailoring-cobalt-strike-on-target/">Tailoring Cobalt Strike on Target</a></li>
+<li><a href="https://www.trustedsec.com/blog/coffloader-building-your-own-in-memory-loader-or-how-to-run-bofs/">COFFLOADER: BUILDING YOUR OWN IN MEMORY LOADER OR HOW TO RUN BOFS</a></li>
+<li><a href="https://www.guidepointsecurity.com/yet-another-cobalt-strike-loader-guid-edition/">Yet Another Cobalt Strike Stager: GUID Edition</a></li>
+</ol>
+<h5 id="3-useful-trick">3. Useful Trick</h5>
+<ol>
+<li><a href="https://evi1cg.me/archives/spear_phish.html">Cobalt Strike Spear Phish</a></li>
+<li><a href="https://evi1cg.me/archives/teamserver.html">run CS in win -- teamserver.bat</a></li>
+<li><a href="https://evi1cg.me/archives/Remote_NTLM_relaying_through_CS.html">Remote NTLM relaying through CS -- related to CVE_2018_8581</a></li>
+<li><a href="http://blog.leanote.com/post/snowming/82b418239c13">Cobalt Strike Convet VPN</a></li>
+<li><a href="https://mp.weixin.qq.com/s/DG87HFrwHf25_M2Dnfdx3g">渗透神器CS3.14搭建使用及流量分析</a></li>
+<li><a href="https://mp.weixin.qq.com/s/G1hmsDVTO2208Ymlia_ggQ">CobaltStrike生成免杀shellcode</a></li>
+<li><a href="https://github.com/kluo84/CS-notes">CS-notes</a>--一系列CS的使用技巧笔记</li>
+<li><a href="http://blog.leanote.com/post/snowming/c34f9defe00c">使用 Cobalt Strike 对 Linux 主机进行后渗透</a></li>
+<li><a href="http://blog.leanote.com/post/snowming/2ec80f7823e0">Cobalt Strike Listener with Proxy</a></li>
+<li><a href="http://blog.leanote.com/post/snowming/82b418239c13">Cobalt Strike Convet VPN</a></li>
+<li><a href="http://blog.leanote.com/post/snowming/8b7ce0f84c03">CS 4.0 SMB Beacon</a></li>
+<li><a href="http://blog.leanote.com/post/snowming/4e07af1cab60">Cobalt Strike 浏览器跳板攻击</a></li>
+<li><a href="http://blog.leanote.com/post/snowming/b6f671477095">Cobalt Strike 中 Bypass UAC</a></li>
+<li><a href="https://www.anquanke.com/post/id/103395/">一起探索Cobalt Strike的ExternalC2框架</a></li>
+<li><a href="https://xz.aliyun.com/t/2239">深入探索Cobalt Strike的ExternalC2框架</a></li>
+<li><a href="https://www.anquanke.com/post/id/86980/">Cobalt Strike的特殊功能（external_C2）探究</a></li>
+<li><a href="https://redteamer.tips/a-tale-of-net-assemblies-cobalt-strike-size-constraints-and-reflection/">A tale of .NET assemblies, cobalt strike size constraints, and reflection</a></li>
+<li><a href="https://offensivedefence.co.uk/posts/assembly-resolve/">AppDomain.AssemblyResolve</a></li>
+<li><a href="https://mp.weixin.qq.com/s/mNCROss5pa4rkrWIIfjVfQ">从webshell建立代理上线不出网的内网机器</a></li>
+<li><a href="https://mp.weixin.qq.com/s/TLyQOupzep1BN7_nbjCXeQ">在Cobalt Strike BOF中进行直接系统调用</a></li>
+<li><a href="https://www.youtube.com/watch?v=mZyMs2PP38w&amp;feature=youtu.be&amp;ab_channel=RaphaelMudge">Using Direct Syscalls in Cobalt Strike's Artifact Kit</a></li>
+<li><a href="https://blog.securehat.co.uk/cobaltstrike/extracting-config-from-cobaltstrike-stager-shellcode">Cobalt Strike Staging and Extracting Configuration Information</a></li>
+</ol>
+<h5 id="4-cobaltstrike-hide">4. CobaltStrike Hide</h5>
+<ol>
+<li><a href="https://mp.weixin.qq.com/s/sYfvD0XQqi6BFw70_jrv5Q">CobaltStrike证书修改躲避流量审查</a></li>
+<li><a href="http://blog.leanote.com/post/snowming/6a724671de78">CS 合法证书 + Powershell 上线</a></li>
+<li><a href="http://blog.leanote.com/post/snowming/d5d2b4ba20d0">Cobalt Strike 团队服务器隐匿</a></li>
+<li><a href="https://xz.aliyun.com/t/4509">红队基础建设:隐藏你的C2 server</a></li>
+<li><a href="https://bluescreenofjeff.com/2016-06-28-cobalt-strike-http-c2-redirectors-with-apache-mod_rewrite/">Cobalt Strike HTTP C2 Redirectors with Apache mod_rewrite</a></li>
+<li><a href="https://xz.aliyun.com/t/2796">深入研究cobalt strike malleable C2配置文件</a></li>
+<li><a href="http://www.harmj0y.net/blog/redteaming/a-brave-new-world-malleable-c2/">A Brave New World: Malleable C2</a></li>
+<li><a href="https://bluescreenofjeff.com/2017-01-24-how-to-write-malleable-c2-profiles-for-cobalt-strike/">How to Write Malleable C2 Profiles for Cobalt Strike</a></li>
+<li><a href="https://bluescreenofjeff.com/2017-08-30-randomized-malleable-c2-profiles-made-easy/">Randomized Malleable C2 Profiles Made Easy</a></li>
+<li><a href="https://mp.weixin.qq.com/s/0MPM3bysJJYr5jbRnES_Vg">关于CobaltStrike的Stager被扫问题</a></li>
+<li><a href="https://mp.weixin.qq.com/s/HibtLfikI_0ezcLVCRxqaA">Beacon Stager listener 去特征</a></li>
+<li><a href="https://hosch3n.github.io/2020/12/16/%E6%A3%80%E6%B5%8B%E4%B8%8E%E9%9A%90%E8%97%8FCobaltstrike%E6%9C%8D%E5%8A%A1%E5%99%A8/">检测与隐藏Cobaltstrike服务器</a></li>
+<li><a href="https://xz.aliyun.com/t/9224">记一次cs bypass卡巴斯基内存查杀</a></li>
+<li><a href="https://newtonpaul.com/cobalt-strike-bypassing-c2-network-detections/">Cobalt Strike – Bypassing C2 Network Detections</a></li>
+</ol>
+<h5 id="5-cobaltstrike-analysis">5. CobaltStrike Analysis</h5>
+<ol>
+<li>Volatility Plugin for Detecting Cobalt Strike Beacon. <a href="https://blogs.jpcert.or.jp/en/2018/08/volatility-plugin-for-detecting-cobalt-strike-beacon.html">blog</a>|<a href="https://github.com/RomanEmelyanov/CobaltStrikeForensic">Toolset</a></li>
+<li><a href="https://mp.weixin.qq.com/s/VHpcHzLc829hmQjrx1139A">逆向分析Cobalt Strike安装后门</a></li>
+<li><a href="https://github.com/verctor/Cobalt_Homework">分析cobaltstrike c2 协议</a></li>
+<li>Small <a href="https://github.com/Mkv4/cobaltstrike-authfile-decrypt">tool</a> to decrypt a Cobalt Strike auth file</li>
+<li><a href="https://xz.aliyun.com/t/6565">Cobalt Strike 的 ExternalC2</a></li>
+<li><a href="https://labs.f-secure.com/blog/detecting-cobalt-strike-default-modules-via-named-pipe-analysis/">Detecting Cobalt Strike Default Modules via Named Pipe Analysis</a></li>
+<li><a href="https://mp.weixin.qq.com/s/WUf96myUi8F3X_eNWPRTdw">浅析CobaltStrike Beacon Staging Server扫描</a></li>
+<li><a href="https://research.nccgroup.com/2020/06/15/striking-back-at-retired-cobalt-strike-a-look-at-a-legacy-vulnerability/">Striking Back at Retired Cobalt Strike: A look at a legacy vulnerability</a></li>
+<li><a href="https://www.randhome.io/blog/2020/12/20/analyzing-cobalt-strike-for-fun-and-profit/">Analyzing Cobalt Strike for Fun and Profit</a></li>
+<li><a href="https://medium.com/@olafhartong/cobalt-strike-remote-threads-detection-206372d11d0f">Cobalt Strike Remote Threads detection</a></li>
+<li><a href="https://talos-intelligence-site.s3.amazonaws.com/production/document_files/files/000/095/031/original/Talos_Cobalt_Strike.pdf">The art and science of detecting Cobalt Strike</a></li>
+<li><a href="https://go.recordedfuture.com/hubfs/reports/cta-2019-0618.pdf">A Multi-Method Approach to Identifying Rogue Cobalt Strike Servers</a></li>
+<li><a href="https://www.andreafortuna.org/2020/11/22/how-to-detect-cobalt-strike-activity-in-memory-forensics/">How to detect Cobalt Strike activities in memory forensics</a></li>
+<li><a href="https://redhead0ntherun.medium.com/detecting-cobalt-strike-by-fingerprinting-imageload-events-6c932185d67c">Detecting Cobalt Strike by Fingerprinting Imageload Events</a></li>
+<li><a href="https://labs.sentinelone.com/the-anatomy-of-an-apt-attack-and-cobaltstrike-beacons-encoded-configuration/">The Anatomy of an APT Attack and CobaltStrike Beacon’s Encoded Configuration</a></li>
+<li><a href="https://tccontre.blogspot.com/2019/11/cobaltstrike-beacondll-your-not.html">CobaltStrike - beacon.dll : Your No Ordinary MZ Header</a></li>
+<li><a href="https://www.bleepingcomputer.com/news/security/github-hosted-malware-calculates-cobalt-strike-payload-from-imgur-pic/">GitHub-hosted malware calculates Cobalt Strike payload from Imgur pic</a></li>
+<li><a href="https://delaat.net/rp/2019-2020/p29/report.pdf">Detecting Cobalt Strike beacons in NetFlow data</a></li>
+<li><a href="https://blogs.jpcert.or.jp/en/2018/08/volatility-plugin-for-detecting-cobalt-strike-beacon.html">Volatility Plugin for Detecting Cobalt Strike Beacon</a></li>
+<li><a href="https://engineering.salesforce.com/easily-identify-malicious-servers-on-the-internet-with-jarm-e095edac525a">Easily Identify Malicious Servers on the Internet with JARM</a></li>
+<li><a href="https://isc.sans.edu/forums/diary/Quick+Tip+Cobalt+Strike+Beacon+Analysis/26818/">Cobalt Strike Beacon Analysis</a></li>
+<li><a href="https://isc.sans.edu/forums/diary/Hancitor+infection+with+Pony+Evil+Pony+Ursnif+and+Cobalt+Strike/25532/">Hancitor infection with Pony, Evil Pony, Ursnif, and Cobalt Strike</a></li>
+<li><a href="https://isc.sans.edu/forums/diary/Attackers+Exploiting+WebLogic+Servers+via+CVE202014882+to+install+Cobalt+Strike/26752/">Attackers Exploiting WebLogic Servers via CVE-2020-14882 to install Cobalt Strike</a></li>
+<li><a href="https://rhinosecuritylabs.com/aws/hiding-cloudcobalt-strike-beacon-c2-using-amazon-apis/">Hiding in the Cloud: Cobalt Strike Beacon C2 using Amazon APIs</a></li>
+<li><a href="https://blog.fox-it.com/2019/02/26/identifying-cobalt-strike-team-servers-in-the-wild/">Identifying Cobalt Strike team servers in the wild</a></li>
+<li><a href="https://blog.malwarebytes.com/threat-analysis/2020/06/multi-stage-apt-attack-drops-cobalt-strike-using-malleable-c2-feature/">Multi-stage APT attack drops Cobalt Strike using Malleable C2 feature</a></li>
+<li><a href="http://cdn2.hubspot.net/hubfs/3354902/Cybereason%20Labs%20Analysis%20Operation%20Cobalt%20Kitty.pdf">Operation Cobalt Kitty</a></li>
+<li><a href="https://www.mdsec.co.uk/2020/06/detecting-and-advancing-in-memory-net-tradecraft/">Detecting and Advancing In-Memory .NET Tradecraft</a></li>
+<li><a href="https://newtonpaul.com/analysing-fileless-malware-cobalt-strike-beacon/">Analysing Fileless Malware: Cobalt Strike Beacon</a></li>
+<li><a href="https://blog.talosintelligence.com/2020/06/indigodrop-maldocs-cobalt-strike.html">IndigoDrop spreads via military-themed lures to deliver Cobalt Strike</a></li>
+<li><a href="https://research.checkpoint.com/2019/cobalt-group-returns-to-kazakhstan/">Cobalt Group Returns To Kazakhstan</a></li>
+<li><a href="https://research.nccgroup.com/2020/06/15/striking-back-at-retired-cobalt-strike-a-look-at-a-legacy-vulnerability/">Striking Back at Retired Cobalt Strike: A look at a legacy vulnerability</a></li>
+<li><a href="https://www.blackhillsinfosec.com/azure-sentinel-quick-deploy-with-cyb3rward0gs-sentinel-to-go-lets-catch-cobalt-strike/">Azure Sentinel Quick-Deploy with Cyb3rWard0g’s Sentinel To-Go – Let’s Catch Cobalt Strike!</a></li>
+<li><a href="https://malwarelab.eu/posts/fin6-cobalt-strike/">Cobalt Strike stagers used by FIN6</a></li>
+<li><a href="https://haggis-m.medium.com/malleable-c2-profiles-and-you-7c7ab43e7929">Malleable C2 Profiles and You</a></li>
+<li><a href="https://marcoramilli.com/2021/01/09/c2-traffic-patterns-personal-notes/">C2 Traffic patterns including Cobalt Strike</a></li>
+<li><a href="https://dtm.uk/cobalt-strike-dns-direct-egress/">Cobalt Strike DNS Direct Egress Not That Far Away</a></li>
+<li><a href="https://labs.f-secure.com/blog/detecting-exposed-cobalt-strike-dns-redirectors">Detecting Exposed Cobalt Strike DNS Redirectors</a></li>
+<li><a href="https://isc.sans.edu/forums/diary/Example+of+Cleartext+Cobalt+Strike+Traffic+Thanks+Brad/27300/">Example of Cleartext Cobalt Strike Traffic</a></li>
+<li><a href="https://zero.bs/cobaltstrike-beacons-analyzed.html">Cobaltstrike-Beacons analyzed</a></li>
+<li><a href="https://mp.weixin.qq.com/s/peIpPJLt4NuJI1a31S_qbQ">通过DNS协议探测Cobalt Strike服务器</a></li>
+<li><a href="https://www.elastic.co/cn/blog/detecting-cobalt-strike-with-memory-signatures">Detecting Cobalt Strike with memory signatures</a></li>
+</ol>
+<h5 id="6-cobaltstrike-video">6. CobaltStrike Video</h5>
+<ol>
+<li><a href="https://www.youtube.com/watch?v=93GyP-mEUAw&amp;feature=emb_title">Malleable Memory Indicators with Cobalt Strike's Beacon Payload</a></li>
+<li><a href="https://www.youtube.com/watch?v=BhjQ6zsCVSc">STAR Webcast: Spooky RYUKy: The Return of UNC1878</a></li>
+<li><a href="https://www.youtube.com/watch?v=XnN_UWfHlNM">Excel 4.0 Macros Analysis - Cobalt Strike Shellcode Injection</a></li>
+<li><a href="https://www.youtube.com/watch?v=oprPu7UIEuk">Profiling And Detecting All Things SSL With JA3</a></li>
+</ol>
+<h4 id="0x02-c2-profiles">0x02 C2 Profiles</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Type</th>
+<th style="text-align:center">Name</th>
+<th style="text-align:center">Description</th>
+<th style="text-align:center">Popularity</th>
+<th style="text-align:center">Language</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">ALL</td>
+<td style="text-align:center"><a href="https://github.com/rsmudge/Malleable-C2-Profiles">Malleable-C2-Profiles</a></td>
+<td style="text-align:center">Official Malleable C2 Profiles</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/rsmudge/Malleable-C2-Profiles" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/rsmudge/Malleable-C2-Profiles" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">ALL</td>
+<td style="text-align:center"><a href="https://github.com/bluscreenofjeff/Malleable-C2-Randomizer">Malleable-C2-Randomizer</a></td>
+<td style="text-align:center">This script randomizes Cobalt Strike Malleable C2 profiles through the use of a metalanguage</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/bluscreenofjeff/Malleable-C2-Randomizer" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/bluscreenofjeff/Malleable-C2-Randomizer" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">ALL</td>
+<td style="text-align:center"><a href="https://github.com/threatexpress/malleable-c2">malleable-c2</a></td>
+<td style="text-align:center">Cobalt Strike Malleable C2 Design and Reference Guide</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/threatexpress/malleable-c2" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/threatexpress/malleable-c2" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">ALL</td>
+<td style="text-align:center"><a href="https://github.com/FortyNorthSecurity/C2concealer">C2concealer</a></td>
+<td style="text-align:center">C2concealer is a command line tool that generates randomized C2 malleable profiles for use in Cobalt Strike.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/FortyNorthSecurity/C2concealer" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/FortyNorthSecurity/C2concealer" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">ALL</td>
+<td style="text-align:center"><a href="https://github.com/mhaskar/MalleableC2-Profiles">MalleableC2-Profiles</a></td>
+<td style="text-align:center">A collection of Cobalt Strike Malleable C2 profiles. now have Windows Updates Profile</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/mhaskar/MalleableC2-Profiles" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/mhaskar/MalleableC2-Profiles" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">ALL</td>
+<td style="text-align:center"><a href="https://github.com/Porchetta-Industries/pyMalleableC2">pyMalleableC2</a></td>
+<td style="text-align:center">A Python interpreter for Cobalt Strike Malleable C2 profiles that allows you to parse, modify, build them programmatically and validate syntax.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Porchetta-Industries/pyMalleableC2" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Porchetta-Industries/pyMalleableC2" alt="" loading="lazy"></td>
+</tr>
+</tbody>
+</table>
+<h4 id="0x03-bof">0x03 BOF</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Type</th>
+<th style="text-align:center">Name</th>
+<th style="text-align:center">Description</th>
+<th style="text-align:center">Popularity</th>
+<th style="text-align:center">Language</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">ALL</td>
+<td style="text-align:center"><a href="https://github.com/rvrsh3ll/BOF_Collection">BOF_Collection</a></td>
+<td style="text-align:center">Various Cobalt Strike BOFs</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/rvrsh3ll/BOF_Collection" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/rvrsh3ll/BOF_Collection" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">ALL</td>
+<td style="text-align:center"><a href="https://github.com/trustedsec/CS-Situational-Awareness-BOF">Situational Awareness BOF</a></td>
+<td style="text-align:center">Its larger goal is providing a code example and workflow for others to begin making more BOF files. <a href="https://www.trustedsec.com/blog/a-developers-introduction-to-beacon-object-files/">Blog</a></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/trustedsec/CS-Situational-Awareness-BOF" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/trustedsec/CS-Situational-Awareness-BOF" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">ALL</td>
+<td style="text-align:center"><a href="https://github.com/dtmsecurity/bof_helper">bof_helper</a></td>
+<td style="text-align:center">Beacon Object File (BOF) Creation Helper</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/dtmsecurity/bof_helper" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/dtmsecurity/bof_helper" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">ALL</td>
+<td style="text-align:center"><a href="https://github.com/tomcarver16/BOF-DLL-Inject">BOF-DLL-Inject</a></td>
+<td style="text-align:center">BOF DLL Inject is a custom Beacon Object File that uses manual map DLL injection in order to migrate a dll into a process all from memory.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/tomcarver16/BOF-DLL-Inject" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/tomcarver16/BOF-DLL-Inject" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">ALL</td>
+<td style="text-align:center"><a href="https://github.com/m57/cobaltstrike_bofs">cobaltstrike_bofs</a></td>
+<td style="text-align:center">BOF spawns a process of your choice under a specified parent, and injects a provided shellcode file via QueueUserAPC().</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/m57/cobaltstrike_bofs" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/m57/cobaltstrike_bofs" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">ALL</td>
+<td style="text-align:center"><a href="https://github.com/EncodeGroup/BOF-RegSave">BOF-RegSave</a></td>
+<td style="text-align:center">Beacon Object File(BOF) for CobaltStrike that will acquire the necessary privileges and dump SAM - SYSTEM - SECURITY registry keys for offline parsing and hash extraction.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/EncodeGroup/BOF-RegSave" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/EncodeGroup/BOF-RegSave" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">ALL</td>
+<td style="text-align:center"><a href="https://github.com/Yaxser/CobaltStrike-BOF">CobaltStrike BOF</a></td>
+<td style="text-align:center">DCOM Lateral Movement; WMI Lateral Movement - Win32_Process Create; WMI Lateral Movement - Event Subscription</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Yaxser/CobaltStrike-BOF" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Yaxser/CobaltStrike-BOF" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">ALL</td>
+<td style="text-align:center"><a href="https://github.com/ajpc500/BOFs">BOFs</a></td>
+<td style="text-align:center">ETW Patching; API Function Utility; Syscalls Shellcode Injection</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/ajpc500/BOFs" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/ajpc500/BOFs" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Dev</td>
+<td style="text-align:center"><a href="https://github.com/nccgroup/nccfsas/blob/main/Tools/bof-vs-template/README.md">bof</a></td>
+<td style="text-align:center">This is a template project for building Cobalt Strike BOFs in Visual Studio.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/nccgroup/nccfsas" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/nccgroup/nccfsas" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Dev</td>
+<td style="text-align:center"><a href="https://github.com/CCob/BOF.NET">BOF.NET</a></td>
+<td style="text-align:center">A .NET Runtime for Cobalt Strike's Beacon Object Files.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/CCob/BOF.NET" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/CCob/BOF.NET" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Dev</td>
+<td style="text-align:center"><a href="https://github.com/realoriginal/beacon-object-file">beacon-object-file</a></td>
+<td style="text-align:center">The format, described by Mudge <a href="https://youtube.com/watch?v=gfYswA_Ronw">here</a>, asks that the operator construct an COFF file using a mingw-w64 compiler or the msvc compiler that holds an symbol name indicating its entrypoint, and underlying function calls.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/realoriginal/beacon-object-file" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/realoriginal/beacon-object-file" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Dev</td>
+<td style="text-align:center"><a href="https://github.com/outflanknl/InlineWhispers">InlineWhispers</a></td>
+<td style="text-align:center">Demonstrate the ability to easily use syscalls using inline assembly in BOFs.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/outflanknl/InlineWhispers" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/outflanknl/InlineWhispers" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Dev</td>
+<td style="text-align:center"><a href="https://github.com/outflanknl/WdToggle">WdToggle</a></td>
+<td style="text-align:center">A Proof of Concept Cobalt Strike Beacon Object File which uses direct system calls to enable WDigest credential caching and circumvent Credential Guard (if enabled).</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/outflanknl/WdToggle" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/outflanknl/WdToggle" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Dev</td>
+<td style="text-align:center"><a href="https://github.com/trustedsec/CS-Situational-Awareness-BOF">Situational Awareness BOF</a></td>
+<td style="text-align:center">This Repo intends to serve two purposes. First it provides a nice set of basic situational awareness commands implemented in BOF. This allows you to perform some checks on a host before you begin executing commands that may be more invasive.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/trustedsec/CS-Situational-Awareness-BOF" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/trustedsec/CS-Situational-Awareness-BOF" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Dev</td>
+<td style="text-align:center"><a href="https://github.com/rookuu/BOFs/tree/main/MiniDumpWriteDump">MiniDumpWriteDump</a></td>
+<td style="text-align:center">Custom implementation of DbgHelp's MiniDumpWriteDump function. Uses static syscalls to replace low-level functions like NtReadVirtualMemory.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/rookuu/BOFs" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/rookuu/BOFs" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Dev</td>
+<td style="text-align:center"><a href="https://github.com/trustedsec/COFFLoader">COFF Loader</a></td>
+<td style="text-align:center">This is a quick and dirty COFF loader (AKA Beacon Object Files). Currently can run un-modified BOF's so it can be used for testing without a CS agent running it. The only exception is that the injection related beacon compatibility functions are just empty.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/trustedsec/COFFLoader" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/trustedsec/COFFLoader" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://gist.github.com/G0ldenGunSec/8ca0e853dd5637af2881697f8de6aecc">EnumCLR.c</a></td>
+<td style="text-align:center">Cobalt Strike BOF to identify processes with the CLR loaded with a goal of identifying SpawnTo / injection candidates.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/G0ldenGunSec" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/G0ldenGunSec" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/outflanknl/FindObjects-BOF">FindObjects-BOF</a></td>
+<td style="text-align:center">A Cobalt Strike Beacon Object File (BOF) project which uses direct system calls to enumerate processes for specific modules or process handles.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/outflanknl/FindObjects-BOF" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/outflanknl/FindObjects-BOF" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/crypt0p3g/bof-collection/tree/main/ChromeKeyDump">ChromeKeyDump</a></td>
+<td style="text-align:center">BOF implementation of Chlonium tool to dump Chrome Masterkey and download Cookie/Login Data files</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/crypt0p3g/bof-collection" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/crypt0p3g/bof-collection" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/crypt0p3g/bof-collection/tree/main/Sleeper">Sleeper</a></td>
+<td style="text-align:center">BOF to call the SetThreadExecutionState function to prevent host from Sleeping</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/crypt0p3g/bof-collection" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/crypt0p3g/bof-collection" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/pwn1sher/CS-BOFs/tree/main/lsass">LSASS</a></td>
+<td style="text-align:center">Beacon Object File to dump Lsass memory by obtaining a snapshot handle. Does MiniDumpWriteDump/NtReadVirtualMemory on SnapShot of LSASS instad of original LSASS itself hence evades some AV/EDR.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/pwn1sher/CS-BOFs" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/pwn1sher/CS-BOFs" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/pwn1sher/CS-BOFs/tree/main/get-system">getsystem</a></td>
+<td style="text-align:center">get system by duplicating winlogon's token.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/pwn1sher/CS-BOFs" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/pwn1sher/CS-BOFs" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/guervild/BOFs">Silent Lsass Dump</a></td>
+<td style="text-align:center">Silent Lsass Dump</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/guervild/BOFs" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/guervild/BOFs" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/xforcered/CredBandit">CredBandit</a></td>
+<td style="text-align:center">CredBandit is a proof of concept Beacon Object File (BOF) that uses static x64 syscalls to perform a complete in memory dump of a process and send that back through your already existing Beacon communication channel. The memory dump is done by using NTFS transactions which allows us to write the dump to memory and the MiniDumpWriteDump API has been replaced with an adaptation of ReactOS's implementation of MiniDumpWriteDump.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/xforcered/CredBandit" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/xforcered/CredBandit" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Exploit</td>
+<td style="text-align:center"><a href="https://github.com/rsmudge/CVE-2020-0796-BOF">CVE-2020-0796-BOF</a></td>
+<td style="text-align:center">SMBGhost LPE</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/rsmudge/CVE-2020-0796-BOF" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/rsmudge/CVE-2020-0796-BOF" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Exploit</td>
+<td style="text-align:center"><a href="https://github.com/rsmudge/ZeroLogon-BOF">ZeroLogon-BOF</a></td>
+<td style="text-align:center">ZeroLogon</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/rsmudge/ZeroLogon-BOF" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/rsmudge/ZeroLogon-BOF" alt="" loading="lazy"></td>
+</tr>
+</tbody>
+</table>
+<h4 id="0x04-aggressor-script">0x04 Aggressor Script</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Type</th>
+<th style="text-align:center">Name</th>
+<th style="text-align:center">Description</th>
+<th style="text-align:center">Popularity</th>
+<th style="text-align:center">Language</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">BypassAV</td>
+<td style="text-align:center"><a href="https://github.com/hack2fun/BypassAV">BypassAV</a></td>
+<td style="text-align:center">用于快速生成免杀的可执行文件</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/hack2fun/BypassAV" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/hack2fun/BypassAV" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">BypassAV</td>
+<td style="text-align:center"><a href="https://github.com/k8gege/scrun">scrun</a></td>
+<td style="text-align:center">BypassAV ShellCode Loader (Cobaltstrike/Metasploit) <a href="https://www.cnblogs.com/k8gege/p/11223393.html">Useage</a></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/k8gege/scrun" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/k8gege/scrun" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">BypassAV</td>
+<td style="text-align:center"><a href="https://github.com/wahyuhadi/beacon-c2-go">beacon-c2-go</a></td>
+<td style="text-align:center">beacon-c2-go (Cobaltstrike/Metasploit)</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/wahyuhadi/beacon-c2-go" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/wahyuhadi/beacon-c2-go" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">BypassAV</td>
+<td style="text-align:center"><a href="https://github.com/OneHone/C--Shellcode">C--Shellcode</a></td>
+<td style="text-align:center">python ShellCode Loader (Cobaltstrike&amp;Metasploit)  <a href="http://hone.cool/2019/11/26/%E5%85%8D%E6%9D%80-C-Shellcode%E5%8A%A0%E8%BD%BD%E5%99%A8/">Useage</a></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/OneHone/C--Shellcode" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/OneHone/C--Shellcode" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">BypassAV</td>
+<td style="text-align:center"><a href="https://github.com/timwhitez/Doge-Loader">Doge-Loader</a></td>
+<td style="text-align:center">Cobalt Strike Shellcode Loader by Golang</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/timwhitez/Doge-Loader" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/timwhitez/Doge-Loader" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">BypassAV</td>
+<td style="text-align:center"><a href="https://github.com/Gality369/CS-Loader">CS-Loader</a></td>
+<td style="text-align:center">CS免杀,包括python版和C版本的</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Gality369/CS-Loader" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Gality369/CS-Loader" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">BypassAV</td>
+<td style="text-align:center"><a href="https://github.com/RCStep/CSSG">CSSG</a></td>
+<td style="text-align:center">Cobalt Strike Shellcode Generator. Generates beacon stageless shellcode with exposed exit method, additional formatting, encryption, encoding, compression, multiline output, etc</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/RCStep/CSSG" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/RCStep/CSSG" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">BypassAV</td>
+<td style="text-align:center"><a href="https://github.com/cribdragg3r/Alaris">Alaris</a></td>
+<td style="text-align:center">Alaris is a new and sneaky shellcode loader capable of bypassing most EDR systems as of today (02/28/2021). It uses several known TTP’s that help protect the malware and it’s execution flow.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/cribdragg3r/Alaris" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/cribdragg3r/Alaris" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">BypassAV</td>
+<td style="text-align:center"><a href="https://github.com/rkervella/CarbonMonoxide">CarbonMonoxide</a></td>
+<td style="text-align:center">EDR Evasion - Combination of SwampThing - TikiTorch</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/rkervella/CarbonMonoxide" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/rkervella/CarbonMonoxide" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">BypassAV</td>
+<td style="text-align:center"><a href="https://github.com/jas502n/bypassAV-1">bypassAV-1</a></td>
+<td style="text-align:center">条件触发式远控 VT 6/70 免杀国内杀软及defender、卡巴斯基等主流杀软.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/jas502n/bypassAV-1" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/jas502n/bypassAV-1" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">BypassAV</td>
+<td style="text-align:center"><a href="https://github.com/optiv/ScareCrow">ScareCrow</a></td>
+<td style="text-align:center">ScareCrow is a payload creation framework for generating loaders for the use of side loading (not injection) into a legitimate Windows process (bypassing Application Whitelisting controls).</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/optiv/ScareCrow" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/optiv/ScareCrow" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">BypassAV</td>
+<td style="text-align:center"><a href="https://github.com/optiv/Dent">Dent</a></td>
+<td style="text-align:center">A framework for creating COM-based bypasses utilizing vulnerabilities in Microsoft's WDAPT sensors.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/optiv/Dent" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/optiv/Dent" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">BypassAV</td>
+<td style="text-align:center"><a href="https://github.com/phra/PEzor">PEzor</a></td>
+<td style="text-align:center">Open-Source PE Packer.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/phra/PEzor" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/phra/PEzor" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">BypassUAC</td>
+<td style="text-align:center"><a href="https://github.com/EncodeGroup/UAC-SilentClean">UAC-SilentClean</a></td>
+<td style="text-align:center">This project implements a DLL planting technique to bypass UAC Always Notify and execute code in a high integrity process.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/EncodeGroup/UAC-SilentClean" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/EncodeGroup/UAC-SilentClean" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">BypassUAC</td>
+<td style="text-align:center"><a href="https://github.com/YDHCUI/csload.net">csload.net</a></td>
+<td style="text-align:center">A cobaltStrike Shellcode loader, can bypass most of AV</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/YDHCUI/csload.net" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/YDHCUI/csload.net" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Recon</td>
+<td style="text-align:center"><a href="https://github.com/threatexpress/red-team-scripts">red-team-scripts</a></td>
+<td style="text-align:center">perform some rudimentary Windows host enumeration with Beacon built-in commands</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/threatexpress/red-team-scripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/threatexpress/red-team-scripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Recon</td>
+<td style="text-align:center"><a href="https://github.com/tevora-threat/aggressor-powerview">aggressor-powerview</a></td>
+<td style="text-align:center">All functions listed in the PowerView about page are included in this with all arguments for each function. <a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1">PowerView</a></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/tevora-threat/aggressor-powerview" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/tevora-threat/aggressor-powerview" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Recon</td>
+<td style="text-align:center"><a href="https://github.com/tevora-threat/PowerView3-Aggressor">PowerView3-Aggressor</a></td>
+<td style="text-align:center">PowerView Aggressor Script for CobaltStrike <a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1">PowerView</a></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/tevora-threat/PowerView3-Aggressor" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/tevora-threat/PowerView3-Aggressor" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Recon</td>
+<td style="text-align:center"><a href="https://github.com/C0axx/AggressorScripts">AggressorScripts</a></td>
+<td style="text-align:center">Sharphound-Aggressor- A user menu for the SharpHound ingestor</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/C0axx/AggressorScripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/C0axx/AggressorScripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Recon</td>
+<td style="text-align:center"><a href="https://github.com/Adminisme/ServerScan">ServerScan</a></td>
+<td style="text-align:center">内网横向信息收集的高并发网络扫描、服务探测工具。</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Adminisme/ServerScan" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Adminisme/ServerScan" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Recon</td>
+<td style="text-align:center"><a href="https://github.com/uknowsec/TailorScan">TailorScan</a></td>
+<td style="text-align:center">端口扫描+探测网卡+ms17010探测</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/uknowsec/TailorScan" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/uknowsec/TailorScan" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Recon</td>
+<td style="text-align:center"><a href="https://github.com/EncodeGroup/AggressiveProxy">AggressiveProxy</a></td>
+<td style="text-align:center">LetMeOutSharp will try to enumerate all available proxy configurations and try to communicate with the Cobalt Strike server over HTTP(s) using the identified proxy configurations.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/EncodeGroup/AggressiveProxy" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/EncodeGroup/AggressiveProxy" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Recon</td>
+<td style="text-align:center"><a href="https://github.com/outflanknl/Spray-AD">Spray-AD</a></td>
+<td style="text-align:center">A Cobalt Strike tool to audit Active Directory user accounts for weak, well known or easy guessable passwords.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/outflanknl/Spray-AD" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/outflanknl/Spray-AD" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Exploit</td>
+<td style="text-align:center"><a href="https://github.com/TheKingOfDuck/XSS-Fishing2-CS">XSS-Fishing2-CS</a></td>
+<td style="text-align:center">鱼儿在cs上线后自动收杆 / Automatically stop fishing in javascript after the fish is hooked</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/TheKingOfDuck/XSS-Fishing2-CS" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/TheKingOfDuck/XSS-Fishing2-CS" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Exploit</td>
+<td style="text-align:center"><a href="https://github.com/timwhitez/XSS-Phishing">XSS-Phishing</a></td>
+<td style="text-align:center">xss钓鱼，cna插件配合php后端收杆</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/timwhitez/XSS-Phishing" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/timwhitez/XSS-Phishing" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Exploit</td>
+<td style="text-align:center"><a href="https://github.com/offsecginger/AggressorScripts">custom_payload_generator</a></td>
+<td style="text-align:center">CobaltStrike3.0+ --&gt; creates various payloads for Cobalt Strike's Beacon. Current payload formats</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/offsecginger/AggressorScripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/offsecginger/AggressorScripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Exploit</td>
+<td style="text-align:center"><a href="https://github.com/gloxec/CrossC2">CrossC2</a></td>
+<td style="text-align:center">CrossC2 framework - Generator CobaltStrike's cross-platform beacon</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/gloxec/CrossC2" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/gloxec/CrossC2" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Exploit</td>
+<td style="text-align:center"><a href="https://github.com/Lz1y/GECC">GECC</a></td>
+<td style="text-align:center">Go External C2 Client implementation for cobalt strike.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Lz1y/GECC" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Lz1y/GECC" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Exploit</td>
+<td style="text-align:center"><a href="https://github.com/phink-team/Cobaltstrike-MS17-010">Cobaltstrike-MS17-010</a></td>
+<td style="text-align:center">ms17-010 exploit tool and scanner.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/phink-team/Cobaltstrike-MS17-010" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/phink-team/Cobaltstrike-MS17-010" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Exploit</td>
+<td style="text-align:center"><a href="https://github.com/offsecginger/AES-PowerShellCode">AES-PowerShellCode</a></td>
+<td style="text-align:center">Standalone version of my AES Powershell payload for Cobalt Strike.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/offsecginger/AES-PowerShellCode" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/offsecginger/AES-PowerShellCode" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Exploit</td>
+<td style="text-align:center"><a href="https://github.com/Tycx2ry/SweetPotato_CS">SweetPotato_CS</a></td>
+<td style="text-align:center">CobaltStrike4.x --&gt; SweetPotato</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Tycx2ry/SweetPotato_CS" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Tycx2ry/SweetPotato_CS" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Exploit</td>
+<td style="text-align:center"><a href="https://github.com/rsmudge/ElevateKit">ElevateKit</a></td>
+<td style="text-align:center">privilege escalation exploits</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/rsmudge/ElevateKit" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/rsmudge/ElevateKit" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Exploit</td>
+<td style="text-align:center"><a href="https://github.com/vysecurity/CVE-2018-4878">CVE-2018-4878</a></td>
+<td style="text-align:center">CVE-2018-4878</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/vysecurity/CVE-2018-4878" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/vysecurity/CVE-2018-4878" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Exploit</td>
+<td style="text-align:center"><a href="https://github.com/RhinoSecurityLabs/Aggressor-Scripts">Aggressor-Scripts</a></td>
+<td style="text-align:center">The only current public is UACBypass, whose readme can be found inside its associated folder.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/RhinoSecurityLabs/Aggressor-Scripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/RhinoSecurityLabs/Aggressor-Scripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Exploit</td>
+<td style="text-align:center"><a href="https://github.com/Rvn0xsy/CVE_2020_0796_CNA">CVE_2020_0796_CNA</a></td>
+<td style="text-align:center">基于<a href="https://github.com/stephenfewer/ReflectiveDLLInjection">ReflectiveDLLInjection</a>实现的本地提权漏洞</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Rvn0xsy/CVE_2020_0796_CNA" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Rvn0xsy/CVE_2020_0796_CNA" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Exploit</td>
+<td style="text-align:center"><a href="https://github.com/p292/DDEAutoCS">DDEAutoCS</a></td>
+<td style="text-align:center">setup our stage(d) Web Delivery attack</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/p292/DDEAutoCS" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/p292/DDEAutoCS" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Exploit</td>
+<td style="text-align:center"><a href="https://github.com/darkr4y/geacon">geacon</a></td>
+<td style="text-align:center">Implement CobaltStrike's Beacon in Go (can be used in Linux)</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/darkr4y/geacon" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/darkr4y/geacon" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Exploit</td>
+<td style="text-align:center"><a href="https://github.com/nccgroup/nccfsas/blob/main/Tools/spoolsystem/Readme.md">SpoolSystem</a></td>
+<td style="text-align:center">SpoolSystem is a CNA script for Cobalt Strike which uses the Print Spooler named pipe impersonation trick to gain SYSTEM privileges.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/nccgroup/nccfsas" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/nccgroup/nccfsas" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Persistence</td>
+<td style="text-align:center"><a href="https://github.com/ZonkSec/persistence-aggressor-script">persistence-aggressor-script</a></td>
+<td style="text-align:center">persistence-aggressor-script</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/ZonkSec/persistence-aggressor-script" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/ZonkSec/persistence-aggressor-script" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Persistence</td>
+<td style="text-align:center"><a href="https://github.com/m0ngo0se/Peinject_dll">Peinject_dll</a></td>
+<td style="text-align:center">弃用winexec函数，使用shellexecute函数，程序流不在卡顿，达到真正的无感。</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/m0ngo0se/Peinject_dll" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/m0ngo0se/Peinject_dll" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Persistence</td>
+<td style="text-align:center"><a href="https://github.com/rasta-mouse/TikiTorch">TikiTorch</a></td>
+<td style="text-align:center">TikiTorch follows the same concept(<a href="https://github.com/vysecurity/CACTUSTORCH">CACTUSTORCH</a>) but has multiple types of process injection available, which can be specified by the user at compile time.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/rasta-mouse/TikiTorch" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/rasta-mouse/TikiTorch" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Persistence</td>
+<td style="text-align:center"><a href="https://github.com/mdsecactivebreach/CACTUSTORCH">CACTUSTORCH</a></td>
+<td style="text-align:center">A JavaScript and VBScript shellcode launcher. This will spawn a 32 bit version of the binary specified and inject shellcode into it.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/mdsecactivebreach/CACTUSTORCH" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/mdsecactivebreach/CACTUSTORCH" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Persistence</td>
+<td style="text-align:center"><a href="https://github.com/Ch1ngg/AggressorScript-UploadAndRunFrp">UploadAndRunFrp</a></td>
+<td style="text-align:center">上传frpc并且运行frpc</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Ch1ngg/AggressorScript-UploadAndRunFrp" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Ch1ngg/AggressorScript-UploadAndRunFrp" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Persistence</td>
+<td style="text-align:center"><a href="https://github.com/threatexpress/persistence-aggressor-script">persistence-aggressor-script</a></td>
+<td style="text-align:center"><a href="https://zonksec.com/blog/persistence-aggressor-script/">Persistence Aggressor Script</a></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/threatexpress/persistence-aggressor-script" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/threatexpress/persistence-aggressor-script" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Persistence</td>
+<td style="text-align:center"><a href="https://github.com/EncodeGroup/AggressiveGadgetToJScript">AggressiveGadgetToJScript</a></td>
+<td style="text-align:center">Automate the generation of payloads using the GadgetToJScript technique.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/EncodeGroup/AggressiveGadgetToJScript" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/EncodeGroup/AggressiveGadgetToJScript" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Persistence</td>
+<td style="text-align:center"><a href="https://github.com/mstxq17/FrpProPlugin">FrpProPlugin</a></td>
+<td style="text-align:center">frp0.33修改版,过流量检测,免杀,支持加载远程配置文件可用于cs直接使用的插件</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/mstxq17/FrpProPlugin" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/mstxq17/FrpProPlugin" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Persistence</td>
+<td style="text-align:center"><a href="https://github.com/Cyri1s/cobalt-strike-persistence">cobalt-strike-persistence</a></td>
+<td style="text-align:center">使用者通过cobalt strike生成Web Delivery类型的payload，然后加载此脚本可以到达自启动效果</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Cyri1s/cobalt-strike-persistence" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Cyri1s/cobalt-strike-persistence" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/eddiezab/aggressor-scripts/blob/master/generate-rotating-beacon.cna">generate-rotating-beacon</a></td>
+<td style="text-align:center">1. Generate a beacon for a given listener; 2. Host the file at a specified location;3. Monitor the weblog for fetching of the specified location;</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/eddiezab/aggressor-scripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/eddiezab/aggressor-scripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/capt-meelo/AggressorScripts">AggressorScripts</a></td>
+<td style="text-align:center">CreateTicket; Seatbelt; SharpHound</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/capt-meelo/AggressorScripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/capt-meelo/AggressorScripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/Rvn0xsy/Cobaltstrike-atexec">Cobaltstrike-atexec</a></td>
+<td style="text-align:center">利用任务计划进行横向，需要与135端口、445端口进行通信</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Rvn0xsy/Cobaltstrike-atexec" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Rvn0xsy/Cobaltstrike-atexec" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/S3cur3Th1sSh1t/Sharp-HackBrowserData">Sharp-HackBrowserData</a></td>
+<td style="text-align:center">C#的HackBrowserData工具，方便在cs中直接内存加载</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/S3cur3Th1sSh1t/Sharp-HackBrowserData" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/S3cur3Th1sSh1t/Sharp-HackBrowserData" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/idiotc4t/Reflective-HackBrowserData">HackBrowserData</a></td>
+<td style="text-align:center">HackBrowserData的反射模块</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/idiotc4t/Reflective-HackBrowserData" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/idiotc4t/Reflective-HackBrowserData" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/cube0x0/SharpeningCobaltStrike">SharpeningCobaltStrike</a></td>
+<td style="text-align:center">In realtime compiling of dotnet v35/v40 exe/dll binaries + obfuscation with ConfuserEx on your linux cobalt strike server.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/cube0x0/SharpeningCobaltStrike" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/cube0x0/SharpeningCobaltStrike" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/SpiderLabs/SharpCompile">SharpCompile</a></td>
+<td style="text-align:center">SharpCompile is an aggressor script for Cobalt Strike which allows you to compile and execute C## in realtime.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/SpiderLabs/SharpCompile" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/SpiderLabs/SharpCompile" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/icebearfriend/Quickrundown">Quickrundown</a></td>
+<td style="text-align:center">Utilizing QRD will allow an operator to quickly characterize what processes are both known and unknown on a host through the use of colors and notes about the processes displayed.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/icebearfriend/Quickrundown" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/icebearfriend/Quickrundown" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/p292/Phant0m_cobaltstrike">Phant0m_cobaltstrike</a></td>
+<td style="text-align:center">This script walks thread stacks of Event Log Service process (spesific svchost.exe) and identify Event Log Threads to kill Event Log Service Threads. So the system will not be able to collect logs and at the same time the Event Log Service will appear to be running.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/p292/Phant0m_cobaltstrike" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/p292/Phant0m_cobaltstrike" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/bitsadmin/nopowershell">NoPowerShell</a></td>
+<td style="text-align:center">NoPowerShell is a tool implemented in C## which supports executing PowerShell-like commands while remaining invisible to any PowerShell logging mechanisms.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/bitsadmin/nopowershell" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/bitsadmin/nopowershell" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/QAX-A-Team/EventLogMaster">EventLogMaster</a></td>
+<td style="text-align:center">RDP EventLog Master</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/QAX-A-Team/EventLogMaster" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/QAX-A-Team/EventLogMaster" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/vysecurity/ANGRYPUPPY">ANGRYPUPPY</a></td>
+<td style="text-align:center">Bloodhound Attack Path Execution for Cobalt Strike</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/vysecurity/ANGRYPUPPY" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/vysecurity/ANGRYPUPPY" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/a1ices/CobaltStrike_Script_Wechat_Push">CobaltStrike_Script_Wechat_Push</a></td>
+<td style="text-align:center">上线微信提醒的插件,通过微信Server酱提醒</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/a1ices/CobaltStrike_Script_Wechat_Push" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/a1ices/CobaltStrike_Script_Wechat_Push" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/secgroundzero/CS-Aggressor-Scripts">CS-Aggressor-Scripts</a></td>
+<td style="text-align:center">slack and webhooks reminder</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/secgroundzero/CS-Aggressor-Scripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/secgroundzero/CS-Aggressor-Scripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/skyleronken/Aggressor-Scripts">Aggressor-Scripts</a></td>
+<td style="text-align:center">surveying of powershell on targets (在对应的目标上检测powershell的相关信息)</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/skyleronken/Aggressor-Scripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/skyleronken/Aggressor-Scripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/tomsteele/cs-magik">cs-magik</a></td>
+<td style="text-align:center">Implements an events channel and job queue using Redis for Cobalt Strike.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/tomsteele/cs-magik" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/tomsteele/cs-magik" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/zer0yu/AggressorScripts">AggressorScripts</a></td>
+<td style="text-align:center">查看进程的时候讲av进程标注为红色</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/zer0yu/AggressorScripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/zer0yu/AggressorScripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/xorrior/raven">Raven</a></td>
+<td style="text-align:center">CobaltStrike External C2 for Websockets</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/xorrior/raven" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/xorrior/raven" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/Sentinel-One/CobaltStrikeParser">CobaltStrikeParser</a></td>
+<td style="text-align:center">Python parser for CobaltStrike Beacon's configuration</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Sentinel-One/CobaltStrikeParser" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Sentinel-One/CobaltStrikeParser" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/bitsadmin/fakelogonscreen">fakelogonscreen</a></td>
+<td style="text-align:center">FakeLogonScreen is a utility to fake the Windows logon screen in order to obtain the user's password.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/bitsadmin/fakelogonscreen" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/bitsadmin/fakelogonscreen" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/Lz1y/SyncDog">SyncDog</a></td>
+<td style="text-align:center">Make bloodhound sync with cobaltstrike.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Lz1y/SyncDog" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Lz1y/SyncDog" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/hayasec/360SafeBrowsergetpass">360SafeBrowsergetpass</a></td>
+<td style="text-align:center">一键辅助抓取360安全浏览器密码的CobaltStrike脚本，通过下载浏览器数据库、记录密钥来离线解密浏览器密码。</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/hayasec/360SafeBrowsergetpass" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/hayasec/360SafeBrowsergetpass" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/uknowsec/SharpDecryptPwd">SharpDecryptPwd</a></td>
+<td style="text-align:center">对密码已保存在 Windwos 系统上的部分程序进行解析,包括：Navicat,TeamViewer,FileZilla,WinSCP,Xmangager系列产品（Xshell,Xftp)。</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/uknowsec/SharpDecryptPwd" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/uknowsec/SharpDecryptPwd" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/mdsecactivebreach/Execute-GithubAssembly-Aggressor">List-GitHubAssembly</a></td>
+<td style="text-align:center">Fetch a list of avaialble artifacts from the configured GitHub repo.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/mdsecactivebreach/Execute-GithubAssembly-Aggressor" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/mdsecactivebreach/Execute-GithubAssembly-Aggressor" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/med0x2e/ExecuteAssembly">ExecuteAssembly</a></td>
+<td style="text-align:center">ExecuteAssembly is an alternative of CS execute-assembly, built with C/C++ and it can be used to Load/Inject .NET assemblies by; reusing the host (spawnto) process loaded CLR Modules/AppDomainManager, Stomping Loader/.NET assembly PE DOS headers, Unlinking .NET related modules, bypassing ETW+AMSI, avoiding EDR hooks via NT static syscalls (x64) and hiding imports by dynamically resolving APIs via superfasthash hashing algorithm.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/med0x2e/ExecuteAssembly" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/med0x2e/ExecuteAssembly" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/sec-consult/aggrokatz">aggrokatz</a></td>
+<td style="text-align:center">aggrokatz is an Aggressor plugin extension for CobaltStrike which enables pypykatz to interface with the beacons remotely.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/sec-consult/aggrokatz" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/sec-consult/aggrokatz" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/DeEpinGh0st/Erebus">Erebus</a></td>
+<td style="text-align:center">CobaltStrike4.x --&gt; Erebus CobaltStrike后渗透测试插件</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/DeEpinGh0st/Erebus" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/DeEpinGh0st/Erebus" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/timwhitez/Cobalt-Strike-Aggressor-Scripts">Cobalt-Strike-Aggressor-Scripts</a></td>
+<td style="text-align:center">CobaltStrike后渗透测试插件集合 <a href="https://github.com/timwhitez/Cobalt-Strike-Aggressor-Scripts/wiki/Usage">Usage</a></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/timwhitez/Cobalt-Strike-Aggressor-Scripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/timwhitez/Cobalt-Strike-Aggressor-Scripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/bluscreenofjeff/AggressorScripts">AggressorScripts</a></td>
+<td style="text-align:center">Aggressor scripts for use with Cobalt Strike 3.0+</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/bluscreenofjeff/AggressorScripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/bluscreenofjeff/AggressorScripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/lengjibo/RedTeamTools">RedTeamTools</a></td>
+<td style="text-align:center">RedTeamTools for use with Cobalt Strike</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/lengjibo/RedTeamTools" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/lengjibo/RedTeamTools" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/mgeeky/cobalt-arsenal">cobalt-arsenal</a></td>
+<td style="text-align:center">Aggressor Scripts for Cobalt Strike 4.0+</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/mgeeky/cobalt-arsenal" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/mgeeky/cobalt-arsenal" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/0xthirteen/MoveKit">MoveKit</a></td>
+<td style="text-align:center">The aggressor script handles payload creation by reading the template files for a specific execution type. <a href="https://www.4hou.com/posts/jO1y">intro</a></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/0xthirteen/MoveKit" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/0xthirteen/MoveKit" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/0xthirteen/StayKit">StayKit</a></td>
+<td style="text-align:center">The aggressor script handles payload creation by reading the template files for a specific execution type. <a href="https://www.4hou.com/posts/jO1y">intro</a></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/0xthirteen/StayKit" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/0xthirteen/StayKit" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/ramen0x3f/AggressorScripts">AggressorScripts</a></td>
+<td style="text-align:center">AggressorScripts</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/ramen0x3f/AggressorScripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/ramen0x3f/AggressorScripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/harleyQu1nn/AggressorScripts">AggressorScripts</a></td>
+<td style="text-align:center">Collection of Aggressor scripts for Cobalt Strike 3.0+ pulled from multiple sources</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/harleyQu1nn/AggressorScripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/harleyQu1nn/AggressorScripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/ramen0x3f/AggressorScripts">AggressorScripts</a></td>
+<td style="text-align:center">AggressorScripts</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/ramen0x3f/AggressorScripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/ramen0x3f/AggressorScripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/vysecurity/Aggressor-VYSEC">Aggressor-VYSEC</a></td>
+<td style="text-align:center">Contains a bunch of CobaltStrike Aggressor Scripts</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/vysecurity/Aggressor-VYSEC" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/vysecurity/Aggressor-VYSEC" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/FortyNorthSecurity/AggressorAssessor">AggressorAssessor</a></td>
+<td style="text-align:center">AggressorAssessor</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/FortyNorthSecurity/AggressorAssessor" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/FortyNorthSecurity/AggressorAssessor" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/FortyNorthSecurity/AggressorAssessor">AggressorAssessor</a></td>
+<td style="text-align:center">AggressorAssessor</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/FortyNorthSecurity/AggressorAssessor" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/FortyNorthSecurity/AggressorAssessor" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/threatexpress/aggressor-scripts">aggressor-scripts</a></td>
+<td style="text-align:center">Collection of Cobalt Strike Aggressor Scripts</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/threatexpress/aggressor-scripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/threatexpress/aggressor-scripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/Und3rf10w/Aggressor-scripts">Aggressor-scripts</a></td>
+<td style="text-align:center">This is just a random collection of Aggressor Scripts I've written for Cobalt Strike 3.x. (其中有一个debug脚本比较好用)</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Und3rf10w/Aggressor-scripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Und3rf10w/Aggressor-scripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/rasta-mouse/Aggressor-Script">Aggressor-Script</a></td>
+<td style="text-align:center">Collection of Aggressor Scripts for Cobalt Strike(主要包含了提权和权限维持脚本)</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/rasta-mouse/Aggressor-Script" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/rasta-mouse/Aggressor-Script" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/QAX-A-Team/CobaltStrike-Toolset">Aggressor-Script</a></td>
+<td style="text-align:center">Aggressor Script, Kit, Malleable C2 Profiles, External C2 and so on</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/QAX-A-Team/CobaltStrike-Toolset" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/QAX-A-Team/CobaltStrike-Toolset" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/michalkoczwara/aggressor_scripts_collection">aggressor_scripts_collection</a></td>
+<td style="text-align:center">Collection of various aggressor scripts for Cobalt Strike from awesome people. Will be sure to update this repo with credit to each person.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/michalkoczwara/aggressor_scripts_collection" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/michalkoczwara/aggressor_scripts_collection" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/killswitch-GUI/CobaltStrike-ToolKit">CobaltStrike-ToolKit</a></td>
+<td style="text-align:center">googlesearch.profile and script related to AD.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/killswitch-GUI/CobaltStrike-ToolKit" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/killswitch-GUI/CobaltStrike-ToolKit" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/Cliov/Arsenal">Arsenal</a></td>
+<td style="text-align:center">Cobalt Strike 3.13 Arsenal Kit</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Cliov/Arsenal" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Cliov/Arsenal" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/mgeeky/cobalt-arsenal">cobalt-arsenal</a></td>
+<td style="text-align:center">My collection of battle-tested Aggressor Scripts for Cobalt Strike 4.0+</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/mgeeky/cobalt-arsenal" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/mgeeky/cobalt-arsenal" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/001SPARTaN/aggressor_scripts">aggressor_scripts</a></td>
+<td style="text-align:center">A collection of useful scripts for Cobalt Strike.(powershell.cna;bot.cna;dcom_lateral_movement.cna;ElevateKit)</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/001SPARTaN/aggressor_scripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/001SPARTaN/aggressor_scripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/gaudard/scripts/tree/master/red-team/aggressor">aggressor</a></td>
+<td style="text-align:center">creating tunnels with netsh; changed default to bit.ly redirect to mcdonalds;using powershell to kill parent process;</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/001SPARTaN/aggressor_scripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/001SPARTaN/aggressor_scripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/branthale/CobaltStrikeCNA">CobaltStrikeCNA</a></td>
+<td style="text-align:center">A collection of scripts - from various sources - see script for more info.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/branthale/CobaltStrikeCNA" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/branthale/CobaltStrikeCNA" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/oldb00t/AggressorScripts">AggressorScripts</a></td>
+<td style="text-align:center">Highlights selected processes from the ps command in beacon;Loads various aliases into beacon;sets a few defaults for scripts to be used later..</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/oldb00t/AggressorScripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/oldb00t/AggressorScripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/FortyNorthSecurity/AggressorAssessor">AggressorAssessor</a></td>
+<td style="text-align:center">从C2生成到横向移动的全辅助脚本套件</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/FortyNorthSecurity/AggressorAssessor" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/FortyNorthSecurity/AggressorAssessor" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/invokethreatguy/AggressorCollection">AggressorCollection</a></td>
+<td style="text-align:center">Collection of awesome Cobalt Strike Aggressor Scripts. All credit due to the authors</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/invokethreatguy/AggressorCollection" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/invokethreatguy/AggressorCollection" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/bytecod3r/Cobaltstrike-Aggressor-Scripts-Collection">Cobaltstrike-Aggressor-Scripts-Collection</a></td>
+<td style="text-align:center">The collection of tested cobaltstrike aggressor scripts.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/bytecod3r/Cobaltstrike-Aggressor-Scripts-Collection" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/bytecod3r/Cobaltstrike-Aggressor-Scripts-Collection" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/Matrix20085/aggressorScripts">aggressorScripts</a></td>
+<td style="text-align:center">CobaltStrike AggressorScripts for the lazy</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Matrix20085/aggressorScripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Matrix20085/aggressorScripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/josephkingstone/cobalt_strike_extension_kit">cobalt_strike_extension_kit</a></td>
+<td style="text-align:center">集成了SharpHound,SharpRDP,SharpWMI等在内的各种内网工具，使用AggressorScripts构建workflow</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/josephkingstone/cobalt_strike_extension_kit" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/josephkingstone/cobalt_strike_extension_kit" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/wafinfo/cobaltstrike">cobaltstrike</a></td>
+<td style="text-align:center">具备域管理员定位、域信息收集、权限维持、内网扫描、数据库hash dump、Everything内网搜索文件等功能的插件集合</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/wafinfo/cobaltstrike" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/wafinfo/cobaltstrike" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/0e0w/CobaltStrike">365CobaltStrike</a></td>
+<td style="text-align:center">兼容CobaltStrike4.0的插件集合</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/0e0w/CobaltStrike" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/0e0w/CobaltStrike" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/Al1ex/CSPlugins">CSPlugins</a></td>
+<td style="text-align:center">一个对Cobaltstrike第三方插件进行收集的项目，持续更新。</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Al1ex/CSPlugins" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Al1ex/CSPlugins" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/WBGlIl/CobaltStrike-file">CobaltStrike-xor</a></td>
+<td style="text-align:center">third-party --&gt; vnc_x86_dll and vnc_x64_dll</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/WBGlIl/CobaltStrike-file" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/WBGlIl/CobaltStrike-file" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/z1un/Z1-AggressorScripts">Z1-AggressorScripts</a></td>
+<td style="text-align:center">适用于Cobalt Strike 3.x &amp; 4.x 的内网渗透插件集合</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/z1un/Z1-AggressorScripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/z1un/Z1-AggressorScripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/422926799/csplugin">csplugin</a></td>
+<td style="text-align:center">导入PowerView脚本，和常见的功能使用</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/422926799/csplugin" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/422926799/csplugin" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/SeaOf0/CSplugins">CSplugins</a></td>
+<td style="text-align:center">涉及工作目录、信息收集、凭据获取、权限维持、权限提升、用户相关、RDP相关、防火墙相关、域渗透、powershell相关、内网穿透、内网探测、远程文件下载、痕迹清除的综合型插件系统</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/SeaOf0/CSplugins" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/SeaOf0/CSplugins" alt="" loading="lazy"></td>
+</tr>
+</tbody>
+</table>
+<h4 id="0x05-related-tools">0x05 Related Tools</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Type</th>
+<th style="text-align:center">Name</th>
+<th style="text-align:center">Description</th>
+<th style="text-align:center">Popularity</th>
+<th style="text-align:center">Language</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">AntiCobaltStrike</td>
+<td style="text-align:center"><a href="https://github.com/isafe/cobaltstrike_brute">cobaltstrike_brute</a></td>
+<td style="text-align:center">Cobalt Strike Team Server Password Brute Forcer</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/isafe/cobaltstrike_brute" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/isafe/cobaltstrike_brute" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">AntiCobaltStrike</td>
+<td style="text-align:center"><a href="https://github.com/Apr4h/CobaltStrikeScan">CobaltStrikeScan</a></td>
+<td style="text-align:center">Scan files or process memory for Cobalt Strike beacons and parse their configuration.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Apr4h/CobaltStrikeScan" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Apr4h/CobaltStrikeScan" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">AntiCobaltStrike</td>
+<td style="text-align:center"><a href="https://github.com/whickey-r7/grab_beacon_config">grab_beacon_config</a></td>
+<td style="text-align:center">Simple PoC script to scan and acquire CobaltStrike Beacon configurations.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/whickey-r7/grab_beacon_config" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/whickey-r7/grab_beacon_config" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">AntiCobaltStrike</td>
+<td style="text-align:center"><a href="https://github.com/cedowens/C2-JARM">C2-JARM</a></td>
+<td style="text-align:center">通过ssl实现所产生的JARM hash来识别不同的c2，例如CobaltStrike</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/cedowens/C2-JARM" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/cedowens/C2-JARM" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">AntiCobaltStrike</td>
+<td style="text-align:center"><a href="https://github.com/salesforce/jarm">JARM</a></td>
+<td style="text-align:center">JARM fingerprints scanner</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/salesforce/jarm" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/salesforce/jarm" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">AntiCobaltStrike</td>
+<td style="text-align:center"><a href="https://github.com/slaeryan/DetectCobaltStomp">DetectCobaltStomp</a></td>
+<td style="text-align:center">A quick(and perhaps dirty!) PoC tool to detect Module Stomping as implemented by Cobalt Strike with moderate to high confidence</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/slaeryan/DetectCobaltStomp" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/slaeryan/DetectCobaltStomp" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">AntiCobaltStrike</td>
+<td style="text-align:center"><a href="https://github.com/Te-k/cobaltstrike">cobaltstrike</a></td>
+<td style="text-align:center">Code and yara rules to detect and analyze Cobalt Strike</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Te-k/cobaltstrike" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Te-k/cobaltstrike" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">AntiCobaltStrike</td>
+<td style="text-align:center"><a href="https://github.com/WBGlIl/CS_Decrypt">CS_Decrypt</a></td>
+<td style="text-align:center">解密可以帮助你理解cs beacon通信原理，但注意密钥是在本地teamserver中</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/WBGlIl/CS_Decrypt" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/WBGlIl/CS_Decrypt" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">AntiCobaltStrike</td>
+<td style="text-align:center"><a href="https://github.com/Skactor/cs-scripts">CS Scripts</a></td>
+<td style="text-align:center">parse_beacon_keys.py 对 .cobaltstrike.beacon_keys 文件的解析工具</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Skactor/cs-scripts" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Skactor/cs-scripts" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">AntiCobaltStrike</td>
+<td style="text-align:center"><a href="https://github.com/nccgroup/pybeacon">PyBeacon</a></td>
+<td style="text-align:center">A collection of scripts for dealing with Cobalt Strike beacons in Python Resources</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/nccgroup/pybeacon" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/nccgroup/pybeacon" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">AntiCobaltStrike</td>
+<td style="text-align:center"><a href="https://github.com/JPCERTCC/aa-tools/blob/master/cobaltstrikescan.py">cobaltstrikescan</a></td>
+<td style="text-align:center">Detecting CobaltStrike for Volatility</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/JPCERTCC/aa-tools" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/JPCERTCC/aa-tools" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">AntiCobaltStrike</td>
+<td style="text-align:center"><a href="https://github.com/RomanEmelyanov/CobaltStrikeForensic">CobaltStrikeForensic</a></td>
+<td style="text-align:center">Toolset for research malware and Cobalt Strike beacons</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/RomanEmelyanov/CobaltStrikeForensic" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/RomanEmelyanov/CobaltStrikeForensic" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">AntiCobaltStrike</td>
+<td style="text-align:center"><a href="https://github.com/huoji120/DuckMemoryScan">DuckMemoryScan</a></td>
+<td style="text-align:center">A simple tool to find backdoors including but not limited to iis hijacking, fileless Trojan, bypass AV shellcode.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/huoji120/DuckMemoryScan" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/huoji120/DuckMemoryScan" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">AntiCobaltStrike</td>
+<td style="text-align:center"><a href="https://github.com/vysecurity/CobaltSplunk">CobaltSplunk Splunk Application</a></td>
+<td style="text-align:center">CobaltSplunk is a Splunk Application that knows how to 1) ingest Cobalt Strike related logs and parse them properly, 2) display useful operational dashboards, 3) display relevant reports.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/vysecurity/CobaltSplunk" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/vysecurity/CobaltSplunk" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">AntiCobaltStrike</td>
+<td style="text-align:center"><a href="https://github.com/3lp4tr0n/BeaconHunter">BeaconHunter</a></td>
+<td style="text-align:center">Behavior based monitoring and hunting tool built in C## tool leveraging ETW tracing. Blue teamers can use this tool to detect and respond to potential Cobalt Strike beacons. Red teamers can use this tool to research ETW bypasses and discover new processes that behave like beacons.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/3lp4tr0n/BeaconHunter" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/3lp4tr0n/BeaconHunter" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Analysis</td>
+<td style="text-align:center"><a href="https://github.com/SecIdiot/Beacon">Beacon</a></td>
+<td style="text-align:center">Open Source Cobalt Strike Beacon. Unreleased, in research stages</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/SecIdiot/Beacon" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/SecIdiot/Beacon" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">BypassAV</td>
+<td style="text-align:center"><a href="https://github.com/Rvn0xsy/Cooolis-ms">Cooolis-ms</a></td>
+<td style="text-align:center">Cooolis-ms是一个包含了Metasploit Payload Loader、Cobalt Strike External C2 Loader、Reflective DLL injection的代码执行工具，它的定位在于能够在静态查杀上规避一些我们将要执行且含有特征的代码，帮助红队人员更方便快捷的从Web容器环境切换到C2环境进一步进行工作。</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Rvn0xsy/Cooolis-ms" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Rvn0xsy/Cooolis-ms" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">BypassAV</td>
+<td style="text-align:center"><a href="https://github.com/slyd0g/UrbanBishopLocal">UrbanBishopLocal</a></td>
+<td style="text-align:center">A port of FuzzySecurity's <a href="https://github.com/FuzzySecurity/Sharp-Suite#urbanbishop">UrbanBishop</a> project for inline shellcode execution.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/slyd0g/UrbanBishopLocal" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/slyd0g/UrbanBishopLocal" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">BypassAV</td>
+<td style="text-align:center"><a href="https://github.com/Yang0615777/SecondaryDevCobaltStrike">SecondaryDevCobaltStrike</a></td>
+<td style="text-align:center">CobaltStrike after second development, can bypass Kaspersky, Norton, McAfee, etc.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Yang0615777/SecondaryDevCobaltStrike" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/slyd0g/UrbanBishopLocalYang0615777/SecondaryDevCobaltStrike" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">BypassAV</td>
+<td style="text-align:center"><a href="https://github.com/dr0op/CrossNet-Beta">CrossNet-Beta</a></td>
+<td style="text-align:center">In the red team operation, the phishing executable file is generated by using the white utilization, to bypass AV and automatically judging the network environment. can bypass 360 and huorong</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/dr0op/CrossNet-Beta" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/slyd0g/dr0op/CrossNet-Beta" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/Daybr4ak/C2ReverseProxy">C2ReverseProxy</a></td>
+<td style="text-align:center">When you encounter a non-networked environment during penetration, you can use this tool to establish a reverse proxy channel so that the beacons generated by CobaltStrike can bounce back to the CobaltStrike server.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Daybr4ak/C2ReverseProxy" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Daybr4ak/C2ReverseProxy" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/ASkyeye/CobaltPatch">CobaltPatch</a></td>
+<td style="text-align:center">Cobalt Strike Malleable Profile Inline Patch Template: A Position Independent Code (PIC) Code Template For Creating Shellcode That Can Be Appended In Stage / Post-Ex Blocks. Made for C Programmers</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/ASkyeye/CobaltPatch" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/ASkyeye/CobaltPatch" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/dcsync/pycobalt">pycobalt</a></td>
+<td style="text-align:center">Cobalt Strike Malleable Profile Inline Patch Template: A Position Independent Code (PIC) Code Template For Creating Shellcode That Can Be Appended In Stage / Post-Ex Blocks. Made for C Programmers.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/dcsync/pycobalt" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/dcsync/pycobalt" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/Verizon/redshell">redshell</a></td>
+<td style="text-align:center">An interactive command prompt that executes commands through proxychains and automatically logs them on a Cobalt Strike team server.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/Verizon/redshell" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/Verizon/redshell" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/hausec/CobaltStrikeToGhostWriter">CobaltStrikeToGhostWriter</a></td>
+<td style="text-align:center">Log converter from CS logs to a CSV in Ghostwriter's operation log format.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/hausec/CobaltStrikeToGhostWriter" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/hausec/CobaltStrikeToGhostWriter" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/jfmaes/Ansible-Cobalt-Strike">Ansible-Cobalt-Strike</a></td>
+<td style="text-align:center">An Ansible role to install cobalt-strike on debian based architectures, let's be honest it's for kali.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/jfmaes/Ansible-Cobalt-Strike" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/jfmaes/Ansible-Cobalt-Strike" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://gist.github.com/xpn/6c40d620607e97c2a09c70032d32d278">cobaltstrike_runtimeconfig</a></td>
+<td style="text-align:center">A POC showing how to modify Cobalt Strike beacon at runtime</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/xpn/6c40d620607e97c2a09c70032d32d278" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/xpn/6c40d620607e97c2a09c70032d32d278" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/FunnyWolf/pystinger">pystinger</a></td>
+<td style="text-align:center">Pystinger implements SOCK4 proxy and port mapping through webshell. It can be directly used by cobalt strike for session online.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/FunnyWolf/pystinger" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/FunnyWolf/pystinger" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/cisagov/ansible-role-cobalt-strike">ansible-role-cobalt-strike</a></td>
+<td style="text-align:center">An Ansible role for installing Cobalt Strike.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/cisagov/ansible-role-cobalt-strike" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/cisagov/ansible-role-cobalt-strike" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/dr0op/CrossNet-Beta">CrossNet</a></td>
+<td style="text-align:center">In the red team operation, the phishing executable file is generated by using the white utilization, avoiding killing and automatically judging the network environment.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/dr0op/CrossNet-Beta" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/dr0op/CrossNet-Beta" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Auxiliary</td>
+<td style="text-align:center"><a href="https://github.com/TryA9ain/BypassAddUser">BypassAddUser</a></td>
+<td style="text-align:center">Bypass AV to add users</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/TryA9ain/BypassAddUser" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/TryA9ain/BypassAddUser" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/taherio/redi">redi</a></td>
+<td style="text-align:center">Automated script for setting up CobaltStrike redirectors (nginx reverse proxy, letsencrypt)</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/taherio/redi" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/taherio/redi" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/threatexpress/cs2modrewrite">cs2modrewrite</a></td>
+<td style="text-align:center">Automatically Generate Rulesets for Apache mod_rewrite or Nginx for Intelligent HTTP C2 Redirection</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/threatexpress/cs2modrewrite" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/threatexpress/cs2modrewrite" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/mgeeky/RedWarden">RedWarden</a></td>
+<td style="text-align:center">Flexible CobaltStrike Malleable Redirector</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/mgeeky/RedWarden" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/mgeeky/RedWarden" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/cedowens/Mod_Rewrite_Automation">Apache Mod_Rewrite Terrafrom Automation</a></td>
+<td style="text-align:center">Bash scripts that take variables from the user and then call terraform scripts to automate standing up apache2 with mod_rewrite in front of C2 servers. Right now, this repo supports standing up redirectors in Linode or Digital Ocean, and I have different scripts for standing up http redirectors versus https redirectors. Since the mod_rewrite redirector setup scripts use a user agent value and optionally a bearer token, these redirectors are not C2 dependent and can work for any C2 that uses http or https.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/cedowens/Mod_Rewrite_Automation" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/cedowens/Mod_Rewrite_Automation" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/jfmaes/Red-EC2">Red-EC2</a></td>
+<td style="text-align:center">Deploy RedTeam Specific EC2 via ansible.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/jfmaes/Red-EC2" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/jfmaes/Red-EC2" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/obscuritylabs/RAI">Rapid Attack Infrastructure</a></td>
+<td style="text-align:center">Red Team Infrastructure... Quick... Fast... Simplified.</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/obscuritylabs/RAI" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/obscuritylabs/RAI" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/guidepointsecurity/RedCommander">RedCommander</a></td>
+<td style="text-align:center">Creates two Cobalt Strike C2 servers (DNS and HTTPS), with redirectors, and RedELK in Amazon AWS. Minimal setup required! Companion Blog <a href="https://www.guidepointsecurity.com/2020/08/31/introducing-red-commander-a-guidepoint-security-open-source-project/">here</a></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/guidepointsecurity/RedCommander" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/guidepointsecurity/RedCommander" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/SecIdiot/CobaltPatch">CobaltPatch</a></td>
+<td style="text-align:center">Cobalt Strike Malleable Profile Inline Patch Template: A Position Independent Code (PIC) Code Template For Creating Shellcode That Can Be Appended In Stage / Post-Ex Blocks. Made for C Programmers</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/SecIdiot/CobaltPatch" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/SecIdiot/CobaltPatch" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Synthesis</td>
+<td style="text-align:center"><a href="https://github.com/rvrsh3ll/CPLResourceRunner">CPLResourceRunner</a></td>
+<td style="text-align:center">Run shellcode(Cobalt Strike) from resource</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/rvrsh3ll/CPLResourceRunner" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/rvrsh3ll/CPLResourceRunner" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Dev</td>
+<td style="text-align:center"><a href="https://github.com/darkoperator/vscode-language-aggressor">vscode-language-aggressor</a></td>
+<td style="text-align:center">This is a Visual Studio Code (VSC) extension that aims to provide: An implement of the Sleep and Cobalt Strike (CS) Aggressor grammar; and The definition of Cobalt Strike functions' prototype</td>
+<td style="text-align:center"><img src="https://img.shields.io/github/stars/darkoperator/vscode-language-aggressor" alt="" loading="lazy"></td>
+<td style="text-align:center"><img src="https://img.shields.io/github/languages/top/darkoperator/vscode-language-aggressor" alt="" loading="lazy"></td>
+</tr>
+</tbody>
+</table>
+<h4 id="0x06-related-resources">0x06 Related Resources</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Type</th>
+<th style="text-align:center">Name</th>
+<th style="text-align:center">Description</th>
+<th style="text-align:center">Popularity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">DATA</td>
+<td style="text-align:center"><a href="https://pastebin.com/DzsPgH9w">SilasCutler JARM Scan CobaltStrike Beacon Config.json</a></td>
+<td style="text-align:center">SilasCutler JARM Scan CobaltStrike Beacon Config</td>
+<td style="text-align:center"><img src="https://img.shields.io/static/v1?label=data&amp;message=hot&amp;color=red" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">DATA</td>
+<td style="text-align:center"><a href="https://bazaar.abuse.ch/browse/yara/CobaltStrike/">Cobalt Strike hashes</a></td>
+<td style="text-align:center">This page shows some basic information the Yara rule CobaltStrike including corresponding malware samples.</td>
+<td style="text-align:center"><img src="https://img.shields.io/static/v1?label=data&amp;message=hot&amp;color=red" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">DATA</td>
+<td style="text-align:center"><a href="https://docs.google.com/spreadsheets/d/1bYvBh6NkNYGstfQWnT5n7cSxdhjSn1mduX8cziWSGrw/edit#gid=766378683">List of Cobalt Strike servers</a></td>
+<td style="text-align:center">List of Cobalt Strike servers</td>
+<td style="text-align:center"><img src="https://img.shields.io/static/v1?label=data&amp;message=hot&amp;color=red" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">DATA</td>
+<td style="text-align:center"><a href="https://www.dropbox.com/s/o5493msqarg3iyu/Cobalt%20Strike.7z?dl=0">CobaltStrike samples pass=infected</a></td>
+<td style="text-align:center">CobaltStrike samples</td>
+<td style="text-align:center"><img src="https://img.shields.io/static/v1?label=data&amp;message=hot&amp;color=red" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">DATA</td>
+<td style="text-align:center"><a href="https://gist.github.com/MHaggis/bdcd0e6d5c727e5b297a3e69e6c52286">List of spawns from exposed Cobalt Strike C2</a></td>
+<td style="text-align:center">List of spawns from exposed Cobalt Strike C2</td>
+<td style="text-align:center"><img src="https://img.shields.io/static/v1?label=data&amp;message=hot&amp;color=red" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">DATA</td>
+<td style="text-align:center"><a href="https://github.com/drb-ra/C2IntelFeeds">C2IntelFeeds</a></td>
+<td style="text-align:center">Automatically created C2 Feeds based of Censys</td>
+<td style="text-align:center"><img src="https://img.shields.io/static/v1?label=data&amp;message=hot&amp;color=red" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">YARA</td>
+<td style="text-align:center"><a href="https://github.com/Neo23x0/signature-base/blob/master/yara/apt_cobaltstrike.yar">apt_cobaltstrike</a></td>
+<td style="text-align:center">Cobalt Strike Yara</td>
+<td style="text-align:center"><img src="https://img.shields.io/static/v1?label=yara&amp;message=hot&amp;color=red" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">YARA</td>
+<td style="text-align:center"><a href="https://github.com/Neo23x0/signature-base/blob/master/yara/apt_cobaltstrike_evasive.yar">apt_cobaltstrike_evasive</a></td>
+<td style="text-align:center">Cobalt Strike Yara</td>
+<td style="text-align:center"><img src="https://img.shields.io/static/v1?label=yara&amp;message=hot&amp;color=red" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">YARA</td>
+<td style="text-align:center"><a href="https://github.com/Te-k/cobaltstrike/blob/master/rules.yar">rules</a></td>
+<td style="text-align:center">Cobalt Strike Yara</td>
+<td style="text-align:center"><img src="https://img.shields.io/static/v1?label=yara&amp;message=hot&amp;color=red" alt="" loading="lazy"></td>
+</tr>
+<tr>
+<td style="text-align:center">Rules</td>
+<td style="text-align:center"><a href="https://github.com/suricata-rules/suricata-rules">suricata-rules</a></td>
+<td style="text-align:center">Suricata IDS rules used to detect the red team penetration/malicious behavior, support testing CobaltStrike/MSF/Empire/DNS tunnels/Weevely scorpion/mining/rebound/kitchen/ice shell/ICMP tunnel, etc</td>
+<td style="text-align:center"><img src="https://img.shields.io/static/v1?label=Rules&amp;message=hot&amp;color=red" alt="" loading="lazy"></td>
+</tr>
+</tbody>
+</table>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[彩虹猫病毒分析]]></title>
+        <id>https://tickertapetimer.github.io/彩虹猫病毒分析/</id>
+        <link href="https://tickertapetimer.github.io/彩虹猫病毒分析/">
+        </link>
+        <updated>2021-03-07T07:20:25.000Z</updated>
+        <content type="html"><![CDATA[<p>参考文章：<a href="https://bbs.pediy.com/thread-262873.htm">[原创]最适合新手的病毒分析——彩虹猫病毒</a></p>
+<h2 id="初步观察">初步观察</h2>
+<p>先拍个快照，再运行病毒程序，观察发生了什么</p>
+<p>发现运行后存在以下现象：</p>
+<ol>
+<li>会弹出浏览器窗口</li>
+<li>鼠标开始不规律的闪动</li>
+<li>有大量三角形感叹号，圆圈状叉号图标出现</li>
+<li>电脑反色，怀疑是对比度的问题</li>
+</ol>
+<p>最后在任务管理器发现了6个MEMZ.exe的进程，任意关闭一个，虚拟机直接卡死，关机重启失败，开机界面为一串大意为电脑已被攻击的英文，然后出现彩虹猫GIF</p>
+<h2 id="初步分析">初步分析</h2>
+<p>在百度以及查阅参考文章后，得到相关现象对应的函数：</p>
+<ol>
+<li>会弹出浏览器窗口 —— ShellExecute</li>
+<li>鼠标开始不规律的闪动 —— SetCursorPos、GetCursorPos</li>
+<li>有大量三角形感叹号，圆圈状叉号图标出现 —— DrawIcon</li>
+<li>电脑反色，怀疑是对比度的问题 —— BitBlt、StretchBlt</li>
+<li>6个MEMZ进程 —— ShellExecute</li>
+<li>由于没有连接声音所以没发现的系统提示音现象 —— PlaySoundA</li>
+</ol>
+<p>这些函数都可以在StudyPE+中查看导入表时发现</p>
+<h2 id="ida">IDA</h2>
+<p>再进一步，打开IDA分析</p>
+<figure data-type="image" tabindex="1"><img src="https://tickertapetimer.github.io/post-images/1629435238110.png" alt="" loading="lazy"></figure>
+<p>一开始就调用了GetCommandLineW()以及CommandLineToArgvW()，这两个函数的作用分别是获取命令行参数，解析命令行参数</p>
+<p>但我们运行它的时候是不存在参数的，所以 <code>pNumArgs &gt; 1</code>可以不看，直接往后看</p>
+<h3 id="无参数部分">无参数部分</h3>
+<figure data-type="image" tabindex="2"><img src="https://tickertapetimer.github.io/post-images/1629435247856.png" alt="" loading="lazy"></figure>
+<p>这里有弹窗，而在我们运行程序时，也会弹出两个一模一样的弹窗，合理推断这里才是程序入口点</p>
+<figure data-type="image" tabindex="3"><img src="https://tickertapetimer.github.io/post-images/1629435253079.png" alt="" loading="lazy"></figure>
+<p>进入入口点后，就可以看到前面说的生成6个MEMZ进程的函数了</p>
+<figure data-type="image" tabindex="4"><img src="https://tickertapetimer.github.io/post-images/1629435259724.png" alt="" loading="lazy"></figure>
+<p>利用do-while循环，以&quot;/watchdog&quot;为参数创建5个MEMZ进程，再用&quot;/main&quot;参数创建一个MEMZ进程</p>
+<p>以main参数创建进程的代码中，还有一个函数 <code>SetPriorityClass()</code>，这个函数是一个给进程设置优先级的函数，目测应该属于提权操作，而该函数的参数0x80，意味着该&quot;/main&quot;进程的优先级被设至最高（应该是）</p>
+<p>创建完线程后调用 <code>ExitProcess</code>退出进程</p>
+<h3 id="watchdog参数">/watchdog参数</h3>
+<p>在添加参数创建的进程中，根据参数的不同，也可以分为两部分代码，即&quot;/watchdog&quot;和&quot;/main&quot;两个参数</p>
+<figure data-type="image" tabindex="5"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307204338336.png" alt="image-20210307204338336" loading="lazy"></figure>
+<p>这段代码有熟悉的 <code>CreateThread</code>创建线程函数，还有 <code>RegisterClassExA</code>函数，作用为注册一个窗口类，供以后在对<a href="https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-createwindowa">CreateWindow</a>或<a href="https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-createwindowexa">CreateWindowEx</a>函数的调用中使用、<code>CreateWindowExA</code>函数，用于创建窗口</p>
+<p>在<code>CreateWindowExA</code>函数下面的while循环，可以看到有三个与message相关的函数，一个是检索消息，另外两个是调度或发布消息，可以推断这是一个消息循环，作用未知</p>
+<p><code>CreateThread</code>有利用到sub_40114A函数去作为参数，点进去查看该函数干了什么</p>
+<h4 id="sub_40114a">sub_40114A</h4>
+<figure data-type="image" tabindex="6"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307205420821.png" alt="image-20210307205420821" loading="lazy"></figure>
+<p>一个申请空间，一个获取句柄，一个获取进程名</p>
+<figure data-type="image" tabindex="7"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307205632817.png" alt="image-20210307205632817" loading="lazy"></figure>
+<p>下面的while循环，看个人感觉大概有几个关键点</p>
+<ol>
+<li>这是永真循环</li>
+<li>这个循环会比较两个变量，相同后v5会自增</li>
+<li>一旦v5&lt;v8，就会进入另一个函数</li>
+<li>v5每次循环都会置0</li>
+<li>v8每次循环都会被赋值为v5的值</li>
+</ol>
+<p>结合彩虹猫病毒的特性，合理猜想，这是在检测进程数，一旦进程数小于6个，即关闭了一个进程，就会触发下面的<code>sub_401021</code>函数，直接蓝屏</p>
+<p>点进去<code>sub_401021</code>函数</p>
+<figure data-type="image" tabindex="8"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307210853672.png" alt="image-20210307210853672" loading="lazy"></figure>
+<p>看到<code>RtlAdjustPrivilege</code>和<code>NtRaiseHardError</code>，这两个东西放在一起，就是一个经典蓝屏手段，前者提权，后者触发蓝屏</p>
+<p>再往下看</p>
+<figure data-type="image" tabindex="9"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307211326958.png" alt="image-20210307211326958" loading="lazy"></figure>
+<p>还有一个退出系统的操作，<code>SeShutdownPrivilege</code>，这个东西和上半部分一起，保证关机，这个进程的参数真的没给错，&quot;/watchdog&quot;，看门狗</p>
+<p>上述是关闭进程后的触发手段，现在回到关闭进程前，看看它有没有别的操作，毕竟开了5个参数为看门狗的进程，不可能就做这点事情</p>
+<figure data-type="image" tabindex="10"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307204338336.png" alt="image-20210307204338336" loading="lazy"></figure>
+<p>有一个sub_401000函数，点进去</p>
+<figure data-type="image" tabindex="11"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307212210133.png" alt="image-20210307212210133" loading="lazy"></figure>
+<p>检测消息常量值，百度后发现，值为16或22的系统消息为WM_CLOSE和WM_ENDSESSION，这两个都是系统在关机时会发送给各个程序或窗口的消息，所以sub_401000的作用也清楚了，在用户主动关机时，也会调用sub_401021，产生蓝屏或关机，看来真就看门狗了，只要进程被杀或者自动关机，就会触发蓝屏或者退出系统</p>
+<h3 id="main参数">/main参数</h3>
+<p>/main参数部分的代码分两块，一块是打开物理磁盘覆盖MBR，达到开机出现GIF的效果，一块是调用若干函数，去实现运行彩虹猫时出现的异象</p>
+<h4 id="mbr">MBR</h4>
+<figure data-type="image" tabindex="12"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210309134334276.png" alt="image-20210309134334276" loading="lazy"></figure>
+<p>先用CreateFileA打开主硬盘，即PhysicalDrive0，再用do-while循环去覆盖数据，byte_402118以及byte_402248中的数据应该就是要用来覆盖的内容</p>
+<p>由于对MBR不熟，所以详情可参考 参考文章：<a href="https://bbs.pediy.com/thread-262873.htm">[原创]最适合新手的病毒分析——彩虹猫病毒</a></p>
+<h4 id="函数">函数</h4>
+<p>在覆盖MBR后，程序调用了notepad去宣告攻击成功，然后开始调用后面的代码去产生各种花里胡哨的异象</p>
+<figure data-type="image" tabindex="13"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210309134946309.png" alt="image-20210309134946309" loading="lazy"></figure>
+<p>代码中出现了产生线程的CreateThread，并且用函数sub_401A2B去作为参数，点进去看它的代码</p>
+<figure data-type="image" tabindex="14"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210309135117187.png" alt="image-20210309135117187" loading="lazy"></figure>
+<p>不太能看懂，跳回去看，参数中除了函数外，还有一个v9，而v9的值一开始就被赋为一个地址，off_405130，这个地址里面存着一个数组，数组中的元素有10个函数，以及10个函数各对应的一个值</p>
+<figure data-type="image" tabindex="15"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210309135524598.png" alt="image-20210309135524598" loading="lazy"></figure>
+<p>在前面代码的循环中，出现一个sleep函数，该函数的参数是v9[1]，这是那10个函数下面的整数值，由此可知，这十个整数值都是时间值，而循环中最后的v9+=2也证实了这一点，由于v9的类型为dword，它每次自增2，实际上都是增加8个字节，这恰好与之对应</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>第一次循环</th>
+<th>第二次循环</th>
+<th>第三次循环</th>
+<th>第四次循环</th>
+<th>......</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v9的值</td>
+<td>0x00405130</td>
+<td>0x00405138</td>
+<td>0x00405140</td>
+<td>0x00405148</td>
+<td>......</td>
+</tr>
+<tr>
+<td>v9[1]的值</td>
+<td>0x00405134</td>
+<td>0x0040513c</td>
+<td>0x00405144</td>
+<td>0x0040514c</td>
+<td>......</td>
+</tr>
+</tbody>
+</table>
+<p>所以后面的代码的作用也大概清楚了，通过设置时间值去触发各个函数引起异象，而时间值的不同可以让事件发生的随机</p>
+<h2 id="小结">小结</h2>
+<p>到这里，这个病毒基本分析完了，但它还有许多细节值得探究，本文只是粗浅分析，那10个函数的具体作用、覆盖MBR的原理等等都没有研究</p>
+<p>在分析完这个病毒后，也许可以试试改造它一下，例如更改它的GIF，或者写一个可以修改win10内存的彩虹猫plus</p>
+<p>再次感谢大佬的文章<a href="https://bbs.pediy.com/thread-262873.htm">[原创]最适合新手的病毒分析——彩虹猫病毒</a></p>
+<p>病毒分析还挺有趣的</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Windows异常处理机制]]></title>
+        <id>https://tickertapetimer.github.io/windows异常处理机制/</id>
+        <link href="https://tickertapetimer.github.io/windows异常处理机制/">
+        </link>
+        <updated>2021-03-05T04:57:00.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="r3异常处理">R3异常处理</h2>
+<p>Windows异常处理机制有两种，一种是内核异常处理，一种是R3异常处理，所谓R3，就是Ring3，Inter的CPU将指令分为两种，特权指令以及非特权指令，将特权等级分为4级，即Ring0-Ring3，Ring3为所有人都能使用的级别。</p>
+<p>对于R3异常处理，Windows的异常处理器一般有一下流程：</p>
+<ol>
+<li>交给调试器(进程必须被调试)</li>
+<li>执行VEH</li>
+<li>执行SEH</li>
+<li>TopLevelEH(进程被调试时不会被执行)</li>
+<li>交给调试器(上面的异常处理都说处理不了，就再次交给调试器)</li>
+<li>调用异常端口通知csrss.exe</li>
+</ol>
+<h3 id="veh向量化异常处理">VEH（向量化异常处理）</h3>
+<p>全称：Vectored Exception Handler<br>
+描述：全局异常链表，不同的线程共用一个</p>
+<p>当调试器无法解决异常时，便会将该程序丢给VEH，此时VEH链表便会逐个使用VEH去排查解决异常，若所有VEH都无法解决异常，就会转到SEH</p>
+<h3 id="seh结构化异常处理-topleveleh">SEH（结构化异常处理）/ TopLevelEH</h3>
+<p><strong>全称</strong>：Structured Exception Handling<br>
+<strong>描述</strong>：局部异常链表，线程相关，位于当前线程的堆栈当中，不同线程不同堆栈</p>
+<p>SEH中存在一异常处理的手段，为TopLevelEH，在最顶层的SEH中，可以注册一个顶层异常处理器。虽然他是基于SEH实现的，但是它可以处理<strong>所有线程</strong>抛出的异常。当SEH都处理不了该异常，在最顶层的SEH中就会检查是否注册了顶层异常处理，如果注册了，则执行顶层异常处理。</p>
+<p><strong>但当该该进程正在调试状态，顶层异常处理会被忽略，不会被执行</strong>。</p>
+<h2 id="返回调试器">返回调试器</h2>
+<p>当所有异常处理的方式都无法处理该异常时，系统会再次将异常转交给调试器，若调试器返回DBG_CONTINUE，则循环以上过程。</p>
+<p>最后如果异常依旧无人处理，则调用ExceptionPort通知csrss.exe，弹出窗口告知用户程序出错。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[python字节码初析]]></title>
+        <id>https://tickertapetimer.github.io/python字节码初析/</id>
+        <link href="https://tickertapetimer.github.io/python字节码初析/">
+        </link>
+        <updated>2021-02-07T12:44:00.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="什么是python字节码">什么是python字节码</h2>
+<p>Python 代码先被编译为字节码后，再由Python虚拟机来执行字节码， Python的字节码是一种类似汇编指令的中间语言， 一个Python语句会对应若干字节码指令，虚拟机一条一条执行字节码指令， 从而完成程序执行。</p>
+<p>Python dis 模块支持对Python代码进行反汇编， 生成字节码指令。</p>
+<p>dis.dis()将CPython字节码转为可读的伪代码(类似于汇编代码)。</p>
+<p>类型如下：</p>
+<pre><code class="language-python">  7           8 LOAD_GLOBAL              1 (list)
+             10 LOAD_FAST                0 (flag)
+             12 LOAD_CONST               2 (5)
+             14 LOAD_CONST               3 (-1)
+             16 BUILD_SLICE              2
+             18 BINARY_SUBSCR
+             20 CALL_FUNCTION            1
+             22 STORE_FAST               1 (flag1)
+</code></pre>
+<p>Python经常被称为是一种解释型语言 -- 一种源代码在程序运行时被即时翻译成原生CPU指令的语言 - 但这只说对了一部分。与其他许多解释型语言一样，Python实际上将源代码编译为一组虚拟机指令，Python的解释器就是该虚拟机的一个具体实现。这种跑在虚拟机内部的中间格式被称为“字节码”。</p>
+<p>因此，Python留下的.pyc文件不仅仅是源代码的一个“更快”或“优化”版本; 实际上，它们是在程序运行时由Python的虚拟机来执行的字节码指令。</p>
+<p>一个经典的&quot;hello world&quot;如下：</p>
+<pre><code class="language-python">print(&quot;hello world&quot;)
+</code></pre>
+<p>转换为字节码后变为：</p>
+<pre><code class="language-python"> 43           0 LOAD_GLOBAL              0 (print)
+              2 LOAD_CONST               1 ('hello world')
+              4 CALL_FUNCTION            1
+              6 POP_TOP
+              8 LOAD_CONST               0 (None)
+             10 RETURN_VALUE
+</code></pre>
+<h2 id="python字节码的指令解析">python字节码的指令解析</h2>
+<p>有关python字节码的指令解析，看雪的《死磕python字节码-手工还原python源码》已经说的十分详细</p>
+<p>链接：<a href="https://zhuanlan.zhihu.com/p/45101508">《死磕python字节码-手工还原python源码》</a></p>
+]]></content>
+    </entry>
+</feed>

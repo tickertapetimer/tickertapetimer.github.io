@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<title>
+    blog
+</title>
+<!--[if lt IE 9]><script src="//cdn.bootcss.com/html5shiv/r29/html5.js"></script><![endif]-->
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+<meta http-equiv="x-dns-prefetch-control" content="on">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<meta name="author" content="ticker tape timer">
+<meta name="description" content="A CTFer loves RE and Misc">
+<meta name="keywords" content="">
+<script async src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+<link rel="stylesheet" href="https://tickertapetimer.github.io/styles/main.css" />
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.7.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/css/style.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/tocbot.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/script.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/icon.min.js"></script>
+    
+            <script src="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@1.0.12/CDN/js/Card/prism.min.js"></script>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@1.0.12/CDN/css/Card/prism.min.css" />
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css">
+            <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js"></script>
+            
+                            <script>
+                                (function() {
+                                    var bp = document.createElement('script');
+                                    var curProtocol = window.location.protocol.split(':')[0];
+                                    if (curProtocol === 'https') {
+                                        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+                                    } else {
+                                        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                                    }
+                                    var s = document.getElementsByTagName("script")[0];
+                                    s.parentNode.insertBefore(bp, s);
+                                })();
+                            </script>
+                            
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo">
+                <a href="https://tickertapetimer.github.io">
+                    blog
+                </a>
+            </div>
+
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">
+                        首页
+                    </a>
+                    
+                    <a class="menu-item" href="/archives">
+                        归档
+                    </a>
+                    
+                    <a class="menu-item" href="/tags">
+                        标签
+                    </a>
+                    
+                    <a class="menu-item" href="/me">
+                        关于
+                    </a>
+                    
+                        <input id="switch_default" type="checkbox" class="switch_default">
+                        <label for="switch_default" class="toggleBtn"></label>
+            </div>
+            <form id="gridea-search-form" data-update="1629443424144" action="/search/index.html">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
+            </form>
+        </div>
+    </nav>
+
+    
+        <nav class="navbar-mobile" id="nav-mobile">
+            <div class="container">
+                <div class="navbar-header">
+                    <div>
+                        <a href="https://tickertapetimer.github.io">
+                            blog
+                        </a>
+                        <!--en-->
+                        <a id="mobile-toggle-theme-en" class="a en">&nbsp;Dark</a>
+                        <!--zh-->
+                        <a id="mobile-toggle-theme-zh" class="a zh">&nbsp;&#x6697;&#x9ED1;</a>
+                    </div>
+                    <form id="gridea-search-form" data-update="1629443424144" action="/search/index.html">
+                        <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
+                    </form>
+                    <!--en-->
+                    <div class="menu-toggle" id="menu-toggle-en" onclick="mobileBtn()">&#9776; Menu</div>
+                    <!--zh-->
+                    <div class="menu-toggle" id="menu-toggle-zh" onclick="mobileBtn()">&#9776; &#x83DC;&#x5355;</div>
+
+                </div>
+                <div class="menu" id="mobile-menu">
+                    
+                        <a class="menu-item" href="/">
+                            首页
+                        </a>
+                        
+                        <a class="menu-item" href="/archives">
+                            归档
+                        </a>
+                        
+                        <a class="menu-item" href="/tags">
+                            标签
+                        </a>
+                        
+                        <a class="menu-item" href="/me">
+                            关于
+                        </a>
+                        
+                </div>
+            </div>
+        </nav>
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementById("menu-toggle-en");
+        var toggleMenu_zh = document.getElementById("menu-toggle-zh");
+
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.display != "none") {
+            if (toggleMenu.classList.contains("active")) {
+                toggleMenu.classList.remove("active")
+                mobileMenu.classList.remove("active")
+            } else {
+                toggleMenu.classList.add("active")
+                mobileMenu.classList.add("active")
+            }
+        } else if (toggleMenu_zh.display != "none") {
+            if (toggleMenu_zh.classList.contains("active")) {
+                toggleMenu_zh.classList.remove("active")
+                mobileMenu.classList.remove("active")
+            } else {
+                toggleMenu_zh.classList.add("active")
+                mobileMenu.classList.add("active")
+            }
+        }
+
+    }
+</script>
+            <div class="main">
+                <div class="container">
+                    <article class="post-wrap">
+                        <header class="post-header">
+                            <h1 class="post-title">
+                                ring3注入学习(1)导入表注入
+                            </h1>
+                            
+                                <!--en-->
+                                <div class="post-meta en">
+                                    Author:
+                                    <a itemprop="author" rel="author" href="/">
+                                        blog
+                                    </a>
+                                    <span class="post-time">
+                                Date: <a href="#">2021-08-16</a>
+                            </span>
+                                    <span class="post-readtime">Reading Time:<a
+                                    href="#">10.2
+                                    mins</a></span>
+                                    <span class="post-words">words:<a href="#">2178</a></span>
+                                    
+                                        <span class="post-category">
+                                Category:
+                                
+                                <a href="https://tickertapetimer.github.io/tag/lPO99KDRN/">逆向</a>
+                                
+                                <a href="https://tickertapetimer.github.io/tag/OI2yF9Mjr/">学习</a>
+                                
+                            </span>
+                                        
+                                </div>
+                                
+                        </header>
+                        
+                        <div class="post-content">
+                            <h2 id="原理">原理</h2>
+<h3 id="导入表的结构">导入表的结构</h3>
+<p>在编程中常常用到“导入函数”(Import functions),导入函数就是被程序调用但其执行代码又不在程序中的函数，这些函数的代码位于一个或者多个DLL中，在调用者程序中只保留一些函数信息，包括函数名及其驻留的DLL名等。</p>
+<p>于磁盘上的PE 文件来说，它无法得知这些输入函数在内存中的地址，只有当PE 文件被装入内存后，Windows 加载器才将相关DLL 装入，并将调用输入函数的指令和函数实际所处的地址联系起来。这就是“动态链接”的概念。动态链接是通过PE 文件中定义的“导入表”来完成的，导入表中保存的正是函数名和其驻留的DLL 名等。</p>
+<p>导入表由一系列IMAGE_IMPORT_DESCRIPTOR结构体组成：</p>
+<figure data-type="image" tabindex="1"><img src="https://tickertapetimer.github.io/post-images/dll%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0(1)%E5%AF%BC%E5%85%A5%E8%A1%A8%E6%B3%A8%E5%85%A5/image-20210818140915785.png" alt="image-20210818140915785" loading="lazy"></figure>
+<p>结构的数量取决于程序要使用的DLL文件的数量，每一个结构对应一个DLL文件</p>
+<p>该结构体的定义如下：</p>
+<pre><code class="language-c++">struct _IMAGE_IMPORT_DESCRIPTOR {
+    union {
+        DWORD   Characteristics; 
+        DWORD   OriginalFirstThunk;         
+    } DUMMYUNIONNAME;
+    DWORD   TimeDateStamp; 
+    DWORD   ForwarderChain;         
+    DWORD   Name;//导入模块名的RVA
+    DWORD   FirstThunk;              
+} IMAGE_IMPORT_DESCRIPTOR;
+</code></pre>
+<p>具体在PE文件中，就像这个样子：</p>
+<figure data-type="image" tabindex="2"><img src="https://tickertapetimer.github.io/post-images/dll%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0(1)%E5%AF%BC%E5%85%A5%E8%A1%A8%E6%B3%A8%E5%85%A5/image-20210818141436232.png" alt="image-20210818141436232" loading="lazy"></figure>
+<p>在IMAGE_IMPORT_DESCRIPTOR的结构体的最后面，附带着许多小结构体，里面记录的信息是该导入表的DLL要导入使用的API</p>
+<pre><code class="language-c++">typedef struct _IMAGE_IMPORT_BY_NAME {
+    WORD    Hint;
+    BYTE    Name[1];
+} IMAGE_IMPORT_BY_NAME, *PIMAGE_IMPORT_BY_NAME;
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://tickertapetimer.github.io/post-images/dll%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0(1)%E5%AF%BC%E5%85%A5%E8%A1%A8%E6%B3%A8%E5%85%A5/image-20210818141729847.png" alt="image-20210818141729847" loading="lazy"></figure>
+<p>以上便是导入表的基础结构</p>
+<h3 id="导入表的注入">导入表的注入</h3>
+<figure data-type="image" tabindex="4"><img src="https://tickertapetimer.github.io/post-images/dll%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0(1)%E5%AF%BC%E5%85%A5%E8%A1%A8%E6%B3%A8%E5%85%A5/image-20210818142936958.png" alt="image-20210818142936958" loading="lazy"></figure>
+<p>由《加密与解密》中得知。Windows装载PE文件时，会检查导入表，将导入表所包含要使用的DLL加载进程序中，这也就产生了一个DLL注入的点，如果将恶意DLL写入导入表中，就可以让程序在运行时调用恶意DLL中的代码，达到DLL注入的效果</p>
+<h2 id="实现">实现</h2>
+<p>要实现导入表注入，需要把要注入的DLL构造的结构体塞进导入表里，但是由于导入表默认不是在PE文件的最后，所以导入表原来所在的位置不一定有足够大的空间塞入一个新的结构体，这时我们就需要把导入表移动到新的足够大的位置，有两种办法，扩大最后一个节和直接新增一个节，比较方便的方法是选择新增一个节，在新增节后将原导入表放进去，如何在最后写入自己的导入表，再新增8字节的INT和8字节IAT，至于为什么要增加8字节的INT表和8字节的IAT表，可以这样解释：</p>
+<figure data-type="image" tabindex="5"><img src="https://tickertapetimer.github.io/post-images/dll%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0(1)%E5%AF%BC%E5%85%A5%E8%A1%A8%E6%B3%A8%E5%85%A5/t65HBV4.png" alt="iat1" loading="lazy"></figure>
+<p>如图，当我们新写入一个IMAGE_IMPORT_DESCRIPTOR结构，我们就需要建立INT和IAT对于该结构的映射，此时就需要扩充IAT和INT表</p>
+<p>具体实现步骤如下：</p>
+<ol>
+<li>找到原导入表</li>
+<li>在程序最后开辟一个新节（也可扩大最后一个节）</li>
+<li>拷贝原来的导入表到新节中</li>
+<li>在新节拷贝的导入表后新增一个导入表</li>
+<li>增加8字节的INT表和8字节的IAT表</li>
+<li>存储要注入的dll的名称</li>
+<li>增加一个_IMAGE_IMPORT_BY_NAME结构，并将函数名称存进结构体第一个变量后的内存中_</li>
+<li>将_IMAGE_IMPORT_BY_NAME结构的地址的RVA赋值给INT表和IAT表第一项</li>
+<li>将dll名称所在位置的首地址的RVA赋值给新增导入表的Name</li>
+<li>修改IMAGE_DATA_DIRECTORY结构的VirtualAddress和Size</li>
+</ol>
+<h2 id="代码">代码</h2>
+<h3 id="dll代码">DLL代码</h3>
+<pre><code class="language-c++">// dllmain.cpp : 定义 DLL 应用程序的入口点。
+#include &quot;pch.h&quot;
+
+
+extern &quot;C&quot; __declspec(dllexport) void puts()
+{
+    MessageBoxA(0, &quot;hi&quot;, &quot;hello&quot;, 0);
+    return;
+}
+
+BOOL APIENTRY DllMain( HMODULE hModule,
+                       DWORD  ul_reason_for_call,
+                       LPVOID lpReserved
+                     )
+{
+    switch (ul_reason_for_call)
+    {
+    case DLL_PROCESS_ATTACH:
+        puts();
+        break;
+    case DLL_THREAD_ATTACH:
+    case DLL_THREAD_DETACH:
+    case DLL_PROCESS_DETACH:
+        break;
+    }
+    return TRUE;
+}
+</code></pre>
+<h3 id="注入程序代码">注入程序代码</h3>
+<pre><code class="language-c++">#include&lt;Windows.h&gt;
+#include&lt;stdio.h&gt;
+#define DLLNAMELENGTH 0xE
+#define FUNCTIONNAMELENGTH 0xF
+#define FUNCTIONNAME &quot;puts&quot;
+#define DLLNAME &quot;Dll1.dll&quot;
+
+//获取DOS头
+PIMAGE_DOS_HEADER GetDosHeader(_In_ char* pBase) {
+	return PIMAGE_DOS_HEADER(pBase);
+}
+
+//获取NT头
+PIMAGE_NT_HEADERS GetNtHeader(_In_ char* pBase) {
+	return PIMAGE_NT_HEADERS(GetDosHeader(pBase)-&gt;e_lfanew + (SIZE_T)pBase);
+}
+
+//获取文件头
+PIMAGE_FILE_HEADER GetFileHeader(_In_ char* pBase) {
+	return &amp;(GetNtHeader(pBase)-&gt;FileHeader);
+}
+
+//获取OPT头
+PIMAGE_OPTIONAL_HEADER32 GetOptHeader(_In_ char* pBase) {
+	return &amp;(GetNtHeader(pBase)-&gt;OptionalHeader);
+}
+
+PIMAGE_SECTION_HEADER GetSecByName(_In_ char* pBase, _In_ const char* name) {
+	DWORD Secnum = GetFileHeader(pBase)-&gt;NumberOfSections;
+	PIMAGE_SECTION_HEADER Section = IMAGE_FIRST_SECTION(GetNtHeader(pBase));
+	char buf[10] = { 0 };
+	for (DWORD i = 0; i &lt; Secnum; i++) {
+		memcpy_s(buf, 8, (char*)Section[i].Name, 8);
+		if (!strcmp(buf, name)) {
+			return Section + i;
+		}
+	}
+	return nullptr;
+}
+
+//获取最后一个区段
+PIMAGE_SECTION_HEADER GetLastSec(_In_ char* PeBase) {
+	DWORD SecNum = GetFileHeader(PeBase)-&gt;NumberOfSections;
+	PIMAGE_SECTION_HEADER FirstSec = IMAGE_FIRST_SECTION(GetNtHeader(PeBase));
+	PIMAGE_SECTION_HEADER LastSec = FirstSec + SecNum - 1;
+	return LastSec;
+}
+
+char* OpenPeFiles(_In_ const char* Path, _Out_opt_ DWORD* nFileSize)
+{
+	//读文件
+	HANDLE hFile = CreateFileA(Path,
+		GENERIC_READ,
+		FILE_SHARE_READ,
+		NULL,
+		OPEN_ALWAYS,
+		FILE_ATTRIBUTE_NORMAL,
+		NULL);
+	if (hFile == INVALID_HANDLE_VALUE)
+	{
+		//printf(&quot;打开文件失败&quot;);
+		return NULL;
+	}
+	DWORD PeSize = GetFileSize(hFile, NULL);
+	if (nFileSize)
+		*nFileSize = PeSize;
+	DWORD ReadSize = 0;
+	char* PeBase = new CHAR[PeSize]{ 0 };
+	ReadFile(hFile, PeBase, PeSize, &amp;ReadSize, NULL);
+
+	PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER)PeBase;
+	//检测DOS头和NT头
+	if (pDosHeader-&gt;e_magic != IMAGE_DOS_SIGNATURE)
+	{
+		//printf(&quot;不是PE文件\n&quot;);
+		//system(&quot;pause&quot;);
+		return NULL;
+	}
+	PIMAGE_NT_HEADERS pNtHeader = (PIMAGE_NT_HEADERS)(PeBase + pDosHeader-&gt;e_lfanew);
+	if (pNtHeader-&gt;Signature != IMAGE_NT_SIGNATURE)
+	{
+		//printf(&quot;不是PE文件\n&quot;);
+		//system(&quot;pause&quot;);
+		return NULL;
+	}
+
+	CloseHandle(hFile);
+	return PeBase;
+}
+
+//粒度对齐处理
+int AlignMent(_In_ int size, _In_ int alignment) {
+	return (size) % (alignment) == 0 ? (size) : ((size) / alignment + 1) * (alignment);
+}
+
+//新增节
+char* AddSection(_In_ char*&amp; PeBase, _In_ DWORD&amp; PeSize, _In_ const char* Section_name, _In_ const int Section_size)
+{
+	GetFileHeader(PeBase)-&gt;NumberOfSections++;
+	PIMAGE_SECTION_HEADER LastPeSection = GetLastSec(PeBase);
+
+	memcpy(LastPeSection-&gt;Name, Section_name, 8);
+	LastPeSection-&gt;Misc.VirtualSize = Section_size;
+	LastPeSection-&gt;VirtualAddress = (LastPeSection - 1)-&gt;VirtualAddress + AlignMent((LastPeSection - 1)-&gt;SizeOfRawData, GetOptHeader(PeBase)-&gt;SectionAlignment);
+	LastPeSection-&gt;SizeOfRawData = AlignMent(Section_size, GetOptHeader(PeBase)-&gt;FileAlignment);
+	LastPeSection-&gt;PointerToRawData = AlignMent(PeSize, GetOptHeader(PeBase)-&gt;FileAlignment);
+	LastPeSection-&gt;Characteristics = 0xc0000040;//节表属性设为该值，意为该节表可读可写且包含已初始化的数据
+
+	GetOptHeader(PeBase)-&gt;SizeOfImage = LastPeSection-&gt;VirtualAddress + LastPeSection-&gt;SizeOfRawData;
+
+	int NewSize = LastPeSection-&gt;PointerToRawData + LastPeSection-&gt;SizeOfRawData;
+
+	char* NewPeBase = new char [NewSize] {0};
+	//向新缓冲区录入数据
+	memcpy(NewPeBase, PeBase, PeSize);
+	//缓存区更替
+	delete PeBase;
+	PeSize = NewSize;
+	return NewPeBase;
+}
+
+//保存文件
+void SaveFile(_In_ const char* path, _In_ const char* data, _In_ int FileSize) {
+	HANDLE hFile = CreateFileA(
+		path,
+		GENERIC_WRITE,
+		FILE_SHARE_READ,
+		NULL,
+		CREATE_ALWAYS,
+		FILE_ATTRIBUTE_NORMAL,
+		NULL
+	);
+	DWORD Buf = 0;
+	WriteFile(hFile, data, FileSize, &amp;Buf, NULL);
+	CloseHandle(hFile);
+}
+
+//将RVA的值转换成FOA
+LPVOID RvaToFoa(LPVOID pFileBuffer, LPSTR virtualAddress) {
+	LPSTR sectionAddress = NULL;//记录距离节头的距离
+	LPSTR fileAddress = NULL;//记录文件中的偏移
+	PIMAGE_DOS_HEADER pDosHeader = NULL;
+	PIMAGE_NT_HEADERS pNTHeader = NULL;
+	PIMAGE_FILE_HEADER pPEHeader = NULL;
+	PIMAGE_OPTIONAL_HEADER32 pOptionHeader = NULL;
+	PIMAGE_SECTION_HEADER pSectionHeader = NULL;
+
+	if (pFileBuffer == NULL) {
+		printf(&quot;文件写入内存失败!\n&quot;);
+		return NULL;
+	}
+
+	pDosHeader = (PIMAGE_DOS_HEADER)pFileBuffer;
+	pNTHeader = (PIMAGE_NT_HEADERS)((DWORD)pFileBuffer + pDosHeader-&gt;e_lfanew);
+	pPEHeader = (PIMAGE_FILE_HEADER)((DWORD)pNTHeader + 4);
+	pOptionHeader = (PIMAGE_OPTIONAL_HEADER32)((DWORD)pPEHeader + 20);
+	pSectionHeader = (PIMAGE_SECTION_HEADER)((DWORD)pOptionHeader + pPEHeader-&gt;SizeOfOptionalHeader);
+
+	if ((DWORD)virtualAddress &lt;= pOptionHeader-&gt;SizeOfHeaders) {
+		return virtualAddress;
+	}
+
+	for (DWORD i = 1; i &lt;= pPEHeader-&gt;NumberOfSections; i++) {
+		if ((DWORD)virtualAddress &lt; pSectionHeader-&gt;VirtualAddress) {
+			pSectionHeader--;
+			break;
+		}
+		else if (i == pPEHeader-&gt;NumberOfSections) {
+			break;
+		}
+		else {
+			pSectionHeader++;
+		}
+
+	}
+
+	//距离该节头的距离
+	sectionAddress = virtualAddress - pSectionHeader-&gt;VirtualAddress;
+	fileAddress = pSectionHeader-&gt;PointerToRawData + sectionAddress;
+
+	return (LPVOID)fileAddress;
+}
+
+//将FOA的值转换成RVA
+LPVOID FoaToRva(LPVOID pFileBuffer, LPSTR fileaddress) {
+	LPSTR sectionAddress = NULL;//记录距离节头的距离
+	LPSTR virtualaddress = NULL;//记录内存中的偏移
+	PIMAGE_DOS_HEADER pDosHeader = NULL;
+	PIMAGE_NT_HEADERS pNTHeader = NULL;
+	PIMAGE_FILE_HEADER pPEHeader = NULL;
+	PIMAGE_OPTIONAL_HEADER32 pOptionHeader = NULL;
+	PIMAGE_SECTION_HEADER pSectionHeader = NULL;
+
+	if (pFileBuffer == NULL) {
+		printf(&quot;文件写入内存失败!\n&quot;);
+		return NULL;
+	}
+
+	pDosHeader = (PIMAGE_DOS_HEADER)pFileBuffer;
+	pNTHeader = (PIMAGE_NT_HEADERS)((DWORD)pFileBuffer + pDosHeader-&gt;e_lfanew);
+	pPEHeader = (PIMAGE_FILE_HEADER)((DWORD)pNTHeader + 4);
+	pOptionHeader = (PIMAGE_OPTIONAL_HEADER32)((DWORD)pPEHeader + 20);
+	pSectionHeader = (PIMAGE_SECTION_HEADER)((DWORD)pOptionHeader + pPEHeader-&gt;SizeOfOptionalHeader);
+
+	if ((DWORD)fileaddress &lt;= pOptionHeader-&gt;SizeOfHeaders) {
+		return fileaddress;
+	}
+
+	for (DWORD i = 1; i &lt;= pPEHeader-&gt;NumberOfSections; i++) {
+		if ((DWORD)fileaddress &lt; pSectionHeader-&gt;PointerToRawData) {
+			pSectionHeader--;
+			break;
+		}
+		else if (i == pPEHeader-&gt;NumberOfSections) {
+			break;
+		}
+		else {
+			pSectionHeader++;
+		}
+
+	}
+
+	//距离该节头的距离
+	sectionAddress = fileaddress - pSectionHeader-&gt;PointerToRawData;
+	virtualaddress = pSectionHeader-&gt;VirtualAddress + sectionAddress;
+
+	return (LPVOID)virtualaddress;
+}
+
+char* inject_dll(_In_ char*&amp; PeBase, _In_ DWORD&amp; PeSize)
+{
+	PIMAGE_DATA_DIRECTORY pDataDirectory = NULL;//定位表目录
+	PIMAGE_IMPORT_DESCRIPTOR importTableAddress = NULL;//定位导入表的真正位置
+	LPVOID returnAddress = NULL;//记录RVAtoFOA的返回值
+
+	//定位到新节的位置和导入表的位置
+	pDataDirectory = (PIMAGE_DATA_DIRECTORY)GetOptHeader(PeBase)-&gt;DataDirectory;
+	pDataDirectory += 0x1;
+
+	DWORD sectionLength = pDataDirectory-&gt;Size + 0x28 + +0x10 + DLLNAMELENGTH + FUNCTIONNAMELENGTH + 0x2;
+	sectionLength = AlignMent(sectionLength, GetOptHeader(PeBase)-&gt;FileAlignment);
+
+	char SecName[] = &quot;.ddjsq&quot;;
+	char* NewPeBase = AddSection(PeBase, PeSize, SecName, sectionLength);
+
+	pDataDirectory = (PIMAGE_DATA_DIRECTORY)GetOptHeader(NewPeBase)-&gt;DataDirectory;
+	pDataDirectory += 0x1;
+
+	PDWORD pNewSection = (PDWORD)(GetLastSec(NewPeBase)-&gt;PointerToRawData + (DWORD)NewPeBase);
+	returnAddress = RvaToFoa(NewPeBase, (LPSTR)pDataDirectory-&gt;VirtualAddress);
+	importTableAddress = (PIMAGE_IMPORT_DESCRIPTOR)((DWORD)returnAddress + (DWORD)NewPeBase);
+
+	//复制原导入表，在原导入表后新增一个导入表
+	memcpy(pNewSection, importTableAddress, pDataDirectory-&gt;Size);
+	importTableAddress = (PIMAGE_IMPORT_DESCRIPTOR)((DWORD)pNewSection + pDataDirectory-&gt;Size - 0x14);
+
+	//增加8字节INT表
+	PIMAGE_THUNK_DATA32 pIntTable = (PIMAGE_THUNK_DATA32)((DWORD)importTableAddress + 0x28);//保留20字节的0
+	PIMAGE_THUNK_DATA32 repairIntTable = pIntTable;
+	pIntTable++;
+	pIntTable-&gt;u1.Ordinal = 0x0;
+	pIntTable++;
+
+	//增加8字节IAT表
+	PIMAGE_THUNK_DATA32 pIatTable = (PIMAGE_THUNK_DATA32)(pIntTable);
+	PIMAGE_THUNK_DATA32 repairIatTable = pIatTable;
+	pIatTable++;
+	pIatTable-&gt;u1.Ordinal = 0x0;
+	pIatTable++;
+
+	//分配空间存储DLL名称字符串
+	PDWORD dllNameAddress = (PDWORD)pIatTable;
+	memcpy(dllNameAddress, DLLNAME, DLLNAMELENGTH);
+
+	//增加IMAGE_IMPORT_BY_NAME 结构
+	PIMAGE_IMPORT_BY_NAME functionNameAddress = (PIMAGE_IMPORT_BY_NAME)((DWORD)dllNameAddress + DLLNAMELENGTH);
+	PDWORD pFunctionName = (PDWORD)((DWORD)functionNameAddress + 0x2);
+	memcpy(pFunctionName, FUNCTIONNAME, FUNCTIONNAMELENGTH);
+
+	//将IMAGE_IMPORT_BY_NAME结构的RVA赋值给INT和IAT表中的第一项
+	repairIntTable-&gt;u1.AddressOfData = (DWORD)FoaToRva(NewPeBase, (LPSTR)((DWORD)functionNameAddress - (DWORD)NewPeBase));
+	repairIatTable-&gt;u1.AddressOfData = repairIntTable-&gt;u1.Ordinal;
+
+	//修正导入表Name、OriginalFirstThunk、FirstThunk
+	importTableAddress-&gt;Name = (DWORD)FoaToRva(NewPeBase, (LPSTR)((DWORD)dllNameAddress - (DWORD)NewPeBase));
+	importTableAddress-&gt;OriginalFirstThunk = (DWORD)FoaToRva(NewPeBase, (LPSTR)((DWORD)repairIntTable - (DWORD)NewPeBase));
+	importTableAddress-&gt;FirstThunk = (DWORD)FoaToRva(NewPeBase, (LPSTR)((DWORD)repairIatTable - (DWORD)NewPeBase));
+
+	//修正IMAGE_DATA_DIRECTORY结构的VirtualAddress和Size
+	pDataDirectory-&gt;VirtualAddress = (DWORD)FoaToRva(NewPeBase, (LPSTR)((DWORD)pNewSection - (DWORD)NewPeBase));
+	pDataDirectory-&gt;Size += 0x14;
+
+	return NewPeBase;
+}
+
+int main()
+{
+	char path[] = &quot;路径&quot;;
+	DWORD pesize;
+	char* PeBase = OpenPeFiles(path, &amp;pesize);
+	if (!PeBase)
+	{
+		printf(&quot;wrong&quot;);
+		return 0;
+	}
+	char* NewPeBase = inject_dll(PeBase, pesize);
+	SaveFile(&quot;路径&quot;, NewPeBase, pesize);
+}
+</code></pre>
+<h3 id="运行结果">运行结果</h3>
+<p>注入前</p>
+<figure data-type="image" tabindex="6"><img src="https://tickertapetimer.github.io/post-images/dll%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0(1)%E5%AF%BC%E5%85%A5%E8%A1%A8%E6%B3%A8%E5%85%A5/image-20210818201529967.png" alt="image-20210818201529967" loading="lazy"></figure>
+<p>注入后</p>
+<figure data-type="image" tabindex="7"><img src="https://tickertapetimer.github.io/post-images/dll%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0(1)%E5%AF%BC%E5%85%A5%E8%A1%A8%E6%B3%A8%E5%85%A5/image-20210818201600590.png" alt="image-20210818201600590" loading="lazy"></figure>
+<p>运行时</p>
+<figure data-type="image" tabindex="8"><img src="https://tickertapetimer.github.io/post-images/dll%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0(1)%E5%AF%BC%E5%85%A5%E8%A1%A8%E6%B3%A8%E5%85%A5/image-20210818201757468.png" alt="image-20210818201757468" loading="lazy"></figure>
+<h2 id="防范手段">防范手段</h2>
+<p>由于是静态注入，直接修改了exe文件，所以可使用校验的方式去检测有无被注入</p>
+
+                        </div>
+                        
+                            <div class="post-toc">
+                                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%8E%9F%E7%90%86">原理</a>
+<ul>
+<li><a href="#%E5%AF%BC%E5%85%A5%E8%A1%A8%E7%9A%84%E7%BB%93%E6%9E%84">导入表的结构</a></li>
+<li><a href="#%E5%AF%BC%E5%85%A5%E8%A1%A8%E7%9A%84%E6%B3%A8%E5%85%A5">导入表的注入</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%9E%E7%8E%B0">实现</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a>
+<ul>
+<li><a href="#dll%E4%BB%A3%E7%A0%81">DLL代码</a></li>
+<li><a href="#%E6%B3%A8%E5%85%A5%E7%A8%8B%E5%BA%8F%E4%BB%A3%E7%A0%81">注入程序代码</a></li>
+<li><a href="#%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C">运行结果</a></li>
+</ul>
+</li>
+<li><a href="#%E9%98%B2%E8%8C%83%E6%89%8B%E6%AE%B5">防范手段</a></li>
+</ul>
+</li>
+</ul>
+
+                            </div>
+                            
+                                
+                                    
+                                        <!--en-->
+                                        <section class="post-copyright en">
+                                            <p class="copyright-item">
+                                                <span>Author:</span>
+                                                <span>blog</span>
+                                            </p>
+
+                                            <p class="copyright-item">
+                                                <span>Permalink:</span>
+                                                <span><a href="https://tickertapetimer.github.io/ring3注入学习(1)导入表注入/">https://tickertapetimer.github.io/ring3注入学习(1)导入表注入/</a></span>
+                                            </p>
+
+                                            <p class="copyright-item">
+                                                <span>License:</span>
+                                                <span>MIT License</span>
+                                            </p>
+                                        </section>
+                                        
+                                                
+                                                    
+                                                        <!-- Share-->
+                                                        <span style="margin-right:15px">
+                                                    <i class="post-share"></i>
+                                                    <span>Share:</span>
+                                                        <a title="QR Code" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tickertapetimer.github.io/ring3注入学习(1)导入表注入/"><i class="fa fa-qrcode"></i></a>
+                                                        <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tickertapetimer.github.io/ring3注入学习(1)导入表注入/&sharesource=qzone&title=ring3注入学习(1)导入表注入&pics=https://tickertapetimer.github.io/images/avatar.png?v=1629443424144&summary="><i class="fa fa-qq"></i></a>
+                                                        <a title="Weibo" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tickertapetimer.github.io/ring3注入学习(1)导入表注入/&sharesource=weibo&title=ring3注入学习(1)导入表注入 + " - " + &pic="https://tickertapetimer.github.io/images/avatar.png?v=1629443424144 "><i class="fa fa-weibo "></i></a>
+                                                        
+                                                                </span>
+                                                                <!--en-->
+                                                                <section class="post-tags en ">
+                                                                    <div>
+                                                                        <span>Tag(s):</span>
+                                                                        <span class="tag ">
+                        
+                        
+                        <a href="https://tickertapetimer.github.io/tag/lPO99KDRN/">#
+                                                逆向
+                                                    </a>
+                                                    
+                        <a href="https://tickertapetimer.github.io/tag/OI2yF9Mjr/">#
+                                                学习
+                                                    </a>
+                                                    
+                                                        
+                                                            </span>
+                                                                    </div>
+                                                                    <div>
+                                                                        <a href="javascript:window.history.back();">back</a>
+                                                                        <span>&dot;</span>
+                                                                        <a href="#">home</a>
+                                                                    </div>
+                                                                </section>
+                                                                
+                                                                                <!---->
+                                                                                <section class="post-nav">
+                                                                                    
+                                                                                            
+                                                                                                <a class="next" rel="next" href="https://tickertapetimer.github.io/一个Windows挖矿样本/">
+                                                                                                    Windows挖矿样本分析
+                                                                                                </a>
+                                                                                                
+                                                                                </section>
+                    </article>
+                </div>
+                
+                                            
+            </div>
+    </div>
+    </div>
+    </div>
+    
+        <footer id="footer" class="footer">
+            <div class="copyright">
+                
+                        
+                            
+                                        <svg viewBox="0 0 1024 1024" style="margin-left: 5px;margin-right: 5px;" version="1.0" width="8" height="8" class="my-face">
+            <path
+                d="M863.597631 513.574282l-271.33965-140.213484L729.783667 81.926656c3.583731-7.87141 7.167462-15.742819 7.167462-25.214109C736.887134 25.226908 708.345275 0.012799 672.635953 0.012799a63.611229 63.611229 0 0 0-39.293053 12.607055c-1.791866 1.59988-3.519736 3.19976-5.311602 3.19976L147.87531 418.925381a55.547834 55.547834 0 0 0-19.646527 47.356448c1.791866 17.278704 14.27093 33.021523 32.125591 42.492813l271.33965 141.749369L292.504463 945.221908c-12.479064 25.214109-1.791866 53.563983 23.166262 69.306802 10.751194 6.335525 23.230258 9.47129 35.709322 9.47129 16.062795 0 32.125591-4.735645 44.604655-15.742819l480.091993-403.297753a55.547834 55.547834 0 0 0 19.646526-47.228458 61.243407 61.243407 0 0 0-32.12559-44.156688z"
+                fill="#93b5cf"></path>
+        </svg>
+                                        blog &copy;Copyright
+                                            <script>
+                                                var date = new Date();
+                                                document.write("" + date.getFullYear());
+                                            </script>
+                                            | Powered by
+                                            <a href="https://coding.net" target="_blank">
+                                                Coding.net
+                                            </a>
+            </div>
+            <div id="update" style="display:none;">
+                on
+            </div>
+            
+                <div id="version" style="display:none;">
+                    1.7.5
+                </div>
+                
+                    <script>
+                        var pat = '';
+                        
+                        document.write('<div id="home_path" style="display:none;">' + document.location.protocol + '//' + window.document.location.hostname + pat + '</div>')
+                    </script>
+        </footer>
+        
+                <script>
+                    
+                    
+                    
+                    getStar();
+                    hljs.initHighlighting();
+                    console.clear();
+                    
+                    CheckVersion();
+                    
+                    var newDate = new Date();
+                    newDate.setTime(1629443424144);
+                    console.log(" Blog Update Time: " + newDate.toLocaleDateString());
+                    console.log("\n %c \u26a1Theme:Chic Author's Blog:https://blog.itjoker.cn  Write By ITJoker  \n\n", "color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;");
+                </script>
+                
+        </div>
+</body>
+<script>
+    scroll();
+</script>
+
+</html>

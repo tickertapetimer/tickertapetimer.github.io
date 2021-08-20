@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<title>
+    blog
+</title>
+<!--[if lt IE 9]><script src="//cdn.bootcss.com/html5shiv/r29/html5.js"></script><![endif]-->
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+<meta http-equiv="x-dns-prefetch-control" content="on">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<meta name="author" content="ticker tape timer">
+<meta name="description" content="A CTFer loves RE and Misc">
+<meta name="keywords" content="">
+<script async src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+<link rel="stylesheet" href="https://tickertapetimer.github.io/styles/main.css" />
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.7.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/css/style.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/tocbot.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/script.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/icon.min.js"></script>
+    
+            <script src="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@1.0.12/CDN/js/Card/prism.min.js"></script>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@1.0.12/CDN/css/Card/prism.min.css" />
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css">
+            <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js"></script>
+            
+                            <script>
+                                (function() {
+                                    var bp = document.createElement('script');
+                                    var curProtocol = window.location.protocol.split(':')[0];
+                                    if (curProtocol === 'https') {
+                                        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+                                    } else {
+                                        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                                    }
+                                    var s = document.getElementsByTagName("script")[0];
+                                    s.parentNode.insertBefore(bp, s);
+                                })();
+                            </script>
+                            
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo">
+                <a href="https://tickertapetimer.github.io">
+                    blog
+                </a>
+            </div>
+
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">
+                        首页
+                    </a>
+                    
+                    <a class="menu-item" href="/archives">
+                        归档
+                    </a>
+                    
+                    <a class="menu-item" href="/tags">
+                        标签
+                    </a>
+                    
+                    <a class="menu-item" href="/me">
+                        关于
+                    </a>
+                    
+                        <input id="switch_default" type="checkbox" class="switch_default">
+                        <label for="switch_default" class="toggleBtn"></label>
+            </div>
+            <form id="gridea-search-form" data-update="1629443424144" action="/search/index.html">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
+            </form>
+        </div>
+    </nav>
+
+    
+        <nav class="navbar-mobile" id="nav-mobile">
+            <div class="container">
+                <div class="navbar-header">
+                    <div>
+                        <a href="https://tickertapetimer.github.io">
+                            blog
+                        </a>
+                        <!--en-->
+                        <a id="mobile-toggle-theme-en" class="a en">&nbsp;Dark</a>
+                        <!--zh-->
+                        <a id="mobile-toggle-theme-zh" class="a zh">&nbsp;&#x6697;&#x9ED1;</a>
+                    </div>
+                    <form id="gridea-search-form" data-update="1629443424144" action="/search/index.html">
+                        <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
+                    </form>
+                    <!--en-->
+                    <div class="menu-toggle" id="menu-toggle-en" onclick="mobileBtn()">&#9776; Menu</div>
+                    <!--zh-->
+                    <div class="menu-toggle" id="menu-toggle-zh" onclick="mobileBtn()">&#9776; &#x83DC;&#x5355;</div>
+
+                </div>
+                <div class="menu" id="mobile-menu">
+                    
+                        <a class="menu-item" href="/">
+                            首页
+                        </a>
+                        
+                        <a class="menu-item" href="/archives">
+                            归档
+                        </a>
+                        
+                        <a class="menu-item" href="/tags">
+                            标签
+                        </a>
+                        
+                        <a class="menu-item" href="/me">
+                            关于
+                        </a>
+                        
+                </div>
+            </div>
+        </nav>
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementById("menu-toggle-en");
+        var toggleMenu_zh = document.getElementById("menu-toggle-zh");
+
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.display != "none") {
+            if (toggleMenu.classList.contains("active")) {
+                toggleMenu.classList.remove("active")
+                mobileMenu.classList.remove("active")
+            } else {
+                toggleMenu.classList.add("active")
+                mobileMenu.classList.add("active")
+            }
+        } else if (toggleMenu_zh.display != "none") {
+            if (toggleMenu_zh.classList.contains("active")) {
+                toggleMenu_zh.classList.remove("active")
+                mobileMenu.classList.remove("active")
+            } else {
+                toggleMenu_zh.classList.add("active")
+                mobileMenu.classList.add("active")
+            }
+        }
+
+    }
+</script>
+            <div class="main">
+                <div class="container">
+                    <article class="post-wrap">
+                        <header class="post-header">
+                            <h1 class="post-title">
+                                g2uc_writeup
+                            </h1>
+                            
+                                <!--en-->
+                                <div class="post-meta en">
+                                    Author:
+                                    <a itemprop="author" rel="author" href="/">
+                                        blog
+                                    </a>
+                                    <span class="post-time">
+                                Date: <a href="#">2020-11-08</a>
+                            </span>
+                                    <span class="post-readtime">Reading Time:<a
+                                    href="#">2.7
+                                    mins</a></span>
+                                    <span class="post-words">words:<a href="#">585</a></span>
+                                    
+                                        <span class="post-category">
+                                Category:
+                                
+                                <a href="https://tickertapetimer.github.io/tag/6g_QaqWQH/">WP</a>
+                                
+                            </span>
+                                        
+                                </div>
+                                
+                        </header>
+                        
+                        <div class="post-content">
+                            <h2 id="misc">misc</h2>
+<h4 id="签到">签到</h4>
+<p>有手就行</p>
+<h4 id="扫码支付">扫码支付</h4>
+<p>扫描二维码，得到字符串“th1s_1s_n0t_password”，binwalk发现有压缩包，直接改后缀解压，有加密，将字符串填入，解压得“flag{what_ls_you_f1ag}”</p>
+<h4 id="二次元二刺螈">二次元？二刺螈！</h4>
+<p>丢winhex改宽度，看flag</p>
+<figure data-type="image" tabindex="1"><img src="https://tickertapetimer.github.io/post-images/Untitled/image-20201108175647199.png" alt="image-20201108175647199" loading="lazy"></figure>
+<h4 id="docx是个啥">docx是个啥</h4>
+<p>下载下来解压，得到docx文件，改后缀再解压，得到一个加密压缩包，打开原来的docx文档，得到提示6位数，爆破得“flag{lue_1ue_lue}”</p>
+<h4 id="万恶的墨水">万恶的墨水</h4>
+<p>脚本</p>
+<pre><code class="language-python">import hashlib
+
+A = 'flag{vnei357####}'
+num = '1234567890qwertyuioplkjhgfdsazxcvbnm'
+B = 'B970BCC47176E5C61C42954CEA34F567'.lower()
+
+num1 = list(num)
+A1 = list(A)
+def md5(str):
+    m = hashlib.md5()
+    m.update(str.encode(&quot;utf8&quot;))
+    return m.hexdigest()
+
+for i in range(36):
+    A1[12] = num1[i]
+    for j in range(36):
+        A1[13] = num1[j]
+        for q in range(36):
+            A1[14] = num1[q]
+            for p in range(36):
+                A1[15] = num1[p]
+                A = ''.join(A1)
+                if(md5(A) == B):
+                    print(A)
+
+
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://tickertapetimer.github.io/post-images/g2uc_writeup/image-20201110160319211.png" alt="image-20201110160319211" loading="lazy"></figure>
+<h2 id="crypto">Crypto</h2>
+<h4 id="caesar">Caesar</h4>
+<p>凯撒密码，移15位解密得flag{d0youknowkaisa}</p>
+<h4 id="the-rail-fence-cipher">The rail fence cipher</h4>
+<p>栅栏密码，8位解密得flag{1_hate_math}</p>
+<h4 id="遵守社会主义核心价值观">遵守社会主义核心价值观</h4>
+<p>百度社会主义核心价值观编码，解码得flag{i_love_china}</p>
+<h2 id="web">web</h2>
+<h4 id="氪金才能变强">氪金才能变强</h4>
+<p>如题，要输入1000及以上的数，但输入后不能点击提交</p>
+<figure data-type="image" tabindex="3"><img src="https://tickertapetimer.github.io/post-images/g2uc_writeup/image-20201110161021209.png" alt="image-20201110161021209" loading="lazy"></figure>
+<p>F12看前端</p>
+<figure data-type="image" tabindex="4"><img src="https://tickertapetimer.github.io/post-images/g2uc_writeup/image-20201110161134845.png" alt="image-20201110161134845" loading="lazy"></figure>
+<p>删除disabled，可以点击，点击后跳转得flag{w0_xi_zhazhaFe1}</p>
+<h4 id="这网站真眼熟">这网站真眼熟</h4>
+<p>burpsuite抓包</p>
+<figure data-type="image" tabindex="5"><img src="https://tickertapetimer.github.io/post-images/g2uc_writeup/image-20201110161423969.png" alt="image-20201110161423969" loading="lazy"></figure>
+<h4 id="闹钟响了">闹钟响了</h4>
+<pre><code class="language-php">&lt;?php
+class clock
+{
+    function __wakeup()
+    {
+        echo &quot;flag{xxx}&quot;;
+        exit();
+    }
+}
+$qqq = new clock();
+echo serialize($qqq);
+?&gt;
+</code></pre>
+<p>运行得结果O:5:&quot;clock&quot;:0:{}</p>
+<p>传参</p>
+<figure data-type="image" tabindex="6"><img src="https://tickertapetimer.github.io/post-images/g2uc_writeup/image-20201110161637510.png" alt="image-20201110161637510" loading="lazy"></figure>
+<h4 id="极限一换一">极限一换一</h4>
+<p>源码</p>
+<pre><code class="language-php">&lt;?php
+$flag = &quot;flag{it_is_fun?_yes!}&quot;;
+$i = &quot;if you give me a flag , i will give you a flag&quot;;
+echo($i);
+if (isset($_GET['a'])) {
+    if (strcmp($_GET['a'], $flag) == 0) //如果 str1 小于 str2 返回 &lt; 0； 如果 str1大于 str2返回 &gt; 0；如果两者相等，返回 0。
+    {
+        die($flag);
+    }
+    else
+        print 'No';
+}
+?&gt;
+</code></pre>
+<p>传参，?a[]=1</p>
+<figure data-type="image" tabindex="7"><img src="https://tickertapetimer.github.io/post-images/g2uc_writeup/image-20201110161917990.png" alt="image-20201110161917990" loading="lazy"></figure>
+<h2 id="re">RE</h2>
+<h4 id="会走迷宫吗">会走迷宫吗</h4>
+<p>拖进IDA</p>
+<figure data-type="image" tabindex="8"><img src="https://tickertapetimer.github.io/post-images/g2uc_writeup/image-20201110162100019.png" alt="image-20201110162100019" loading="lazy"></figure>
+<p>运行exe</p>
+<figure data-type="image" tabindex="9"><img src="https://tickertapetimer.github.io/post-images/g2uc_writeup/image-20201110162137770.png" alt="image-20201110162137770" loading="lazy"></figure>
+<p>导出迷宫，每一行的字符串是倒的，所以将所有字符串倒过来拼接，再划分成10*10，得迷宫</p>
+<pre><code class="language-c">1100000000
+0100000000
+0110000000
+0011001110
+0001111010
+0000000010
+0000001110
+0000111000
+0000100000
+0000111112
+</code></pre>
+<p>路径即为flag<br>
+flag{4224242444144222332332244444}</p>
+<h4 id="一换一">一换一</h4>
+<figure data-type="image" tabindex="10"><img src="https://tickertapetimer.github.io/post-images/g2uc_writeup/image-20201110163031616.png" alt="image-20201110163031616" loading="lazy"></figure>
+<p>密文还原一下，fk_dwqo^njXkcjWg_l</p>
+<p>脚本</p>
+<pre><code class="language-python">import binascii
+
+a = 'fk_dwqo^njXkcjWg_l'
+
+for i in range(0, 18):
+    b = int(binascii.b2a_hex(a[i]),16) + i
+    print b
+</code></pre>
+<p>转字符串，得flag{vuevsbvowevo}</p>
+<h2 id="android">android</h2>
+<h4 id="g2uc_android1">g2uc_android1</h4>
+<p>改后缀，解压，搜索图片，得</p>
+<figure data-type="image" tabindex="11"><img src="https://tickertapetimer.github.io/post-images/g2uc_writeup/f.png" alt="f" loading="lazy"></figure>
+<h4 id="g2uc_android2">g2uc_android2</h4>
+<p>JEB反编译得</p>
+<figure data-type="image" tabindex="12"><img src="https://tickertapetimer.github.io/post-images/g2uc_writeup/image-20201110164908005.png" alt="image-20201110164908005" loading="lazy"></figure>
+<p>arr = ’0x99, 0x93, 0x9E, 0x98, 0x84, 0xA7, 0x90, 0x8D, 0xA0, 206, 140, 0xA0, 0x9A, 0x9E, 140, 0x86, 0x86, 0x86, 130‘</p>
+<p>将arr中的所有元素与0xFF作异或，得flag{Xor_1s_easyyy}</p>
+
+                        </div>
+                        
+                            <div class="post-toc">
+                                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#misc">misc</a><br>
+*
+<ul>
+<li><a href="#%E7%AD%BE%E5%88%B0">签到</a></li>
+<li><a href="#%E6%89%AB%E7%A0%81%E6%94%AF%E4%BB%98">扫码支付</a></li>
+<li><a href="#%E4%BA%8C%E6%AC%A1%E5%85%83%E4%BA%8C%E5%88%BA%E8%9E%88">二次元？二刺螈！</a></li>
+<li><a href="#docx%E6%98%AF%E4%B8%AA%E5%95%A5">docx是个啥</a></li>
+<li><a href="#%E4%B8%87%E6%81%B6%E7%9A%84%E5%A2%A8%E6%B0%B4">万恶的墨水</a></li>
+</ul>
+</li>
+<li><a href="#crypto">Crypto</a><br>
+*
+<ul>
+<li><a href="#caesar">Caesar</a></li>
+<li><a href="#the-rail-fence-cipher">The rail fence cipher</a></li>
+<li><a href="#%E9%81%B5%E5%AE%88%E7%A4%BE%E4%BC%9A%E4%B8%BB%E4%B9%89%E6%A0%B8%E5%BF%83%E4%BB%B7%E5%80%BC%E8%A7%82">遵守社会主义核心价值观</a></li>
+</ul>
+</li>
+<li><a href="#web">web</a><br>
+*
+<ul>
+<li><a href="#%E6%B0%AA%E9%87%91%E6%89%8D%E8%83%BD%E5%8F%98%E5%BC%BA">氪金才能变强</a></li>
+<li><a href="#%E8%BF%99%E7%BD%91%E7%AB%99%E7%9C%9F%E7%9C%BC%E7%86%9F">这网站真眼熟</a></li>
+<li><a href="#%E9%97%B9%E9%92%9F%E5%93%8D%E4%BA%86">闹钟响了</a></li>
+<li><a href="#%E6%9E%81%E9%99%90%E4%B8%80%E6%8D%A2%E4%B8%80">极限一换一</a></li>
+</ul>
+</li>
+<li><a href="#re">RE</a><br>
+*
+<ul>
+<li><a href="#%E4%BC%9A%E8%B5%B0%E8%BF%B7%E5%AE%AB%E5%90%97">会走迷宫吗</a></li>
+<li><a href="#%E4%B8%80%E6%8D%A2%E4%B8%80">一换一</a></li>
+</ul>
+</li>
+<li><a href="#android">android</a><br>
+*
+<ul>
+<li><a href="#g2uc_android1">g2uc_android1</a></li>
+<li><a href="#g2uc_android2">g2uc_android2</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                            </div>
+                            
+                                
+                                    
+                                        <!--en-->
+                                        <section class="post-copyright en">
+                                            <p class="copyright-item">
+                                                <span>Author:</span>
+                                                <span>blog</span>
+                                            </p>
+
+                                            <p class="copyright-item">
+                                                <span>Permalink:</span>
+                                                <span><a href="https://tickertapetimer.github.io/g2uc writeup/">https://tickertapetimer.github.io/g2uc writeup/</a></span>
+                                            </p>
+
+                                            <p class="copyright-item">
+                                                <span>License:</span>
+                                                <span>MIT License</span>
+                                            </p>
+                                        </section>
+                                        
+                                                
+                                                    
+                                                        <!-- Share-->
+                                                        <span style="margin-right:15px">
+                                                    <i class="post-share"></i>
+                                                    <span>Share:</span>
+                                                        <a title="QR Code" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tickertapetimer.github.io/g2uc writeup/"><i class="fa fa-qrcode"></i></a>
+                                                        <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tickertapetimer.github.io/g2uc writeup/&sharesource=qzone&title=g2uc_writeup&pics=https://tickertapetimer.github.io/images/avatar.png?v=1629443424144&summary="><i class="fa fa-qq"></i></a>
+                                                        <a title="Weibo" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tickertapetimer.github.io/g2uc writeup/&sharesource=weibo&title=g2uc_writeup + " - " + &pic="https://tickertapetimer.github.io/images/avatar.png?v=1629443424144 "><i class="fa fa-weibo "></i></a>
+                                                        
+                                                                </span>
+                                                                <!--en-->
+                                                                <section class="post-tags en ">
+                                                                    <div>
+                                                                        <span>Tag(s):</span>
+                                                                        <span class="tag ">
+                        
+                        
+                        <a href="https://tickertapetimer.github.io/tag/6g_QaqWQH/">#
+                                                WP
+                                                    </a>
+                                                    
+                                                        
+                                                            </span>
+                                                                    </div>
+                                                                    <div>
+                                                                        <a href="javascript:window.history.back();">back</a>
+                                                                        <span>&dot;</span>
+                                                                        <a href="#">home</a>
+                                                                    </div>
+                                                                </section>
+                                                                
+                                                                                <!---->
+                                                                                <section class="post-nav">
+                                                                                    
+                                                                                        <a class="prev" rel="prev" href="https://tickertapetimer.github.io/【ACTF2020】Splendid_MineCraft【wp】/">
+                                                                                            【ACTF2020】Splendid_MineCraft【wp】
+                                                                                        </a>
+                                                                                        
+                                                                                            
+                                                                                                <a class="next" rel="next" href="https://tickertapetimer.github.io/CTFd搭建以及后续使用/">
+                                                                                                    CTFd搭建以及后续使用
+                                                                                                </a>
+                                                                                                
+                                                                                </section>
+                    </article>
+                </div>
+                
+                                            
+            </div>
+    </div>
+    </div>
+    </div>
+    
+        <footer id="footer" class="footer">
+            <div class="copyright">
+                
+                        
+                            
+                                        <svg viewBox="0 0 1024 1024" style="margin-left: 5px;margin-right: 5px;" version="1.0" width="8" height="8" class="my-face">
+            <path
+                d="M863.597631 513.574282l-271.33965-140.213484L729.783667 81.926656c3.583731-7.87141 7.167462-15.742819 7.167462-25.214109C736.887134 25.226908 708.345275 0.012799 672.635953 0.012799a63.611229 63.611229 0 0 0-39.293053 12.607055c-1.791866 1.59988-3.519736 3.19976-5.311602 3.19976L147.87531 418.925381a55.547834 55.547834 0 0 0-19.646527 47.356448c1.791866 17.278704 14.27093 33.021523 32.125591 42.492813l271.33965 141.749369L292.504463 945.221908c-12.479064 25.214109-1.791866 53.563983 23.166262 69.306802 10.751194 6.335525 23.230258 9.47129 35.709322 9.47129 16.062795 0 32.125591-4.735645 44.604655-15.742819l480.091993-403.297753a55.547834 55.547834 0 0 0 19.646526-47.228458 61.243407 61.243407 0 0 0-32.12559-44.156688z"
+                fill="#93b5cf"></path>
+        </svg>
+                                        blog &copy;Copyright
+                                            <script>
+                                                var date = new Date();
+                                                document.write("" + date.getFullYear());
+                                            </script>
+                                            | Powered by
+                                            <a href="https://coding.net" target="_blank">
+                                                Coding.net
+                                            </a>
+            </div>
+            <div id="update" style="display:none;">
+                on
+            </div>
+            
+                <div id="version" style="display:none;">
+                    1.7.5
+                </div>
+                
+                    <script>
+                        var pat = '';
+                        
+                        document.write('<div id="home_path" style="display:none;">' + document.location.protocol + '//' + window.document.location.hostname + pat + '</div>')
+                    </script>
+        </footer>
+        
+                <script>
+                    
+                    
+                    
+                    getStar();
+                    hljs.initHighlighting();
+                    console.clear();
+                    
+                    CheckVersion();
+                    
+                    var newDate = new Date();
+                    newDate.setTime(1629443424144);
+                    console.log(" Blog Update Time: " + newDate.toLocaleDateString());
+                    console.log("\n %c \u26a1Theme:Chic Author's Blog:https://blog.itjoker.cn  Write By ITJoker  \n\n", "color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;");
+                </script>
+                
+        </div>
+</body>
+<script>
+    scroll();
+</script>
+
+</html>

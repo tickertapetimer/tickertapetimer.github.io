@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<title>
+    blog
+</title>
+<!--[if lt IE 9]><script src="//cdn.bootcss.com/html5shiv/r29/html5.js"></script><![endif]-->
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+<meta http-equiv="x-dns-prefetch-control" content="on">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<meta name="author" content="ticker tape timer">
+<meta name="description" content="A CTFer loves RE and Misc">
+<meta name="keywords" content="">
+<script async src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+<link rel="stylesheet" href="https://tickertapetimer.github.io/styles/main.css" />
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.7.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/css/style.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/tocbot.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/script.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/icon.min.js"></script>
+    
+            <script src="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@1.0.12/CDN/js/Card/prism.min.js"></script>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@1.0.12/CDN/css/Card/prism.min.css" />
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css">
+            <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js"></script>
+            
+                            <script>
+                                (function() {
+                                    var bp = document.createElement('script');
+                                    var curProtocol = window.location.protocol.split(':')[0];
+                                    if (curProtocol === 'https') {
+                                        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+                                    } else {
+                                        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                                    }
+                                    var s = document.getElementsByTagName("script")[0];
+                                    s.parentNode.insertBefore(bp, s);
+                                })();
+                            </script>
+                            
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo">
+                <a href="https://tickertapetimer.github.io">
+                    blog
+                </a>
+            </div>
+
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">
+                        首页
+                    </a>
+                    
+                    <a class="menu-item" href="/archives">
+                        归档
+                    </a>
+                    
+                    <a class="menu-item" href="/tags">
+                        标签
+                    </a>
+                    
+                    <a class="menu-item" href="/me">
+                        关于
+                    </a>
+                    
+                        <input id="switch_default" type="checkbox" class="switch_default">
+                        <label for="switch_default" class="toggleBtn"></label>
+            </div>
+            <form id="gridea-search-form" data-update="1629443424144" action="/search/index.html">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
+            </form>
+        </div>
+    </nav>
+
+    
+        <nav class="navbar-mobile" id="nav-mobile">
+            <div class="container">
+                <div class="navbar-header">
+                    <div>
+                        <a href="https://tickertapetimer.github.io">
+                            blog
+                        </a>
+                        <!--en-->
+                        <a id="mobile-toggle-theme-en" class="a en">&nbsp;Dark</a>
+                        <!--zh-->
+                        <a id="mobile-toggle-theme-zh" class="a zh">&nbsp;&#x6697;&#x9ED1;</a>
+                    </div>
+                    <form id="gridea-search-form" data-update="1629443424144" action="/search/index.html">
+                        <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
+                    </form>
+                    <!--en-->
+                    <div class="menu-toggle" id="menu-toggle-en" onclick="mobileBtn()">&#9776; Menu</div>
+                    <!--zh-->
+                    <div class="menu-toggle" id="menu-toggle-zh" onclick="mobileBtn()">&#9776; &#x83DC;&#x5355;</div>
+
+                </div>
+                <div class="menu" id="mobile-menu">
+                    
+                        <a class="menu-item" href="/">
+                            首页
+                        </a>
+                        
+                        <a class="menu-item" href="/archives">
+                            归档
+                        </a>
+                        
+                        <a class="menu-item" href="/tags">
+                            标签
+                        </a>
+                        
+                        <a class="menu-item" href="/me">
+                            关于
+                        </a>
+                        
+                </div>
+            </div>
+        </nav>
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementById("menu-toggle-en");
+        var toggleMenu_zh = document.getElementById("menu-toggle-zh");
+
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.display != "none") {
+            if (toggleMenu.classList.contains("active")) {
+                toggleMenu.classList.remove("active")
+                mobileMenu.classList.remove("active")
+            } else {
+                toggleMenu.classList.add("active")
+                mobileMenu.classList.add("active")
+            }
+        } else if (toggleMenu_zh.display != "none") {
+            if (toggleMenu_zh.classList.contains("active")) {
+                toggleMenu_zh.classList.remove("active")
+                mobileMenu.classList.remove("active")
+            } else {
+                toggleMenu_zh.classList.add("active")
+                mobileMenu.classList.add("active")
+            }
+        }
+
+    }
+</script>
+            <div class="main">
+                <div class="container">
+                    <article class="post-wrap">
+                        <header class="post-header">
+                            <h1 class="post-title">
+                                软件设计课设
+                            </h1>
+                            
+                                <!--en-->
+                                <div class="post-meta en">
+                                    Author:
+                                    <a itemprop="author" rel="author" href="/">
+                                        blog
+                                    </a>
+                                    <span class="post-time">
+                                Date: <a href="#">2021-01-11</a>
+                            </span>
+                                    <span class="post-readtime">Reading Time:<a
+                                    href="#">11.3
+                                    mins</a></span>
+                                    <span class="post-words">words:<a href="#">2100</a></span>
+                                    
+                                </div>
+                                
+                        </header>
+                        
+                        <div class="post-content">
+                            <pre><code class="language-python">import docx
+import random
+import linecache
+import hashlib
+import tkinter
+from tkinter import messagebox
+
+# 试卷的docx
+doc = docx.Document()
+# 全部答案的docx
+doc_a = docx.Document()
+
+line2 = '.'
+
+
+# 生成选择题答案
+def choice(num1_1, num2_1):
+    # 打开选择题答案存放的txt文件
+    f = open('./Answer.txt', 'w')
+
+    # 通过在随机选题后添加进列表来防止有重复的题目
+    # 如果有重复的随机数就再随机一遍
+    list1 = []
+    for j in range(num1_1):
+        i = random.randint(1, 10)
+        while i in list1:
+            i = random.randint(1, 10)
+        list1.append(i)
+        # 打印检测
+        print(list1)
+        # 因为选择题有三行，一行题目，一行选项，一行答案，所以随机数*3才能精确选到相应的题目和选项
+        i = 3 * i
+        print(i)
+
+        # 选题
+        if num2_1 == 1:
+            # 打开题目存放的txt并选取题目
+            line = linecache.getline('question\\choice\\1.txt', i - 1)
+            # 添加题目序号
+            line1 = str(j + 1) + line2
+            line = line1 + line
+            doc.add_paragraph(line)
+            line = linecache.getline('question\\choice\\1.txt', i)
+            doc.add_paragraph(line)
+            line = linecache.getline('question\\choice\\1.txt', i - 2)
+            f.write(line)
+            doc_a.add_paragraph(line)
+        elif num2_1 == 2:
+            line = linecache.getline('question\\choice\\2.txt', i - 1)
+            line1 = str(j + 1) + line2
+            line = line1 + line
+            doc.add_paragraph(line)
+            line = linecache.getline('question\\choice\\2.txt', i)
+            doc.add_paragraph(line)
+            line = linecache.getline('question\\choice\\2.txt', i - 2)
+            f.write(line)
+            doc_a.add_paragraph(line)
+        elif num2_1 == 3:
+            line = linecache.getline('question\\choice\\3.txt', i - 1)
+            line1 = str(j + 1) + line2
+            line = line1 + line
+            doc.add_paragraph(line)
+            line = linecache.getline('question\\choice\\3.txt', i)
+            doc.add_paragraph(line)
+            line = linecache.getline('question\\choice\\3.txt', i - 2)
+            f.write(line)
+            doc_a.add_paragraph(line)
+
+    f.close()
+    return 0
+
+
+def completion(num3_1, num4_1):
+    # 通过在随机选题后添加进列表来防止有重复的题目
+    # 如果有重复的随机数就再随机一遍
+    list1 = []
+    for j in range(num3_1):
+        i = random.randint(1, 10)
+        while i in list1:
+            i = random.randint(1, 10)
+        list1.append(i)
+        # 打印检测
+        print(list1)
+        # 因为选填空有两行，一行题目，一行答案，所以随机数*2可以精确选到相应的题目
+        i = 2 * i
+        print(i)
+
+        if num4_1 == 2:
+            line = linecache.getline('question\\completion\\2.txt', i)
+            line1 = str(j + 1) + line2
+            line = line1 + line
+            doc.add_paragraph(line)
+            line = linecache.getline('question\\completion\\2.txt', i - 1)
+            doc_a.add_paragraph(line)
+        elif num4_1 == 3:
+            line = linecache.getline('question\\completion\\3.txt', i)
+            line1 = str(j + 1) + line2
+            line = line1 + line
+            doc.add_paragraph(line)
+            line = linecache.getline('question\\completion\\3.txt', i - 1)
+            doc_a.add_paragraph(line)
+        elif num4_1 == 4:
+            line = linecache.getline('question\\completion\\4.txt', i)
+            line1 = str(j + 1) + line2
+            line = line1 + line
+            doc.add_paragraph(line)
+            line = linecache.getline('question\\completion\\4.txt', i - 1)
+            doc_a.add_paragraph(line)
+
+    return 0
+
+
+def short_answer(num5_1, num6_1):
+    # 通过在随机选题后添加进列表来防止有重复的题目
+    # 如果有重复的随机数就再随机一遍
+    list1 = []
+    for j in range(num5_1):
+        i = random.randint(1, 10)
+        while i in list1:
+            i = random.randint(1, 10)
+        list1.append(i)
+        # 打印检测
+        print(list1)
+        # 因为简答题有两行，一行题目，一行答案，所以随机数*3才能精确选到相应的题目
+        i = 2 * i
+        print(i)
+
+        if num6_1 == 5:
+            line = linecache.getline('question\\short\\5.txt', i)
+            line1 = str(j + 1) + line2
+            line = line1 + line
+            doc.add_paragraph(line)
+            line = linecache.getline('question\\short\\5.txt', i - 1)
+            doc_a.add_paragraph(line)
+        elif num6_1 == 10:
+            line = linecache.getline('question\\short\\10.txt', i)
+            line1 = str(j + 1) + line2
+            line = line1 + line
+            doc.add_paragraph(line)
+            line = linecache.getline('question\\short\\10.txt', i - 1)
+            doc_a.add_paragraph(line)
+        elif num6_1 == 15:
+            line = linecache.getline('question\\short\\15.txt', i)
+            line1 = str(j + 1) + line2
+            line = line1 + line
+            doc.add_paragraph(line)
+            line = linecache.getline('question\\short\\15.txt', i - 1)
+            doc_a.add_paragraph(line)
+
+    return 0
+
+
+def setup(num1, num2, num3, num4, num5, num6, new_window):
+    num1_1 = num1.get()
+    num2_1 = num2.get()
+    num3_1 = num3.get()
+    num4_1 = num4.get()
+    num5_1 = num5.get()
+    num6_1 = num6.get()
+
+    if num1_1 &gt; 0:
+        choice(num1_1, num2_1)
+    if num3_1 &gt; 0:
+        completion(num3_1, num4_1)
+    if num5_1 &gt; 0:
+        short_answer(num5_1, num6_1)
+
+    doc.save('./试卷.docx')
+    doc_a.save('./答案.docx')
+
+    messagebox.showinfo(title='成功', message='试卷已生成')
+    new_window.destroy()
+
+
+def Create_testpaper(window1):
+    window1.destroy()
+
+    # 输入题型以及分数窗口
+    new_window = tkinter.Tk()
+    new_window.title(&quot;试卷自动生成系统&quot;)
+
+    sw = new_window.winfo_screenwidth()
+    sh = new_window.winfo_screenheight()
+    ww = 300
+    wh = 300
+    x = (sw - ww) / 2
+    y = (sh - wh) / 2
+    new_window.geometry(&quot;%dx%d+%d+%d&quot; % (ww, wh, x, y))
+
+    num1 = tkinter.IntVar()
+    num2 = tkinter.IntVar()
+    num3 = tkinter.IntVar()
+    num4 = tkinter.IntVar()
+    num5 = tkinter.IntVar()
+    num6 = tkinter.IntVar()
+
+    Label1 = tkinter.Label(new_window, text=&quot;选择题题数,只有10道&quot;)
+    Label1.grid(row=0)
+    Entry1 = tkinter.Entry(new_window, textvariable=num1, show=None)
+    Entry1.grid(row=1, column=0)
+    Label2 = tkinter.Label(new_window, text=&quot;单题分值,1~3分&quot;)
+    Label2.grid(row=0, column=1)
+    Entry2 = tkinter.Entry(new_window, textvariable=num2, show=None)
+    Entry2.grid(row=1, column=1)
+    Label3 = tkinter.Label(new_window, text=&quot;填空题题数,只有10道&quot;)
+    Label3.grid(row=2)
+    Entry3 = tkinter.Entry(new_window, textvariable=num3, show=None)
+    Entry3.grid(row=3, column=0)
+    Label4 = tkinter.Label(new_window, text=&quot;单题分值,2~4分&quot;)
+    Label4.grid(row=2, column=1)
+    Entry4 = tkinter.Entry(new_window, textvariable=num4, show=None)
+    Entry4.grid(row=3, column=1)
+    Label5 = tkinter.Label(new_window, text=&quot;简答题题数,只有10道&quot;)
+    Label5.grid(row=4)
+    Entry5 = tkinter.Entry(new_window, textvariable=num5, show=None)
+    Entry5.grid(row=5, column=0)
+    Label6 = tkinter.Label(new_window, text=&quot;单题分值,5、10、15分&quot;)
+    Label6.grid(row=4, column=1)
+    Entry6 = tkinter.Entry(new_window, textvariable=num6, show=None)
+    Entry6.grid(row=5, column=1)
+    Button2 = tkinter.Button(new_window, text=&quot;生成&quot;,
+                             command=lambda: setup(num1, num2, num3, num4, num5, num6, new_window))
+    Button2.grid(row=6)
+
+    new_window.mainloop()
+
+
+def count(window2, num7):
+    num7_1 = num7.get()
+    # 答题卡
+    Answer_card = open('./Answer_card.txt', 'r')
+    # 答案
+    Answer = open('./Answer.txt', 'r')
+
+    line_a = Answer.readline()
+    line_a_c = Answer_card.readline()
+    score = 0
+    # 对了加分，错了不加分
+    while line_a:
+        if line_a == line_a_c:
+            score = score + num7_1
+        line_a = Answer.readline()
+        line_a_c = Answer_card.readline()
+
+    # 弹窗显示选择题分数
+    messagebox.showinfo(title=&quot;选择题得分&quot;, message=str(score))
+    window2.destroy()
+
+
+def Correct_testpaper(window1):
+    window1.destroy()
+
+    # 批改界面
+    window2 = tkinter.Tk()
+    window2.title(&quot;试卷自动批改系统(只限批改选择题)&quot;)
+
+    sw = window2.winfo_screenwidth()
+    sh = window2.winfo_screenheight()
+    ww = 300
+    wh = 300
+    x = (sw - ww) / 2
+    y = (sh - wh) / 2
+    window2.geometry(&quot;%dx%d+%d+%d&quot; % (ww, wh, x, y))
+
+    num7 = tkinter.IntVar()
+
+    Label7 = tkinter.Label(window2, text=&quot;选择题单分分值&quot;)
+    Label7.pack()
+    Entry7 = tkinter.Entry(window2, textvariable=num7, show=None)
+    Entry7.pack()
+    botton = tkinter.Button(window2, text=&quot;确定&quot;, command=lambda: count(window2, num7))
+    botton.pack()
+
+    window2.mainloop()
+
+
+def Main():
+    # 主界面两个选项，生成试卷和批改试卷
+    window1 = tkinter.Tk()
+    window1.title(&quot;试卷自动生成系统&quot;)
+
+    sw = window1.winfo_screenwidth()
+    sh = window1.winfo_screenheight()
+    ww = 300
+    wh = 300
+    x = (sw - ww) / 2
+    y = (sh - wh) / 2
+    window1.geometry(&quot;%dx%d+%d+%d&quot; % (ww, wh, x, y))
+
+    botton1 = tkinter.Button(window1, text=&quot;生成试卷&quot;, command=lambda: Create_testpaper(window1))
+    botton1.pack()
+    botton2 = tkinter.Button(window1, text=&quot;批改试卷&quot;, command=lambda: Correct_testpaper(window1))
+    botton2.pack()
+    window1.mainloop()
+
+
+def login(top, user, password):
+    # 登录验证
+    user_var = user.get()
+    password_var = password.get()
+    # 打开密码存放txt
+    user_true = linecache.getline('./passwd.txt', 1)
+    user_true = user_true.replace(&quot;\n&quot;, &quot;&quot;)
+    password_true = linecache.getline('./passwd.txt', 2)
+    password_true = password_true.replace(&quot;\n&quot;, &quot;&quot;)
+
+    # md5加密验证
+    user_md5 = hashlib.md5(str(user_var).encode(&quot;utf-8&quot;)).hexdigest()
+    password_md5 = hashlib.md5(str(password_var).encode(&quot;utf-8&quot;)).hexdigest()
+
+    if user_md5 != user_true or password_md5 != password_true:
+        messagebox.showinfo(title='错误', message='用户名或者密码不正确')
+    else:
+        messagebox.showinfo(title='正确', message='欢迎管理员进入')
+        top.destroy()
+        # 进入主界面
+        Main()
+
+
+def change(user):
+    # 验证用户名
+    user_var = user.get()
+    user_md5 = hashlib.md5(str(user_var).encode(&quot;utf-8&quot;)).hexdigest()
+    user_true = linecache.getline('./passwd.txt', 1)
+    user_true = user_true.replace(&quot;\n&quot;, &quot;&quot;)
+    if user_md5 != user_true:
+        messagebox.showinfo(title='错误', message='用户名不正确')
+    else:
+        messagebox.showinfo(title='修改', message='输入原密码和新密码')
+        top.destroy()
+        modify = tkinter.Tk()
+        modify.title(&quot;修改密码&quot;)
+
+        sw = modify.winfo_screenwidth()
+        sh = modify.winfo_screenheight()
+        ww = 300
+        wh = 300
+        x = (sw - ww) / 2
+        y = (sh - wh) / 2
+        modify.geometry(&quot;%dx%d+%d+%d&quot; % (ww, wh, x, y))
+
+        old_label = tkinter.Label(modify, text=&quot;原密码&quot;)
+        old_label.pack()
+        password_old = tkinter.StringVar()
+        password_input = tkinter.Entry(modify, textvariable=password_old, show=None)
+        password_input.pack()
+
+        new_label = tkinter.Label(modify, text=&quot;新密码&quot;)
+        new_label.pack()
+        password_new = tkinter.StringVar()
+        password_input1 = tkinter.Entry(modify, textvariable=password_new, show=None)
+        password_input1.pack()
+
+        change_botton = tkinter.Button(modify, text=&quot;确认&quot;,
+                                       command=lambda: write_txt(modify, user_md5, password_new,
+                                                                 password_old))
+        change_botton.pack()
+
+        modify.mainloop()
+
+
+def write_txt(modify, user_md5, password_new, password_old):
+    # 覆盖原密码
+    password_var = password_old.get()
+    password_true = linecache.getline('./passwd.txt', 2)
+    password_true = password_true.replace(&quot;\n&quot;, &quot;&quot;)
+    password_md5 = hashlib.md5(str(password_var).encode(&quot;utf-8&quot;)).hexdigest()
+    if password_md5 != password_true:
+        messagebox.showinfo(title='错误', message='密码不正确')
+    else:
+        password_newinput = password_new.get()
+        password_newmd5 = hashlib.md5(str(password_newinput).encode(&quot;utf-8&quot;)).hexdigest()
+
+        txt = open('./passwd.txt', 'w')
+        txt.write(user_md5)
+        txt.write('\n')
+        txt.write(password_newmd5)
+        txt.close()
+
+        messagebox.showinfo(title='正确', message='密码已修改')
+        modify.destroy()
+
+        login_new = tkinter.Tk()
+        login_new.title(&quot;登录&quot;)
+
+        sw = login_new.winfo_screenwidth()
+        sh = login_new.winfo_screenheight()
+        ww = 300
+        wh = 300
+        x = (sw - ww) / 2
+        y = (sh - wh) / 2
+        login_new.geometry(&quot;%dx%d+%d+%d&quot; % (ww, wh, x, y))
+
+        login_botton = tkinter.Button(login_new, text=&quot;登录&quot;, command=Main)
+        login_botton.pack()
+
+        login_new.destroy()
+
+
+if __name__ == '__main__':
+    # 登录窗口
+    top = tkinter.Tk()
+    top.title(&quot;试卷自动生成系统&quot;)
+
+    # 居中显示窗口
+    # sw和sh是获取电脑屏幕的分辨率
+    # ww和wh是窗口预设分辨率
+    sw = top.winfo_screenwidth()
+    sh = top.winfo_screenheight()
+    ww = 300
+    wh = 300
+    # x和y是电脑分辨率和窗口预设计算后得出的坐标值，保证窗口弹出居中
+    x = (sw - ww) / 2
+    y = (sh - wh) / 2
+    top.geometry(&quot;%dx%d+%d+%d&quot; % (ww, wh, x, y))
+
+    user = tkinter.StringVar()
+    password = tkinter.StringVar()
+
+    # 设置文本、输入框和按钮去实现各项功能
+    L1 = tkinter.Label(top, text=&quot;用户名&quot;)
+    L1.pack()
+    name1 = tkinter.Entry(top, textvariable=user, show=None)
+    name1.pack()
+    L2 = tkinter.Label(top, text=&quot;密码&quot;)
+    L2.pack()
+    name2 = tkinter.Entry(top, textvariable=password, show='*')
+    name2.pack()
+    Button1 = tkinter.Button(top, text=&quot;登录&quot;, command=lambda: login(top, user, password))
+    Button1.pack()
+    Button2 = tkinter.Button(top, text=&quot;修改密码&quot;, command=lambda: change(user))
+    Button2.pack()
+
+    # 保持窗口事件
+    top.mainloop()
+</code></pre>
+
+                        </div>
+                        
+                            <div class="post-toc">
+                                
+                            </div>
+                            
+                                
+                                    
+                                        <!--en-->
+                                        <section class="post-copyright en">
+                                            <p class="copyright-item">
+                                                <span>Author:</span>
+                                                <span>blog</span>
+                                            </p>
+
+                                            <p class="copyright-item">
+                                                <span>Permalink:</span>
+                                                <span><a href="https://tickertapetimer.github.io/软件设计课设/">https://tickertapetimer.github.io/软件设计课设/</a></span>
+                                            </p>
+
+                                            <p class="copyright-item">
+                                                <span>License:</span>
+                                                <span>MIT License</span>
+                                            </p>
+                                        </section>
+                                        
+                                                
+                                                    
+                                                        <!-- Share-->
+                                                        <span style="margin-right:15px">
+                                                    <i class="post-share"></i>
+                                                    <span>Share:</span>
+                                                        <a title="QR Code" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tickertapetimer.github.io/软件设计课设/"><i class="fa fa-qrcode"></i></a>
+                                                        <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tickertapetimer.github.io/软件设计课设/&sharesource=qzone&title=软件设计课设&pics=https://tickertapetimer.github.io/images/avatar.png?v=1629443424144&summary="><i class="fa fa-qq"></i></a>
+                                                        <a title="Weibo" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tickertapetimer.github.io/软件设计课设/&sharesource=weibo&title=软件设计课设 + " - " + &pic="https://tickertapetimer.github.io/images/avatar.png?v=1629443424144 "><i class="fa fa-weibo "></i></a>
+                                                        
+                                                                </span>
+                                                                <!--en-->
+                                                                <section class="post-tags en ">
+                                                                    <div>
+                                                                        <span>Tag(s):</span>
+                                                                        <span class="tag ">
+                        
+                                                            </span>
+                                                                    </div>
+                                                                    <div>
+                                                                        <a href="javascript:window.history.back();">back</a>
+                                                                        <span>&dot;</span>
+                                                                        <a href="#">home</a>
+                                                                    </div>
+                                                                </section>
+                                                                
+                                                                                <!---->
+                                                                                <section class="post-nav">
+                                                                                    
+                                                                                        <a class="prev" rel="prev" href="https://tickertapetimer.github.io/python字节码初析/">
+                                                                                            python字节码初析
+                                                                                        </a>
+                                                                                        
+                                                                                            
+                                                                                                <a class="next" rel="next" href="https://tickertapetimer.github.io/通过阉割FreeLibrary来实现DLL隐藏/">
+                                                                                                    通过阉割FreeLibrary来实现DLL隐藏
+                                                                                                </a>
+                                                                                                
+                                                                                </section>
+                    </article>
+                </div>
+                
+                                            
+            </div>
+    </div>
+    </div>
+    </div>
+    
+        <footer id="footer" class="footer">
+            <div class="copyright">
+                
+                        
+                            
+                                        <svg viewBox="0 0 1024 1024" style="margin-left: 5px;margin-right: 5px;" version="1.0" width="8" height="8" class="my-face">
+            <path
+                d="M863.597631 513.574282l-271.33965-140.213484L729.783667 81.926656c3.583731-7.87141 7.167462-15.742819 7.167462-25.214109C736.887134 25.226908 708.345275 0.012799 672.635953 0.012799a63.611229 63.611229 0 0 0-39.293053 12.607055c-1.791866 1.59988-3.519736 3.19976-5.311602 3.19976L147.87531 418.925381a55.547834 55.547834 0 0 0-19.646527 47.356448c1.791866 17.278704 14.27093 33.021523 32.125591 42.492813l271.33965 141.749369L292.504463 945.221908c-12.479064 25.214109-1.791866 53.563983 23.166262 69.306802 10.751194 6.335525 23.230258 9.47129 35.709322 9.47129 16.062795 0 32.125591-4.735645 44.604655-15.742819l480.091993-403.297753a55.547834 55.547834 0 0 0 19.646526-47.228458 61.243407 61.243407 0 0 0-32.12559-44.156688z"
+                fill="#93b5cf"></path>
+        </svg>
+                                        blog &copy;Copyright
+                                            <script>
+                                                var date = new Date();
+                                                document.write("" + date.getFullYear());
+                                            </script>
+                                            | Powered by
+                                            <a href="https://coding.net" target="_blank">
+                                                Coding.net
+                                            </a>
+            </div>
+            <div id="update" style="display:none;">
+                on
+            </div>
+            
+                <div id="version" style="display:none;">
+                    1.7.5
+                </div>
+                
+                    <script>
+                        var pat = '';
+                        
+                        document.write('<div id="home_path" style="display:none;">' + document.location.protocol + '//' + window.document.location.hostname + pat + '</div>')
+                    </script>
+        </footer>
+        
+                <script>
+                    
+                    
+                    
+                    getStar();
+                    hljs.initHighlighting();
+                    console.clear();
+                    
+                    CheckVersion();
+                    
+                    var newDate = new Date();
+                    newDate.setTime(1629443424144);
+                    console.log(" Blog Update Time: " + newDate.toLocaleDateString());
+                    console.log("\n %c \u26a1Theme:Chic Author's Blog:https://blog.itjoker.cn  Write By ITJoker  \n\n", "color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;");
+                </script>
+                
+        </div>
+</body>
+<script>
+    scroll();
+</script>
+
+</html>

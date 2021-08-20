@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<title>
+    blog
+</title>
+<!--[if lt IE 9]><script src="//cdn.bootcss.com/html5shiv/r29/html5.js"></script><![endif]-->
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+<meta http-equiv="x-dns-prefetch-control" content="on">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<meta name="author" content="ticker tape timer">
+<meta name="description" content="A CTFer loves RE and Misc">
+<meta name="keywords" content="">
+<script async src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+<link rel="stylesheet" href="https://tickertapetimer.github.io/styles/main.css" />
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.7.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/css/style.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/tocbot.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/script.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/icon.min.js"></script>
+    
+            <script src="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@1.0.12/CDN/js/Card/prism.min.js"></script>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@1.0.12/CDN/css/Card/prism.min.css" />
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css">
+            <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js"></script>
+            
+                            <script>
+                                (function() {
+                                    var bp = document.createElement('script');
+                                    var curProtocol = window.location.protocol.split(':')[0];
+                                    if (curProtocol === 'https') {
+                                        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+                                    } else {
+                                        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                                    }
+                                    var s = document.getElementsByTagName("script")[0];
+                                    s.parentNode.insertBefore(bp, s);
+                                })();
+                            </script>
+                            
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo">
+                <a href="https://tickertapetimer.github.io">
+                    blog
+                </a>
+            </div>
+
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">
+                        首页
+                    </a>
+                    
+                    <a class="menu-item" href="/archives">
+                        归档
+                    </a>
+                    
+                    <a class="menu-item" href="/tags">
+                        标签
+                    </a>
+                    
+                    <a class="menu-item" href="/me">
+                        关于
+                    </a>
+                    
+                        <input id="switch_default" type="checkbox" class="switch_default">
+                        <label for="switch_default" class="toggleBtn"></label>
+            </div>
+            <form id="gridea-search-form" data-update="1629443424144" action="/search/index.html">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
+            </form>
+        </div>
+    </nav>
+
+    
+        <nav class="navbar-mobile" id="nav-mobile">
+            <div class="container">
+                <div class="navbar-header">
+                    <div>
+                        <a href="https://tickertapetimer.github.io">
+                            blog
+                        </a>
+                        <!--en-->
+                        <a id="mobile-toggle-theme-en" class="a en">&nbsp;Dark</a>
+                        <!--zh-->
+                        <a id="mobile-toggle-theme-zh" class="a zh">&nbsp;&#x6697;&#x9ED1;</a>
+                    </div>
+                    <form id="gridea-search-form" data-update="1629443424144" action="/search/index.html">
+                        <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
+                    </form>
+                    <!--en-->
+                    <div class="menu-toggle" id="menu-toggle-en" onclick="mobileBtn()">&#9776; Menu</div>
+                    <!--zh-->
+                    <div class="menu-toggle" id="menu-toggle-zh" onclick="mobileBtn()">&#9776; &#x83DC;&#x5355;</div>
+
+                </div>
+                <div class="menu" id="mobile-menu">
+                    
+                        <a class="menu-item" href="/">
+                            首页
+                        </a>
+                        
+                        <a class="menu-item" href="/archives">
+                            归档
+                        </a>
+                        
+                        <a class="menu-item" href="/tags">
+                            标签
+                        </a>
+                        
+                        <a class="menu-item" href="/me">
+                            关于
+                        </a>
+                        
+                </div>
+            </div>
+        </nav>
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementById("menu-toggle-en");
+        var toggleMenu_zh = document.getElementById("menu-toggle-zh");
+
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.display != "none") {
+            if (toggleMenu.classList.contains("active")) {
+                toggleMenu.classList.remove("active")
+                mobileMenu.classList.remove("active")
+            } else {
+                toggleMenu.classList.add("active")
+                mobileMenu.classList.add("active")
+            }
+        } else if (toggleMenu_zh.display != "none") {
+            if (toggleMenu_zh.classList.contains("active")) {
+                toggleMenu_zh.classList.remove("active")
+                mobileMenu.classList.remove("active")
+            } else {
+                toggleMenu_zh.classList.add("active")
+                mobileMenu.classList.add("active")
+            }
+        }
+
+    }
+</script>
+            <div class="main">
+                <div class="container">
+                    <article class="post-wrap">
+                        <header class="post-header">
+                            <h1 class="post-title">
+                                C++课设
+                            </h1>
+                            
+                                <!--en-->
+                                <div class="post-meta en">
+                                    Author:
+                                    <a itemprop="author" rel="author" href="/">
+                                        blog
+                                    </a>
+                                    <span class="post-time">
+                                Date: <a href="#">2020-07-02</a>
+                            </span>
+                                    <span class="post-readtime">Reading Time:<a
+                                    href="#">20.7
+                                    mins</a></span>
+                                    <span class="post-words">words:<a href="#">3988</a></span>
+                                    
+                                        <span class="post-category">
+                                Category:
+                                
+                                <a href="https://tickertapetimer.github.io/tag/IqhHbRfsH/">课设</a>
+                                
+                            </span>
+                                        
+                                </div>
+                                
+                        </header>
+                        
+                        <div class="post-content">
+                            <h2 id="1-课程设计题目及内容">1、课程设计题目及内容：</h2>
+<p>设计一个程序，对学生的学籍信息进行管理。通过该系统实现对学生基本信息的录入、保存、删除、修改、查询等操作。<br>
+设计要求及提示如下：<br>
+1、学生基本信息包括：学号、姓名、性别、年龄、班号、专业名称、系别等。<br>
+2、使用类和对象的概念实现程序设计。<br>
+3、以菜单形式显示各功能项。<br>
+4、各功能项如下：<br>
+（1）学生基本信息的录入。<br>
+（2）学生基本信息的删除。<br>
+（3）学生基本信息的修改。<br>
+（4）学生基本信息的查询。<br>
+（a)按学号查询单个学生信息；<br>
+(b)按姓名查询单个学生信息；<br>
+(c)按性别查询学生信息；<br>
+(d)按班号查询学生信息；<br>
+（5）学生基本信息的统计。<br>
+(a)按性别统计学生人数；<br>
+(b)按班号统计学生人数；<br>
+(c)按年龄统计学生人数；<br>
+(d)按系别统计学生人数；<br>
+（6）退出系统。<br>
+5、执行某个功能之后，程序将重新显示菜单供用户选择。<br>
+6、将学生学籍信息保存到文件中。</p>
+<h2 id="功能模块的设计及算法描述">功能模块的设计及算法描述：</h2>
+<p>在程序主菜单中包含“查询”、“修改”、“添加”、“删除”、“统计”选项，<br>
+分别通过类函数<code>“find”</code>、<code>“modify”</code>、<code>“add”</code>、<code>“deleted”</code>、<code>“stat”</code>来实现，<br>
+在进入主菜单界面前，会通过类函数<code>“load”</code>来读取文件，<br>
+在退出菜单时，会通过类函数<code>“save”</code>来保存文件。</p>
+<p>在类student中，定义了学生的学号<code>“school”</code>、名字<code>“name”</code>、性别<code>“sex”</code>、年龄<code>“age”</code>、班级号<code>“classnum”</code>、专业<code>“profess”</code>、系别<code>“college”</code>七个属性，通过重载<code>“=”</code>、<code>“&lt;&lt;”</code>、<code>“&gt;&gt;”</code>三个符号，来进行数据的转换在使用添加模块时，要求依次输入这些属性，并且通过创建一个<code>student</code>类型的数组去存储这些数值。</p>
+<h2 id="程序中使用的数据及主要符号说明">程序中使用的数据及主要符号说明：</h2>
+<p>使用了学生的学号<code>“school”</code>、名字<code>“name”</code>、性别<code>“sex”</code>、年龄<code>“age”</code>、班级号<code>“classnum”</code>、专业<code>“profess”</code>、系别<code>“college”</code>七个数据</p>
+<h2 id="代码">代码</h2>
+<pre><code class="language-C++">#include&lt;iostream&gt;
+#include&lt;fstream&gt;
+#include&lt;iomanip&gt;
+
+using namespace std;
+
+class student
+{
+private:
+	int num;//编号
+	string school;//学号
+	string name;//姓名
+	string sex;//性别
+	string age;//年龄
+	string classnum;//班级
+	string profess;//专业
+	string college;//系别
+public:
+	student();//构造函数
+	void add();//增加
+	int find();//查找
+	void modify();//修改
+	void deleted();//删除
+	void save();//保存
+	void load();//读取
+	void stat();//统计
+	student&amp; operator = (student&amp; T);
+	friend istream&amp; operator &gt;&gt; (istream&amp; scin, student&amp; s1);
+	friend ostream&amp; operator &lt;&lt; (ostream&amp; scout, student&amp; s2);
+};
+
+student stu[200];//创建数组用来存储临时数据
+int n = 0;//全局变量，用来计算有多少人
+
+void student::add()
+{
+	int x;
+	cin &gt;&gt; stu[n];//输入
+	n = n + 1;//存储人数+1
+	cin &gt;&gt; x;
+	system(&quot;cls&quot;);//清屏
+}
+
+int student::find()
+{
+	string name1, sex1, age1, classnum1, profess1, college1, school1;
+	int i, option, x;
+	cout &lt;&lt; &quot;---------请选择用来查找的信息--------&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;|            1：学号                |&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;|            2：姓名                |&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;|            3：性别                |&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;|            4：班级                |&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;-------------------------------------&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;请输入选项(1-4)：&quot;;
+	cin &gt;&gt; option;//输入查找依据
+	int B = 0;//判断是否找到的依据
+	switch (option)
+	{
+	case 1:
+		cout &lt;&lt; &quot;请输入要查找的学号&quot;;
+		cin &gt;&gt; school1;
+		for (i = 0; i &lt; n; i++)
+		{
+			if (stu[i].school == school1)
+			{
+				cout &lt;&lt; &quot;学号&quot; &lt;&lt; stu[i].school &lt;&lt; &quot;姓名&quot; &lt;&lt; stu[i].name &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;性别&quot; &lt;&lt; stu[i].sex &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;年龄&quot; &lt;&lt; stu[i].age &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;班级&quot; &lt;&lt; stu[i].classnum &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;专业&quot; &lt;&lt; stu[i].profess &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;系别&quot; &lt;&lt; stu[i].college &lt;&lt; endl;
+				B = 1;
+			}
+		}
+		break;
+	case 2:
+		cout &lt;&lt; &quot;请输入要查找的姓名&quot;;
+		cin &gt;&gt; name1;
+		for (i = 0; i &lt; n; i++)
+		{
+			if (stu[i].name == name1)
+			{
+				cout &lt;&lt; &quot;学号&quot; &lt;&lt; stu[i].school &lt;&lt; &quot;姓名&quot; &lt;&lt; stu[i].name &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;性别&quot; &lt;&lt; stu[i].sex &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;年龄&quot; &lt;&lt; stu[i].age &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;班级&quot; &lt;&lt; stu[i].classnum &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;专业&quot; &lt;&lt; stu[i].profess &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;系别&quot; &lt;&lt; stu[i].college &lt;&lt; endl;
+				B = 1;
+			}
+		}
+		break;
+	case 3:
+		cout &lt;&lt; &quot;请输入要查找的性别&quot;;
+		cin &gt;&gt; sex1;
+		for (i = 0; i &lt; n; i++)
+		{
+			if (stu[i].sex == sex1)
+			{
+				cout &lt;&lt; &quot;学号&quot; &lt;&lt; stu[i].school &lt;&lt; &quot;姓名&quot; &lt;&lt; stu[i].name &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;性别&quot; &lt;&lt; stu[i].sex &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;年龄&quot; &lt;&lt; stu[i].age &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;班级&quot; &lt;&lt; stu[i].classnum &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;专业&quot; &lt;&lt; stu[i].profess &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;系别&quot; &lt;&lt; stu[i].college &lt;&lt; endl;
+				B = 1;
+			}
+		}
+		break;
+	case 4:
+		cout &lt;&lt; &quot;请输入要查找的班别&quot;;
+		cin &gt;&gt; classnum1;
+		for (i = 0; i &lt; n; i++)
+		{
+			if (stu[i].classnum == classnum1)
+			{
+				cout &lt;&lt; &quot;学号&quot; &lt;&lt; stu[i].school &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;姓名&quot; &lt;&lt; stu[i].name &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;性别&quot; &lt;&lt; stu[i].sex &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;年龄&quot; &lt;&lt; stu[i].age &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;班级&quot; &lt;&lt; stu[i].classnum &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;专业&quot; &lt;&lt; stu[i].profess &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;系别&quot; &lt;&lt; stu[i].college &lt;&lt; endl;
+				B = 1;
+
+			}
+		}
+		break;
+	}
+	if (B == 0)
+	{
+		cout &lt;&lt; &quot;找不到,按任意键后回车返回&quot; &lt;&lt; endl;
+		cin &gt;&gt; x;
+		system(&quot;cls&quot;);
+		return -1;
+	}
+	else
+	{
+		cout &lt;&lt; &quot;查找结束，按任意键结束&quot;;
+		cin &gt;&gt; x;
+		system(&quot;cls&quot;);
+		return i;
+	}
+	
+}
+
+void student::modify()
+{
+	string name1, sex1, age1, classnum1, profess1, college1, school1;
+	int i, option, x, option1, j;
+	cout &lt;&lt; &quot;---------请选择用来查找的信息--------&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;|            1：学号                |&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;|            2：姓名                |&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;|            3：性别                |&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;|            4：班级                |&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;-------------------------------------&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;请输入选项(1-4)：&quot;;
+	cin &gt;&gt; option;//输入查找依据
+	int B = 0;//判断是否找到的依据
+	switch (option)
+	{
+	case 1:
+		cout &lt;&lt; &quot;请输入要查找的学号&quot;;
+		cin &gt;&gt; school1;
+		for (i = 0; i &lt; n; i++)
+		{
+			if (stu[i].school == school1)
+			{
+				cout &lt;&lt; &quot;学号&quot; &lt;&lt; stu[i].school &lt;&lt; &quot;姓名&quot; &lt;&lt; stu[i].name &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;性别&quot; &lt;&lt; stu[i].sex &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;年龄&quot; &lt;&lt; stu[i].age &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;班级&quot; &lt;&lt; stu[i].classnum &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;专业&quot; &lt;&lt; stu[i].profess &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;系别&quot; &lt;&lt; stu[i].college &lt;&lt; endl;
+				B = 1;
+				j = i;
+			}
+		}
+		break;
+	case 2:
+		cout &lt;&lt; &quot;请输入要查找的姓名&quot;;
+		cin &gt;&gt; name1;
+		for (i = 0; i &lt; n; i++)
+		{
+			if (stu[i].name == name1)
+			{
+				cout &lt;&lt; &quot;学号&quot; &lt;&lt; stu[i].school &lt;&lt; &quot;姓名&quot; &lt;&lt; stu[i].name &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;性别&quot; &lt;&lt; stu[i].sex &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;年龄&quot; &lt;&lt; stu[i].age &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;班级&quot; &lt;&lt; stu[i].classnum &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;专业&quot; &lt;&lt; stu[i].profess &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;系别&quot; &lt;&lt; stu[i].college &lt;&lt; endl;
+				B = 1;
+				j = i;
+			}
+		}
+		break;
+	case 3:
+		cout &lt;&lt; &quot;请输入要查找的性别&quot;;
+		cin &gt;&gt; sex1;
+		for (i = 0; i &lt; n; i++)
+		{
+			if (stu[i].sex == sex1)
+			{
+				cout &lt;&lt; &quot;学号&quot; &lt;&lt; stu[i].school &lt;&lt; &quot;姓名&quot; &lt;&lt; stu[i].name &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;性别&quot; &lt;&lt; stu[i].sex &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;年龄&quot; &lt;&lt; stu[i].age &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;班级&quot; &lt;&lt; stu[i].classnum &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;专业&quot; &lt;&lt; stu[i].profess &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;系别&quot; &lt;&lt; stu[i].college &lt;&lt; endl;
+				B = 1;
+				j = i;
+			}
+		}
+		break;
+	case 4:
+		cout &lt;&lt; &quot;请输入要查找的班别&quot;;
+		cin &gt;&gt; classnum1;
+		for (i = 0; i &lt; n; i++)
+		{
+			if (stu[i].classnum == classnum1)
+			{
+				cout &lt;&lt; &quot;学号&quot; &lt;&lt; stu[i].school &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;姓名&quot; &lt;&lt; stu[i].name &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;性别&quot; &lt;&lt; stu[i].sex &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;年龄&quot; &lt;&lt; stu[i].age &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;班级&quot; &lt;&lt; stu[i].classnum &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;专业&quot; &lt;&lt; stu[i].profess &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;系别&quot; &lt;&lt; stu[i].college &lt;&lt; endl;
+				B = 1;
+				j = i;
+			}
+		}
+		break;
+	}
+	string name2, sex2, age2, classnum2, profess2, college2, school2;
+	if (B == 1)
+	{
+		cout &lt;&lt; &quot;已找到，请选择要更改的信息&quot; &lt;&lt; endl;
+		cout &lt;&lt; &quot;-------------------------------------&quot; &lt;&lt; endl;
+		cout &lt;&lt; &quot;|            1：学号                |&quot; &lt;&lt; endl;
+		cout &lt;&lt; &quot;|            2：姓名                |&quot; &lt;&lt; endl;
+		cout &lt;&lt; &quot;|            3：性别                |&quot; &lt;&lt; endl;
+		cout &lt;&lt; &quot;|            4：年龄                |&quot; &lt;&lt; endl;
+		cout &lt;&lt; &quot;|            5：班级                |&quot; &lt;&lt; endl;
+		cout &lt;&lt; &quot;|            6：专业                |&quot; &lt;&lt; endl;
+		cout &lt;&lt; &quot;|            7：系别                |&quot; &lt;&lt; endl;
+		cout &lt;&lt; &quot;-------------------------------------&quot; &lt;&lt; endl;
+		cin &gt;&gt; option1;
+		switch (option1)
+		{
+		case 1:
+			cout &lt;&lt; &quot;新的学号&quot; &lt;&lt; endl;
+			cin &gt;&gt; school2;
+			stu[j].school = school2;
+			break;
+		case 2:
+			cout &lt;&lt; &quot;新的姓名&quot; &lt;&lt; endl;
+			cin &gt;&gt; name2;
+			stu[j].name = name2;
+			break;
+		case 3:
+			cout &lt;&lt; &quot;新的性别&quot; &lt;&lt; endl;
+			cin &gt;&gt; sex2;
+			stu[j].sex = sex2;
+			break;
+		case 4:
+			cout &lt;&lt; &quot;新的年龄&quot; &lt;&lt; endl;
+			cin &gt;&gt; age2;
+			stu[j].age = age2;
+			break;
+		case 5:
+			cout &lt;&lt; &quot;新的班级&quot; &lt;&lt; endl;
+			cin &gt;&gt; classnum2;
+			stu[j].classnum = classnum2;
+			break;
+		case 6:
+			cout &lt;&lt; &quot;新的专业&quot; &lt;&lt; endl;
+			cin &gt;&gt; profess2;
+			stu[j].profess = profess2;
+			break;
+		case 7:
+			cout &lt;&lt; &quot;新的系别&quot; &lt;&lt; endl;
+			cin &gt;&gt; college2;
+			stu[j].college = college2;
+			break;
+		}
+		cout &lt;&lt; &quot;学号&quot; &lt;&lt; stu[j].school &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;姓名&quot; &lt;&lt; stu[j].name &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;性别&quot; &lt;&lt; stu[j].sex &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;年龄&quot; &lt;&lt; stu[j].age &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;班级&quot; &lt;&lt; stu[j].classnum &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;专业&quot; &lt;&lt; stu[j].profess &lt;&lt; &quot;\t&quot; &lt;&lt; &quot;系别&quot; &lt;&lt; stu[j].college &lt;&lt; &quot;\t&quot; &lt;&lt; endl;
+		cout &lt;&lt; &quot;更改成功，按任意键结束&quot; &lt;&lt; endl;
+		cin &gt;&gt; x;
+		system(&quot;cls&quot;);
+	}
+	else
+	{
+		cout &lt;&lt; &quot;找不到该人信息，按任意键返回&quot; &lt;&lt; endl;
+		cin &gt;&gt; x;
+		system(&quot;cls&quot;);
+	}
+}
+
+void student::deleted()
+{
+	string name1;
+	bool f5 = 0;
+	int choose;
+	do {
+		cout &lt;&lt; '\n';
+		cout &lt;&lt; &quot;请输入您要删除的学生姓名：&quot;;
+		cin &gt;&gt; name1;
+		for (int i = 0; i &lt; n; i++)
+		{
+			if (name1 == stu[i].name)
+			{
+				f5 = 1;
+				n--;
+				do {
+					stu[i] = stu[i + 1];
+					i++;
+				} while (i &lt;= n);
+			}
+		}
+		if (f5 == 0)
+			cout &lt;&lt; &quot;您要删除的学生不存在&quot;;
+		cout &lt;&lt; &quot;是否要继续删除（输入1或者0）&quot; &lt;&lt; endl;
+		cin &gt;&gt; choose;
+		if (choose != 1 &amp;&amp; choose != 0)
+		{
+			cout &lt;&lt; &quot;输入错误！您只能输入Y或N&quot; &lt;&lt; endl;
+			cin &gt;&gt; choose;
+		}
+	} while (choose == 1);
+	int x;
+	cout &lt;&lt; &quot;按任意键返回&quot; &lt;&lt; endl;
+	cin &gt;&gt; x;
+	system(&quot;cls&quot;);
+}
+
+void student::save()
+{
+	ofstream fout;
+	fout.open(&quot;system.txt&quot;);
+	for (int i = 0; i &lt; n; i++)
+	{
+		fout &lt;&lt; ' ' &lt;&lt; stu[i].school &lt;&lt; ' ' &lt;&lt; stu[i].name
+			&lt;&lt; ' ' &lt;&lt; stu[i].sex &lt;&lt; ' ' &lt;&lt; stu[i].age
+			&lt;&lt; ' ' &lt;&lt; stu[i].classnum &lt;&lt; ' ' &lt;&lt; stu[i].profess
+			&lt;&lt; ' ' &lt;&lt; stu[i].college &lt;&lt; endl;
+	}
+	cout &lt;&lt; &quot;保存成功&quot; &lt;&lt; endl;
+	fout.close();
+	int x;
+	cin &gt;&gt; x;
+	system(&quot;cls&quot;);
+}
+
+void student::stat()
+{
+	int option2;
+	cout &lt;&lt; &quot;---------请选择用来统计的信息--------&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;|            1：性别                |&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;|            2：班级                |&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;|            3：年龄                |&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;|            4：系别                |&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;-------------------------------------&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;请输入选项(1-4)：&quot;;
+	cin &gt;&gt; option2;
+	int i;
+	int A = 0;
+	int x;
+	string sex1, age1, classnum1, college1;
+	switch (option2)
+	{
+	case 1:
+		cout &lt;&lt; &quot;请输入要查找的性别&quot;;
+		cin &gt;&gt; sex1;
+		for (i = 0; i &lt; n; i++)
+		{
+			if (stu[i].sex == sex1)
+			{
+				A = A + 1;
+			}
+		}
+		break;
+	case 2:
+		cout &lt;&lt; &quot;请输入要查找的班级&quot;;
+		cin &gt;&gt; classnum1;
+		for (i = 0; i &lt; n; i++)
+		{
+			if (stu[i].classnum == classnum1)
+			{
+				A = A + 1;
+			}
+		}
+		break;
+	case 3:
+		cout &lt;&lt; &quot;请输入要查找的年龄&quot;;
+		cin &gt;&gt; age1;
+		for (i = 0; i &lt; n; i++)
+		{
+			if (stu[i].age == age1)
+			{
+				A = A + 1;
+			}
+		}
+		break;
+	case 4:
+		cout &lt;&lt; &quot;请输入要查找的系别&quot;;
+		cin &gt;&gt; college1;
+		for (i = 0; i &lt; n; i++)
+		{
+			if (stu[i].college == college1)
+			{
+				A = A + 1;
+			}
+		}
+		break;
+	}
+	cout &lt;&lt; &quot;符合该条件的人数有&quot; &lt;&lt; A &lt;&lt; &quot;人&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;查找结束，按任意键结束&quot;;
+	cin &gt;&gt; x;
+	system(&quot;cls&quot;);
+}
+
+void student::load()
+{
+	int x;
+	ifstream fin;
+	fin.open(&quot;system.txt&quot;);
+	while (!fin.eof())
+	{
+		fin &gt;&gt; stu[n].school &gt;&gt; stu[n].name
+			&gt;&gt; stu[n].sex &gt;&gt; stu[n].age &gt;&gt; stu[n].classnum
+			&gt;&gt; stu[n].profess &gt;&gt; stu[n].college;
+		n = n + 1;
+	}
+	cout &lt;&lt; &quot;文件已读取成功！按任意键后回车返回&quot; &lt;&lt; endl;
+	fin.close();
+	cin &gt;&gt; x;
+	system(&quot;cls&quot;);
+}
+
+student&amp; student::operator=(student&amp; T)
+{
+	school = T.school;
+	name = T.name;
+	sex = T.sex;
+	age = T.age;
+	classnum = T.classnum;
+	profess = T.profess;
+	college = T.college;
+	return (*this);
+}
+ostream&amp; operator&lt;&lt;(ostream&amp; scout, student&amp; s2)
+{
+	cout &lt;&lt; setw(5) &lt;&lt; s2.school &lt;&lt; setw(8) &lt;&lt; s2.name &lt;&lt; setw(6) &lt;&lt; s2.sex
+		&lt;&lt; setw(6) &lt;&lt; s2.age &lt;&lt; setw(6) &lt;&lt; s2.classnum
+		&lt;&lt; setw(6) &lt;&lt; s2.profess &lt;&lt; setw(6) &lt;&lt; s2.college &lt;&lt; '\n';
+	return scout;
+}
+istream&amp; operator&gt;&gt;(istream&amp; scin, student&amp; s1)
+{
+	cout &lt;&lt; '\n';
+	cout &lt;&lt; &quot;学号：&quot;;
+	scin &gt;&gt; s1.school;
+	cout &lt;&lt; &quot;姓名：&quot;;
+	scin &gt;&gt; s1.name;
+	cout &lt;&lt; &quot;性别：&quot;;
+	scin &gt;&gt; s1.sex;
+	cout &lt;&lt; &quot;年龄：&quot;;
+	scin &gt;&gt; s1.age;
+	cout &lt;&lt; &quot;班级：&quot;;
+	scin &gt;&gt; s1.classnum;
+	cout &lt;&lt; &quot;专业：&quot;;
+	scin &gt;&gt; s1.profess;
+	cout &lt;&lt; &quot;系别：&quot;;
+	scin &gt;&gt; s1.college;
+	return scin;
+}
+
+student::student()//构造函数
+{
+	name = &quot; &quot;;
+	sex = &quot; &quot;;
+	age = &quot; &quot;;
+	classnum = &quot; &quot;;
+	profess = &quot; &quot;;
+	college = &quot; &quot;;
+}
+
+int choose1()
+{
+	int option;
+	cout &lt;&lt; &quot;-----------学生学籍管理系统----------&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;|            1：查询                |&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;|            2：修改                |&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;|            3：添加                |&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;|            4：删除                |&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;|            5：统计                |&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;|            6：退出                |&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;-------------------------------------&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;请输入选项(1-6)：&quot;;
+	cin &gt;&gt; option;
+
+	system(&quot;cls&quot;);
+	return option;
+}
+
+void main()
+{
+	int choose = 0;
+	student s;
+	s.load();
+	while (choose != 6)//当输入不为6时，无限循环，直至输入6退出
+	{
+		choose = choose1();
+		switch (choose)
+		{
+		case 1:s.find();
+			break;
+		case 2:s.modify();
+			break;
+		case 3:s.add();
+			break;				
+		case 4:s.deleted();
+			break;
+		case 5:s.stat();
+			break;
+		}
+	}
+	s.save();
+}
+</code></pre>
+<h2 id="程序运行时的效果图">程序运行时的效果图</h2>
+<h3 id="读文件">读文件</h3>
+<figure data-type="image" tabindex="1"><img src="/img/C++%E8%AF%BE%E8%AE%BE/1.png" alt="1" loading="lazy"></figure>
+<h3 id="主菜单">主菜单</h3>
+<figure data-type="image" tabindex="2"><img src="/img/C++%E8%AF%BE%E8%AE%BE/2.png" alt="2" loading="lazy"></figure>
+<h3 id="查询">查询</h3>
+<figure data-type="image" tabindex="3"><img src="/img/C++%E8%AF%BE%E8%AE%BE/3.png" alt="3" loading="lazy"></figure>
+<h3 id="修改">修改</h3>
+<figure data-type="image" tabindex="4"><img src="/img/C++%E8%AF%BE%E8%AE%BE/4.png" alt="4" loading="lazy"></figure>
+<h3 id="添加">添加</h3>
+<figure data-type="image" tabindex="5"><img src="/img/C++%E8%AF%BE%E8%AE%BE/5.png" alt="5" loading="lazy"></figure>
+<h3 id="删除">删除</h3>
+<figure data-type="image" tabindex="6"><img src="/img/C++%E8%AF%BE%E8%AE%BE/6.png" alt="6" loading="lazy"></figure>
+<h3 id="统计">统计</h3>
+<figure data-type="image" tabindex="7"><img src="/img/C++%E8%AF%BE%E8%AE%BE/7.png" alt="7" loading="lazy"></figure>
+<h3 id="退出">退出</h3>
+<figure data-type="image" tabindex="8"><img src="/img/C++%E8%AF%BE%E8%AE%BE/8.png" alt="8" loading="lazy"></figure>
+<h2 id="实验结果分析实验收获和体会">实验结果分析，实验收获和体会</h2>
+<p><s>在实验初期，我通过使用结构体完成了该题目，但感觉这样无法让我更深入的了解掌握类与对象，于是我选择重做一遍，运用类与对象的知识去完成该实验。</s></p>
+<p><s>实验中，我一开始对于文件的输入输出并不是十分了解，于是打算使用多文件存储，一个文件存储一种数据，后来经过学习思考，我逐渐掌握了文件输入输出，于是我开始使用单一文件存储数据，事实证明，这样存储数据更好。</s></p>
+<p><s>这次实验要求在一操作结束后重新打开菜单，我一开始只用了循环去保证菜单可以重复出现，但后来觉得重复出现的菜单会导致整个程序运行起来不够整洁，我开始使用清屏函数<code>system(“cls”)</code>，进而掌握了这一技巧</s></p>
+<p><s>通过本次实验，我更深入的了解并掌握了类与对象的运用知识，这对我的学习有着很大的帮助。</s></p>
+
+                        </div>
+                        
+                            <div class="post-toc">
+                                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E8%AF%BE%E7%A8%8B%E8%AE%BE%E8%AE%A1%E9%A2%98%E7%9B%AE%E5%8F%8A%E5%86%85%E5%AE%B9">1、课程设计题目及内容：</a></li>
+<li><a href="#%E5%8A%9F%E8%83%BD%E6%A8%A1%E5%9D%97%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%8F%8A%E7%AE%97%E6%B3%95%E6%8F%8F%E8%BF%B0">功能模块的设计及算法描述：</a></li>
+<li><a href="#%E7%A8%8B%E5%BA%8F%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E5%8F%8A%E4%B8%BB%E8%A6%81%E7%AC%A6%E5%8F%B7%E8%AF%B4%E6%98%8E">程序中使用的数据及主要符号说明：</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+<li><a href="#%E7%A8%8B%E5%BA%8F%E8%BF%90%E8%A1%8C%E6%97%B6%E7%9A%84%E6%95%88%E6%9E%9C%E5%9B%BE">程序运行时的效果图</a>
+<ul>
+<li><a href="#%E8%AF%BB%E6%96%87%E4%BB%B6">读文件</a></li>
+<li><a href="#%E4%B8%BB%E8%8F%9C%E5%8D%95">主菜单</a></li>
+<li><a href="#%E6%9F%A5%E8%AF%A2">查询</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9">修改</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0">添加</a></li>
+<li><a href="#%E5%88%A0%E9%99%A4">删除</a></li>
+<li><a href="#%E7%BB%9F%E8%AE%A1">统计</a></li>
+<li><a href="#%E9%80%80%E5%87%BA">退出</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C%E5%88%86%E6%9E%90%E5%AE%9E%E9%AA%8C%E6%94%B6%E8%8E%B7%E5%92%8C%E4%BD%93%E4%BC%9A">实验结果分析，实验收获和体会</a></li>
+</ul>
+</li>
+</ul>
+
+                            </div>
+                            
+                                
+                                    
+                                        <!--en-->
+                                        <section class="post-copyright en">
+                                            <p class="copyright-item">
+                                                <span>Author:</span>
+                                                <span>blog</span>
+                                            </p>
+
+                                            <p class="copyright-item">
+                                                <span>Permalink:</span>
+                                                <span><a href="https://tickertapetimer.github.io/C++课设/">https://tickertapetimer.github.io/C++课设/</a></span>
+                                            </p>
+
+                                            <p class="copyright-item">
+                                                <span>License:</span>
+                                                <span>MIT License</span>
+                                            </p>
+                                        </section>
+                                        
+                                                
+                                                    
+                                                        <!-- Share-->
+                                                        <span style="margin-right:15px">
+                                                    <i class="post-share"></i>
+                                                    <span>Share:</span>
+                                                        <a title="QR Code" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tickertapetimer.github.io/C++课设/"><i class="fa fa-qrcode"></i></a>
+                                                        <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tickertapetimer.github.io/C++课设/&sharesource=qzone&title=C++课设&pics=https://tickertapetimer.github.io/images/avatar.png?v=1629443424144&summary="><i class="fa fa-qq"></i></a>
+                                                        <a title="Weibo" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tickertapetimer.github.io/C++课设/&sharesource=weibo&title=C++课设 + " - " + &pic="https://tickertapetimer.github.io/images/avatar.png?v=1629443424144 "><i class="fa fa-weibo "></i></a>
+                                                        
+                                                                </span>
+                                                                <!--en-->
+                                                                <section class="post-tags en ">
+                                                                    <div>
+                                                                        <span>Tag(s):</span>
+                                                                        <span class="tag ">
+                        
+                        
+                        <a href="https://tickertapetimer.github.io/tag/IqhHbRfsH/">#
+                                                课设
+                                                    </a>
+                                                    
+                                                        
+                                                            </span>
+                                                                    </div>
+                                                                    <div>
+                                                                        <a href="javascript:window.history.back();">back</a>
+                                                                        <span>&dot;</span>
+                                                                        <a href="#">home</a>
+                                                                    </div>
+                                                                </section>
+                                                                
+                                                                                <!---->
+                                                                                <section class="post-nav">
+                                                                                    
+                                                                                        <a class="prev" rel="prev" href="https://tickertapetimer.github.io/pwn-IOF/">
+                                                                                            pwn IOF
+                                                                                        </a>
+                                                                                        
+                                                                                            
+                                                                                                <a class="next" rel="next" href="https://tickertapetimer.github.io/利用arp欺骗截取图片信息/">
+                                                                                                     利用arp欺骗截取图片信息
+                                                                                                </a>
+                                                                                                
+                                                                                </section>
+                    </article>
+                </div>
+                
+                                            
+            </div>
+    </div>
+    </div>
+    </div>
+    
+        <footer id="footer" class="footer">
+            <div class="copyright">
+                
+                        
+                            
+                                        <svg viewBox="0 0 1024 1024" style="margin-left: 5px;margin-right: 5px;" version="1.0" width="8" height="8" class="my-face">
+            <path
+                d="M863.597631 513.574282l-271.33965-140.213484L729.783667 81.926656c3.583731-7.87141 7.167462-15.742819 7.167462-25.214109C736.887134 25.226908 708.345275 0.012799 672.635953 0.012799a63.611229 63.611229 0 0 0-39.293053 12.607055c-1.791866 1.59988-3.519736 3.19976-5.311602 3.19976L147.87531 418.925381a55.547834 55.547834 0 0 0-19.646527 47.356448c1.791866 17.278704 14.27093 33.021523 32.125591 42.492813l271.33965 141.749369L292.504463 945.221908c-12.479064 25.214109-1.791866 53.563983 23.166262 69.306802 10.751194 6.335525 23.230258 9.47129 35.709322 9.47129 16.062795 0 32.125591-4.735645 44.604655-15.742819l480.091993-403.297753a55.547834 55.547834 0 0 0 19.646526-47.228458 61.243407 61.243407 0 0 0-32.12559-44.156688z"
+                fill="#93b5cf"></path>
+        </svg>
+                                        blog &copy;Copyright
+                                            <script>
+                                                var date = new Date();
+                                                document.write("" + date.getFullYear());
+                                            </script>
+                                            | Powered by
+                                            <a href="https://coding.net" target="_blank">
+                                                Coding.net
+                                            </a>
+            </div>
+            <div id="update" style="display:none;">
+                on
+            </div>
+            
+                <div id="version" style="display:none;">
+                    1.7.5
+                </div>
+                
+                    <script>
+                        var pat = '';
+                        
+                        document.write('<div id="home_path" style="display:none;">' + document.location.protocol + '//' + window.document.location.hostname + pat + '</div>')
+                    </script>
+        </footer>
+        
+                <script>
+                    
+                    
+                    
+                    getStar();
+                    hljs.initHighlighting();
+                    console.clear();
+                    
+                    CheckVersion();
+                    
+                    var newDate = new Date();
+                    newDate.setTime(1629443424144);
+                    console.log(" Blog Update Time: " + newDate.toLocaleDateString());
+                    console.log("\n %c \u26a1Theme:Chic Author's Blog:https://blog.itjoker.cn  Write By ITJoker  \n\n", "color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;");
+                </script>
+                
+        </div>
+</body>
+<script>
+    scroll();
+</script>
+
+</html>
