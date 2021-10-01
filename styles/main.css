@@ -1378,7 +1378,7 @@ pre .storage {
   margin-top: 0;
 }
 .post-title a {
-  color: #101012;
+  color: #98a6ac;
 }
 .post-title a:hover {
   color: #98A9F9;
@@ -2143,3 +2143,8 @@ pre .storage {
 .hljs-strong {
   font-weight: bold;
 }
+
+      body {
+        background: #111111;
+      }
+    
