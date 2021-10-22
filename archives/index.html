@@ -1,965 +1,567 @@
-<!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 <title>A little blog</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="description" content=""/>
-<meta name="keywords" content=""/>
-<link rel="shortcut icon" href="https://tickertapetimer.github.io/favicon.ico">
+<meta name="description" content="" />
+<link rel="shortcut icon" href="https://tickertapetimer.github.io/media/images/favicon.ico?v=1634896915817">
 <link rel="stylesheet" href="https://tickertapetimer.github.io/styles/main.css">
+<script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://tickertapetimer.github.io/media/js/bigfoot.min.js"></script>
 
-
-<!-- Comment -->
-
-
-<link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
-
-
-
-</head>
-<body class="tag-template">
-<div id="page" class="site">
-
-    <header class="site-header">
-    <h1 class="site-title"><a href="https://tickertapetimer.github.io">A little blog</a></h1>
-    <a class="sidebar-toggle"><span class="screen-reader-text">Menu</span><span class="icon" aria-hidden="true"></span></a>
-</header>
-
-<aside class="sidebar">
-    <div class="sidebar-scrollable">
-        <div class="inner">
-            <div class="widget-area">
-                <!-- 菜单 -->
-                <nav class="site-navigation">
-                    <h2>A little blog</h2>
-                    <ul class="menu">
-                        
-                            <li class="menu-item home current-menu-item">
-                                <a href="/"
-                                
-                                >首页</a>
-                            </li>
-                        
-                            <li class="menu-item home current-menu-item">
-                                <a href="/archives"
-                                
-                                >归档</a>
-                            </li>
-                        
-                            <li class="menu-item home current-menu-item">
-                                <a href="/tags"
-                                
-                                >标签</a>
-                            </li>
-                        
-                            <li class="menu-item home current-menu-item">
-                                <a href="https://tickertapetimer.github.io/post/me"
-                                
-                                >关于</a>
-                            </li>
-                        
-                    </ul>
-                </nav>
-
-                <section class="widget widget-about">
-                    <h2 class="widget-title">关于</h2>
-                    <p></p>
-                </section>
-
-                <section class="widget widget-tags">
-                    <h2 class="widget-title">标签</h2>
-                    <div class="tagcloud">
-                        
-                            <a href="https://tickertapetimer.github.io/tag/OI2yF9Mjr/" class="button">
-                                学习
-                                <span aria-hidden="true"><span class="line left"></span><span class="line top"></span><span class="line right"></span><span class="line bottom"></span></span>
-                            </a>
-                        
-                            <a href="https://tickertapetimer.github.io/tag/NpOlg1WrO/" class="button">
-                                其他
-                                <span aria-hidden="true"><span class="line left"></span><span class="line top"></span><span class="line right"></span><span class="line bottom"></span></span>
-                            </a>
-                        
-                            <a href="https://tickertapetimer.github.io/tag/3-QQipkEd/" class="button">
-                                运维
-                                <span aria-hidden="true"><span class="line left"></span><span class="line top"></span><span class="line right"></span><span class="line bottom"></span></span>
-                            </a>
-                        
-                            <a href="https://tickertapetimer.github.io/tag/lPO99KDRN/" class="button">
-                                逆向
-                                <span aria-hidden="true"><span class="line left"></span><span class="line top"></span><span class="line right"></span><span class="line bottom"></span></span>
-                            </a>
-                        
-                            <a href="https://tickertapetimer.github.io/tag/AFFv1xmrf/" class="button">
-                                实战
-                                <span aria-hidden="true"><span class="line left"></span><span class="line top"></span><span class="line right"></span><span class="line bottom"></span></span>
-                            </a>
-                        
-                            <a href="https://tickertapetimer.github.io/tag/6g_QaqWQH/" class="button">
-                                WP
-                                <span aria-hidden="true"><span class="line left"></span><span class="line top"></span><span class="line right"></span><span class="line bottom"></span></span>
-                            </a>
-                        
-                            <a href="https://tickertapetimer.github.io/tag/IqhHbRfsH/" class="button">
-                                课设
-                                <span aria-hidden="true"><span class="line left"></span><span class="line top"></span><span class="line right"></span><span class="line bottom"></span></span>
-                            </a>
-                        
-                    </div>
-                </section>
-
-            </div>
-            <a class="sidebar-toggle"><span class="screen-reader-text">Close</span><span class="icon" aria-hidden="true"></span></a>
-        </div>
+  </head>
+  <body>
+    <!-- start: main -->
+    <div class="main animated">
+      
+      <div class="header animated fadeInDown">
+  <div class="site_title_container">
+    <div class="site_title"><a href="https://tickertapetimer.github.io"><img src="https://tickertapetimer.github.io/media/images/logo1.svg" alt=""></a></div>
+    <div class="description">
+      <p class="sub_title">一个邋遢君子的自娱自乐</p>
+      <div class="my_socials">
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
     </div>
-</aside>
-
-
-    <main class="site-main">
-        <div class="site-content">
-
-            <header class="cover page-header">
-                <div class="cover-bg" style="background-image: linear-gradient( 135deg, #EE9AE5 10%, #5961F9 100%);"></div>
-                <div class="cover-content">
-                    <div class="inner">
-                        <div class="post-count"></div>
-                        <h1 class="page-title" style="font-size: 46px;">归档</h1>
-                    </div>
-                </div>
-            </header>
-
-            
-            <div id="post-list" class="post-list inner">
-                
-
-                    <article class="post">
-                        <!-- post-header -->
-                        <header class="post-header">
-                            <div class="post-header-wrap">
-                                <div class="post-meta">
-                                    <time class="published published-txt" style="font-weight: bolder; font-size: 1.5em" datetime="2021">
-                                        2021
-                                    </time>
-                                </div>
-                                <div class="post-title archives-list">
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/HgCQ3On_k/">
-                                                    康威生命游戏
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/rZqMTU-M_/">
-                                                    折腾博客有感
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/ring3注入学习(1)导入表注入/">
-                                                    ring3注入学习(1)导入表注入
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/一个Windows挖矿样本/">
-                                                    Windows挖矿样本分析
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/服务器防御病毒经验/">
-                                                    防御病毒经验
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/一个Linux挖矿样本分析/">
-                                                    Linux挖矿病毒分析
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/壳的自我修养/">
-                                                    壳的自我修养
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/利用PEB寻找kernel32.dll的基地址/">
-                                                    利用PEB寻找kernel32.dll的基地址
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/免杀转载/">
-                                                    免杀转载
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/彩虹猫病毒分析/">
-                                                    彩虹猫病毒分析
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/windows异常处理机制/">
-                                                    Windows异常处理机制
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/python字节码初析/">
-                                                    python字节码初析
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/软件设计课设/">
-                                                    软件设计课设
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-                                </div>
-                            </div>
-                        </header>
-                    </article>
-
-                
-
-                    <article class="post">
-                        <!-- post-header -->
-                        <header class="post-header">
-                            <div class="post-header-wrap">
-                                <div class="post-meta">
-                                    <time class="published published-txt" style="font-weight: bolder; font-size: 1.5em" datetime="2020">
-                                        2020
-                                    </time>
-                                </div>
-                                <div class="post-title archives-list">
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/通过阉割FreeLibrary来实现DLL隐藏/">
-                                                    通过阉割FreeLibrary来实现DLL隐藏
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/ring3注入学习(2)远程线程注入/">
-                                                    ring3注入学习(2)远程线程注入
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/逆向讲课/">
-                                                    逆向讲课
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/奇怪的知识增加了/">
-                                                    奇怪的知识增加了
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/SMC技术浅析/">
-                                                    SMC技术浅析
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/【ACTF2020】Splendid_MineCraft【wp】/">
-                                                    【ACTF2020】Splendid_MineCraft【wp】
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/g2uc writeup/">
-                                                    g2uc_writeup
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/CTFd搭建以及后续使用/">
-                                                    CTFd搭建以及后续使用
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/竞赛体验-第一次课/">
-                                                    竞赛体验
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/分析网易云加密/">
-                                                    分析网易云加密
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/基于badusb实现的基础渗透/">
-                                                    基于badusb实现的基础渗透
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/辩论队一面辩题资料/">
-                                                     辩论队一面辩题资料
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/CVE-2017-11882漏洞复现及分析/">
-                                                    CVE-2017-11882漏洞分析及利用
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/pwn-IOF/">
-                                                    pwn IOF
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/C++课设/">
-                                                    C++课设
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/利用arp欺骗截取图片信息/">
-                                                     利用arp欺骗截取图片信息
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/ms12-020以及ms17-010使用/">
-                                                    ms12-020以及ms17-010使用
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/末日算法/">
-                                                    末日算法
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/格式化字符串漏洞之crack/">
-                                                    格式化字符串漏洞之crack
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/pwn3/">
-                                                    pwn3
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/just-do-it/">
-                                                    just_do_it
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/整数型溢出/">
-                                                    整数型溢出
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/BUUCTF-warmup-csaw-2016-writeup/">
-                                                    BUUCTF_warmup_csaw_2016_writeup
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/哀悼·铭记/">
-                                                    哀悼·铭记
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/栈溢出初级之level2/">
-                                                    栈溢出初级学习之level2
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-
-                                        
-                                            <div class="read-more">
-                                                <a class="button" href="https://tickertapetimer.github.io/post/栈溢出初级学习之level1/">
-                                                    栈溢出初级学习之level1
-                                                    <span aria-hidden="true"></span>
-                                                    <span class="line left"></span>
-                                                    <span class="line top"></span>
-                                                    <span class="line right"></span>
-                                                    <span class="line bottom"></span>
-                                                </a>
-                                            </div>
-                                        
-
-                                    
-                                </div>
-                            </div>
-                        </header>
-                    </article>
-
-                
-
-            </div>
-        </div>
-    </main>
-
-    <footer class="site-footer">
-    <div class="inner">
-        <!-- 社交 -->
-        <div class="offsite-links">
-            
-                
-            
-                
-            
-                
-            
-                
-            
-                
-            
-        </div>
-
-        <div class="site-info">
-            THEME BY <a href="https://github.com/GalaxySuze/gridea-theme-subtle-galaxy">Subtle Galaxy</a>, REFERENCE FROM <a href="https://subtle.justgoodthemes.com/">Subtle</a><br/>
-            
-        </div>
-        <a href="#page" class="arrow-up" data-scroll><span class="screen-reader-text">Back to the top</span></a>
-    </div>
-</footer>
-
-
+  </div>
 </div>
 
-<script src="https://tickertapetimer.github.io/media/scripts/_core/plugins.js"></script>
-<script src="https://tickertapetimer.github.io/media/scripts/_core/custom.js"></script>
 
-<!-- highlight -->
-<script src="https://cdn.bootcss.com/highlight.js/9.15.8/highlight.min.js"></script>
-<!-- Md5 Min JS -->
-<script src="https://tickertapetimer.github.io/media/scripts/_vendors/md5.min.js"></script>
+<div class="autopagerize_page_element">
+  <div class="content">
 
-<script type="application/javascript">
-    // 代码高亮
-    hljs.initHighlightingOnLoad();
+      
+            <!-- start: .articles -->
+            
 
+
+<ul class="list_with_title">
+
+    <div class="listing_title">2021</div>
+    <ul class="listing">
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/HgCQ3On_k/" title="康威生命游戏">康威生命游戏</a>
+            <div class="post_time"><span class="date">2021-08-27</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/rZqMTU-M_/" title="折腾博客有感">折腾博客有感</a>
+            <div class="post_time"><span class="date">2021-08-21</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/ring3注入学习(1)导入表注入/" title="ring3注入学习(1)导入表注入">ring3注入学习(1)导入表注入</a>
+            <div class="post_time"><span class="date">2021-08-16</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/一个Windows挖矿样本/" title="Windows挖矿样本分析">Windows挖矿样本分析</a>
+            <div class="post_time"><span class="date">2021-08-08</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/服务器防御病毒经验/" title="防御病毒经验">防御病毒经验</a>
+            <div class="post_time"><span class="date">2021-08-06</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/一个Linux挖矿样本分析/" title="Linux挖矿病毒分析">Linux挖矿病毒分析</a>
+            <div class="post_time"><span class="date">2021-08-06</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/壳的自我修养/" title="壳的自我修养">壳的自我修养</a>
+            <div class="post_time"><span class="date">2021-07-23</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/利用PEB寻找kernel32.dll的基地址/" title="利用PEB寻找kernel32.dll的基地址">利用PEB寻找kernel32.dll的基地址</a>
+            <div class="post_time"><span class="date">2021-06-28</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/免杀转载/" title="免杀转载">免杀转载</a>
+            <div class="post_time"><span class="date">2021-06-22</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/彩虹猫病毒分析/" title="彩虹猫病毒分析">彩虹猫病毒分析</a>
+            <div class="post_time"><span class="date">2021-03-07</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/windows异常处理机制/" title="Windows异常处理机制">Windows异常处理机制</a>
+            <div class="post_time"><span class="date">2021-03-05</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/python字节码初析/" title="python字节码初析">python字节码初析</a>
+            <div class="post_time"><span class="date">2021-02-07</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/软件设计课设/" title="软件设计课设">软件设计课设</a>
+            <div class="post_time"><span class="date">2021-01-11</span></div>
+          </div>
+        </div>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    </ul>
+
+    <div class="listing_title">2020</div>
+    <ul class="listing">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/通过阉割FreeLibrary来实现DLL隐藏/" title="通过阉割FreeLibrary来实现DLL隐藏">通过阉割FreeLibrary来实现DLL隐藏</a>
+            <div class="post_time"><span class="date">2020-12-17</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/ring3注入学习(2)远程线程注入/" title="ring3注入学习(2)远程线程注入">ring3注入学习(2)远程线程注入</a>
+            <div class="post_time"><span class="date">2020-12-05</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/逆向讲课/" title="逆向讲课">逆向讲课</a>
+            <div class="post_time"><span class="date">2020-11-29</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/奇怪的知识增加了/" title="奇怪的知识增加了">奇怪的知识增加了</a>
+            <div class="post_time"><span class="date">2020-11-27</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/SMC技术浅析/" title="SMC技术浅析">SMC技术浅析</a>
+            <div class="post_time"><span class="date">2020-11-24</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/【ACTF2020】Splendid_MineCraft【wp】/" title="【ACTF2020】Splendid_MineCraft【wp】">【ACTF2020】Splendid_MineCraft【wp】</a>
+            <div class="post_time"><span class="date">2020-11-23</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/g2uc writeup/" title="g2uc_writeup">g2uc_writeup</a>
+            <div class="post_time"><span class="date">2020-11-08</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/CTFd搭建以及后续使用/" title="CTFd搭建以及后续使用">CTFd搭建以及后续使用</a>
+            <div class="post_time"><span class="date">2020-11-06</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/竞赛体验-第一次课/" title="竞赛体验">竞赛体验</a>
+            <div class="post_time"><span class="date">2020-10-09</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/分析网易云加密/" title="分析网易云加密">分析网易云加密</a>
+            <div class="post_time"><span class="date">2020-09-15</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/基于badusb实现的基础渗透/" title="基于badusb实现的基础渗透">基于badusb实现的基础渗透</a>
+            <div class="post_time"><span class="date">2020-08-08</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/辩论队一面辩题资料/" title=" 辩论队一面辩题资料"> 辩论队一面辩题资料</a>
+            <div class="post_time"><span class="date">2020-07-29</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/CVE-2017-11882漏洞复现及分析/" title="CVE-2017-11882漏洞分析及利用">CVE-2017-11882漏洞分析及利用</a>
+            <div class="post_time"><span class="date">2020-07-19</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/pwn-IOF/" title="pwn IOF">pwn IOF</a>
+            <div class="post_time"><span class="date">2020-07-17</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/C++课设/" title="C++课设">C++课设</a>
+            <div class="post_time"><span class="date">2020-07-02</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/利用arp欺骗截取图片信息/" title=" 利用arp欺骗截取图片信息"> 利用arp欺骗截取图片信息</a>
+            <div class="post_time"><span class="date">2020-06-25</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/ms12-020以及ms17-010使用/" title="ms12-020以及ms17-010使用">ms12-020以及ms17-010使用</a>
+            <div class="post_time"><span class="date">2020-06-24</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/末日算法/" title="末日算法">末日算法</a>
+            <div class="post_time"><span class="date">2020-05-16</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/格式化字符串漏洞之crack/" title="格式化字符串漏洞之crack">格式化字符串漏洞之crack</a>
+            <div class="post_time"><span class="date">2020-05-16</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/pwn3/" title="pwn3">pwn3</a>
+            <div class="post_time"><span class="date">2020-04-16</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/just-do-it/" title="just_do_it">just_do_it</a>
+            <div class="post_time"><span class="date">2020-04-16</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/整数型溢出/" title="整数型溢出">整数型溢出</a>
+            <div class="post_time"><span class="date">2020-04-04</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/BUUCTF-warmup-csaw-2016-writeup/" title="BUUCTF_warmup_csaw_2016_writeup">BUUCTF_warmup_csaw_2016_writeup</a>
+            <div class="post_time"><span class="date">2020-04-04</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/哀悼·铭记/" title="哀悼·铭记">哀悼·铭记</a>
+            <div class="post_time"><span class="date">2020-04-04</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/栈溢出初级之level2/" title="栈溢出初级学习之level2">栈溢出初级学习之level2</a>
+            <div class="post_time"><span class="date">2020-04-03</span></div>
+          </div>
+        </div>
+      
+    
+      
+        <div class="listing_item">
+          <div class="listing_post">
+            <a href="https://tickertapetimer.github.io/post/栈溢出初级学习之level1/" title="栈溢出初级学习之level1">栈溢出初级学习之level1</a>
+            <div class="post_time"><span class="date">2020-04-03</span></div>
+          </div>
+        </div>
+      
+    
+    </ul>
+
+</ul>
+            <!-- end: .articles -->
+
+            <div class="paginator pager pagination">
+  <div class="paginator_container pagination_container">
+                
+                
+  </div>
+</div>
+      
+
+  </div>
+</div>
+
+    </div>
+    <!-- end: #main -->
+
+    <div class="footer">
+  <div class="bitcron_nav">
+    
+    <a href="/" class="menu">
+      首页
+    </a>
+    
+    <a href="/archives" class="menu">
+      归档
+    </a>
+    
+    <a href="/tags" class="menu">
+      标签
+    </a>
+    
+    <a href="https://tickertapetimer.github.io/post/me" class="menu">
+      关于
+    </a>
+    
+  </div>
+
+  <div class="powered_by">
+    <a href="https://www.caicai.me" target="_blank">Designed by CaiCai,</a><a href="https://gridea.dev/" target="_blank">Powered by Gridea.</a>
+  </div>
+
+  <div class="footer_slogan">
+    <img src="https://tickertapetimer.github.io/media/images/footer.svg" alt="把生命浪费在美好的事物上">
+  </div>
+</div>
+
+<!--字体渲染 & 统计-->
+<script src="https://tickertapetimer.github.io/media/js/sii0bgt.js" async=""></script>
+<script type="text/javascript" src="https://tickertapetimer.github.io/media/js/fonts.js"></script>
+
+<!--电信运营商，整天用 iframe 的方式给用户弹广告 参考:http://en.wikipedia.org/wiki/Framekiller（by fenng）-->
+<style>html{display:none;}</style>
+
+<script>
+  if( self == top ) {
+    document.documentElement.style.display = 'block' ;
+  } else {
+    top.location = self.location ;
+  }
+  jQuery(document).ready(function($){
+    <!-- bigfootjs 控制-->
+    var bigfoot = $.bigfoot({
+      actionOriginalFN: "hide",
+      positionContent: "true"
+    });
+    <!--新窗口打开链接 by 林木木-->
+    $('.post_content a:not(:has(img)),.author-name a,.footer a').click (function() {
+        var location_href = window.location.href.replace(/.*:\/\/(.*)\/.*/,'$1')
+        var click_href = $(this).attr('href').replace(/.*:\/\/(.*)(\/|)$/,'$1').replace(/^(.*)\/.*/,'$1');
+        if ( location_href != click_href )
+            $(this).attr('target','_blank');
+
+    });
+  });
 </script>
 
-
-
-
-
-</body>
+  </body>
 </html>
