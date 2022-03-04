@@ -2,13 +2,13 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://tickertapetimer.github.io</id>
     <title>A little blog</title>
-    <updated>2021-11-29T10:59:10.261Z</updated>
+    <updated>2022-03-04T04:14:59.404Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://tickertapetimer.github.io"/>
     <link rel="self" href="https://tickertapetimer.github.io/atom.xml"/>
     <logo>https://tickertapetimer.github.io/images/avatar.png</logo>
     <icon>https://tickertapetimer.github.io/favicon.ico</icon>
-    <rights>All rights reserved 2021, A little blog</rights>
+    <rights>All rights reserved 2022, A little blog</rights>
     <entry>
         <title type="html"><![CDATA[壳]]></title>
         <id>https://tickertapetimer.github.io/post/OV4NGVHjF/</id>
@@ -20,6 +20,48 @@
 <h2 id="代码">代码</h2>
 <p>代码放在GitHub了<br>
 https://github.com/tickertapetimer/pack_ddjsq</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[某PDF阅读器的破解]]></title>
+        <id>https://tickertapetimer.github.io/post/nmu4gcKIx/</id>
+        <link href="https://tickertapetimer.github.io/post/nmu4gcKIx/">
+        </link>
+        <updated>2021-10-12T04:03:03.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="打开">打开</h2>
+<figure data-type="image" tabindex="1"><img src="https://tickertapetimer.github.io/post-images/1646366684661.png" alt="" loading="lazy"></figure>
+<h2 id="vip功能">VIP功能</h2>
+<p>搜索Registered，找到get_IsRegistered<br>
+<img src="https://tickertapetimer.github.io/post-images/1646366723914.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366730157.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366735126.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366739097.png" alt="" loading="lazy"><br>
+编辑IL指令<br>
+<img src="https://tickertapetimer.github.io/post-images/1646366751206.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366761188.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366764084.png" alt="" loading="lazy"><br>
+还有一块要修改<br>
+<img src="https://tickertapetimer.github.io/post-images/1646366786996.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366789692.png" alt="" loading="lazy"><br>
+依法炮制<br>
+<img src="https://tickertapetimer.github.io/post-images/1646366836553.png" alt="" loading="lazy"><br>
+保存模块</p>
+<h2 id="登录选项">登录选项</h2>
+<p>UI相关的DLL，找到ribbon（选项卡），可能存在文件名与初始化有关的函数，找到InitializeComponent<br>
+<img src="https://tickertapetimer.github.io/post-images/1646366903516.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366911280.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366916144.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366922357.png" alt="" loading="lazy"><br>
+判断哪个是对的<br>
+<img src="https://tickertapetimer.github.io/post-images/1646366959575.png" alt="" loading="lazy"><br>
+四个UI，第一个不是按钮，第二第三个看参数与登录无关<br>
+<img src="https://tickertapetimer.github.io/post-images/1646366976011.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366981180.png" alt="" loading="lazy"><br>
+最后一个应该是，改最后一个的参数，把size相关的全改为0，直接消失<br>
+<img src="https://tickertapetimer.github.io/post-images/1646367003095.png" alt="" loading="lazy"><br>
+用第二种patch操作，直接编辑方法<br>
+<img src="https://tickertapetimer.github.io/post-images/1646367023958.png" alt="" loading="lazy"><br>
+保存模块</p>
 ]]></content>
     </entry>
     <entry>
@@ -2178,130 +2220,6 @@ PEB的地址计算有两种：<br>
 </tr>
 </tbody>
 </table>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[彩虹猫病毒分析]]></title>
-        <id>https://tickertapetimer.github.io/post/彩虹猫病毒分析/</id>
-        <link href="https://tickertapetimer.github.io/post/彩虹猫病毒分析/">
-        </link>
-        <updated>2021-03-07T07:20:25.000Z</updated>
-        <content type="html"><![CDATA[<p>参考文章：<a href="https://bbs.pediy.com/thread-262873.htm">[原创]最适合新手的病毒分析——彩虹猫病毒</a></p>
-<h2 id="初步观察">初步观察</h2>
-<p>先拍个快照，再运行病毒程序，观察发生了什么</p>
-<p>发现运行后存在以下现象：</p>
-<ol>
-<li>会弹出浏览器窗口</li>
-<li>鼠标开始不规律的闪动</li>
-<li>有大量三角形感叹号，圆圈状叉号图标出现</li>
-<li>电脑反色，怀疑是对比度的问题</li>
-</ol>
-<p>最后在任务管理器发现了6个MEMZ.exe的进程，任意关闭一个，虚拟机直接卡死，关机重启失败，开机界面为一串大意为电脑已被攻击的英文，然后出现彩虹猫GIF</p>
-<h2 id="初步分析">初步分析</h2>
-<p>在百度以及查阅参考文章后，得到相关现象对应的函数：</p>
-<ol>
-<li>会弹出浏览器窗口 —— ShellExecute</li>
-<li>鼠标开始不规律的闪动 —— SetCursorPos、GetCursorPos</li>
-<li>有大量三角形感叹号，圆圈状叉号图标出现 —— DrawIcon</li>
-<li>电脑反色，怀疑是对比度的问题 —— BitBlt、StretchBlt</li>
-<li>6个MEMZ进程 —— ShellExecute</li>
-<li>由于没有连接声音所以没发现的系统提示音现象 —— PlaySoundA</li>
-</ol>
-<p>这些函数都可以在StudyPE+中查看导入表时发现</p>
-<h2 id="ida">IDA</h2>
-<p>再进一步，打开IDA分析</p>
-<figure data-type="image" tabindex="1"><img src="https://tickertapetimer.github.io/post-images/1629435238110.png" alt="" loading="lazy"></figure>
-<p>一开始就调用了GetCommandLineW()以及CommandLineToArgvW()，这两个函数的作用分别是获取命令行参数，解析命令行参数</p>
-<p>但我们运行它的时候是不存在参数的，所以 <code>pNumArgs &gt; 1</code>可以不看，直接往后看</p>
-<h3 id="无参数部分">无参数部分</h3>
-<figure data-type="image" tabindex="2"><img src="https://tickertapetimer.github.io/post-images/1629435247856.png" alt="" loading="lazy"></figure>
-<p>这里有弹窗，而在我们运行程序时，也会弹出两个一模一样的弹窗，合理推断这里才是程序入口点</p>
-<figure data-type="image" tabindex="3"><img src="https://tickertapetimer.github.io/post-images/1629435253079.png" alt="" loading="lazy"></figure>
-<p>进入入口点后，就可以看到前面说的生成6个MEMZ进程的函数了</p>
-<figure data-type="image" tabindex="4"><img src="https://tickertapetimer.github.io/post-images/1629435259724.png" alt="" loading="lazy"></figure>
-<p>利用do-while循环，以&quot;/watchdog&quot;为参数创建5个MEMZ进程，再用&quot;/main&quot;参数创建一个MEMZ进程</p>
-<p>以main参数创建进程的代码中，还有一个函数 <code>SetPriorityClass()</code>，这个函数是一个给进程设置优先级的函数，目测应该属于提权操作，而该函数的参数0x80，意味着该&quot;/main&quot;进程的优先级被设至最高（应该是）</p>
-<p>创建完线程后调用 <code>ExitProcess</code>退出进程</p>
-<h3 id="watchdog参数">/watchdog参数</h3>
-<p>在添加参数创建的进程中，根据参数的不同，也可以分为两部分代码，即&quot;/watchdog&quot;和&quot;/main&quot;两个参数</p>
-<figure data-type="image" tabindex="5"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307204338336.png" alt="image-20210307204338336" loading="lazy"></figure>
-<p>这段代码有熟悉的 <code>CreateThread</code>创建线程函数，还有 <code>RegisterClassExA</code>函数，作用为注册一个窗口类，供以后在对<a href="https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-createwindowa">CreateWindow</a>或<a href="https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-createwindowexa">CreateWindowEx</a>函数的调用中使用、<code>CreateWindowExA</code>函数，用于创建窗口</p>
-<p>在<code>CreateWindowExA</code>函数下面的while循环，可以看到有三个与message相关的函数，一个是检索消息，另外两个是调度或发布消息，可以推断这是一个消息循环，作用未知</p>
-<p><code>CreateThread</code>有利用到sub_40114A函数去作为参数，点进去查看该函数干了什么</p>
-<h4 id="sub_40114a">sub_40114A</h4>
-<figure data-type="image" tabindex="6"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307205420821.png" alt="image-20210307205420821" loading="lazy"></figure>
-<p>一个申请空间，一个获取句柄，一个获取进程名</p>
-<figure data-type="image" tabindex="7"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307205632817.png" alt="image-20210307205632817" loading="lazy"></figure>
-<p>下面的while循环，看个人感觉大概有几个关键点</p>
-<ol>
-<li>这是永真循环</li>
-<li>这个循环会比较两个变量，相同后v5会自增</li>
-<li>一旦v5&lt;v8，就会进入另一个函数</li>
-<li>v5每次循环都会置0</li>
-<li>v8每次循环都会被赋值为v5的值</li>
-</ol>
-<p>结合彩虹猫病毒的特性，合理猜想，这是在检测进程数，一旦进程数小于6个，即关闭了一个进程，就会触发下面的<code>sub_401021</code>函数，直接蓝屏</p>
-<p>点进去<code>sub_401021</code>函数</p>
-<figure data-type="image" tabindex="8"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307210853672.png" alt="image-20210307210853672" loading="lazy"></figure>
-<p>看到<code>RtlAdjustPrivilege</code>和<code>NtRaiseHardError</code>，这两个东西放在一起，就是一个经典蓝屏手段，前者提权，后者触发蓝屏</p>
-<p>再往下看</p>
-<figure data-type="image" tabindex="9"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307211326958.png" alt="image-20210307211326958" loading="lazy"></figure>
-<p>还有一个退出系统的操作，<code>SeShutdownPrivilege</code>，这个东西和上半部分一起，保证关机，这个进程的参数真的没给错，&quot;/watchdog&quot;，看门狗</p>
-<p>上述是关闭进程后的触发手段，现在回到关闭进程前，看看它有没有别的操作，毕竟开了5个参数为看门狗的进程，不可能就做这点事情</p>
-<figure data-type="image" tabindex="10"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307204338336.png" alt="image-20210307204338336" loading="lazy"></figure>
-<p>有一个sub_401000函数，点进去</p>
-<figure data-type="image" tabindex="11"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210307212210133.png" alt="image-20210307212210133" loading="lazy"></figure>
-<p>检测消息常量值，百度后发现，值为16或22的系统消息为WM_CLOSE和WM_ENDSESSION，这两个都是系统在关机时会发送给各个程序或窗口的消息，所以sub_401000的作用也清楚了，在用户主动关机时，也会调用sub_401021，产生蓝屏或关机，看来真就看门狗了，只要进程被杀或者自动关机，就会触发蓝屏或者退出系统</p>
-<h3 id="main参数">/main参数</h3>
-<p>/main参数部分的代码分两块，一块是打开物理磁盘覆盖MBR，达到开机出现GIF的效果，一块是调用若干函数，去实现运行彩虹猫时出现的异象</p>
-<h4 id="mbr">MBR</h4>
-<figure data-type="image" tabindex="12"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210309134334276.png" alt="image-20210309134334276" loading="lazy"></figure>
-<p>先用CreateFileA打开主硬盘，即PhysicalDrive0，再用do-while循环去覆盖数据，byte_402118以及byte_402248中的数据应该就是要用来覆盖的内容</p>
-<p>由于对MBR不熟，所以详情可参考 参考文章：<a href="https://bbs.pediy.com/thread-262873.htm">[原创]最适合新手的病毒分析——彩虹猫病毒</a></p>
-<h4 id="函数">函数</h4>
-<p>在覆盖MBR后，程序调用了notepad去宣告攻击成功，然后开始调用后面的代码去产生各种花里胡哨的异象</p>
-<figure data-type="image" tabindex="13"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210309134946309.png" alt="image-20210309134946309" loading="lazy"></figure>
-<p>代码中出现了产生线程的CreateThread，并且用函数sub_401A2B去作为参数，点进去看它的代码</p>
-<figure data-type="image" tabindex="14"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210309135117187.png" alt="image-20210309135117187" loading="lazy"></figure>
-<p>不太能看懂，跳回去看，参数中除了函数外，还有一个v9，而v9的值一开始就被赋为一个地址，off_405130，这个地址里面存着一个数组，数组中的元素有10个函数，以及10个函数各对应的一个值</p>
-<figure data-type="image" tabindex="15"><img src="https://tickertapetimer.github.io/post-images/%E5%BD%A9%E8%99%B9%E7%8C%AB%E7%97%85%E6%AF%92%E5%88%86%E6%9E%90/image-20210309135524598.png" alt="image-20210309135524598" loading="lazy"></figure>
-<p>在前面代码的循环中，出现一个sleep函数，该函数的参数是v9[1]，这是那10个函数下面的整数值，由此可知，这十个整数值都是时间值，而循环中最后的v9+=2也证实了这一点，由于v9的类型为dword，它每次自增2，实际上都是增加8个字节，这恰好与之对应</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>第一次循环</th>
-<th>第二次循环</th>
-<th>第三次循环</th>
-<th>第四次循环</th>
-<th>......</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>v9的值</td>
-<td>0x00405130</td>
-<td>0x00405138</td>
-<td>0x00405140</td>
-<td>0x00405148</td>
-<td>......</td>
-</tr>
-<tr>
-<td>v9[1]的值</td>
-<td>0x00405134</td>
-<td>0x0040513c</td>
-<td>0x00405144</td>
-<td>0x0040514c</td>
-<td>......</td>
-</tr>
-</tbody>
-</table>
-<p>所以后面的代码的作用也大概清楚了，通过设置时间值去触发各个函数引起异象，而时间值的不同可以让事件发生的随机</p>
-<h2 id="小结">小结</h2>
-<p>到这里，这个病毒基本分析完了，但它还有许多细节值得探究，本文只是粗浅分析，那10个函数的具体作用、覆盖MBR的原理等等都没有研究</p>
-<p>在分析完这个病毒后，也许可以试试改造它一下，例如更改它的GIF，或者写一个可以修改win10内存的彩虹猫plus</p>
-<p>再次感谢大佬的文章<a href="https://bbs.pediy.com/thread-262873.htm">[原创]最适合新手的病毒分析——彩虹猫病毒</a></p>
-<p>病毒分析还挺有趣的</p>
 ]]></content>
     </entry>
 </feed>

@@ -1,0 +1,198 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>某PDF阅读器的破解 | A little blog</title>
+<meta name="description" content="" />
+<link rel="shortcut icon" href="https://tickertapetimer.github.io/media/images/favicon.ico?v=1646367295565">
+<link rel="stylesheet" href="https://tickertapetimer.github.io/styles/main.css">
+<script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://tickertapetimer.github.io/media/js/bigfoot.min.js"></script>
+
+    <script src="https://cdn.staticfile.org/prism/1.17.1/prism.min.js"></script>
+    
+  </head>
+  <body>
+    <!-- start: main -->
+    <div class="main animated">
+      
+      <div class="header animated fadeInDown">
+  <div class="site_title_container">
+    <div class="site_title"><a href="https://tickertapetimer.github.io"><img src="https://tickertapetimer.github.io/media/images/logo1.svg" alt=""></a></div>
+    <div class="description">
+      <p class="sub_title">一个邋遢君子的自娱自乐</p>
+      <div class="my_socials">
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="autopagerize_page_element">
+  <div class="content">
+
+      <div class="post animated fadeInDown">
+        <div class="post_title">
+          <h2><a>某PDF阅读器的破解</a></h2>
+          <span class="date">2021-10-12</span>
+        </div>
+
+              <div class="post_content markdown">
+                <h2 id="打开">打开</h2>
+<figure data-type="image" tabindex="1"><img src="https://tickertapetimer.github.io/post-images/1646366684661.png" alt="" loading="lazy"></figure>
+<h2 id="vip功能">VIP功能</h2>
+<p>搜索Registered，找到get_IsRegistered<br>
+<img src="https://tickertapetimer.github.io/post-images/1646366723914.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366730157.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366735126.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366739097.png" alt="" loading="lazy"><br>
+编辑IL指令<br>
+<img src="https://tickertapetimer.github.io/post-images/1646366751206.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366761188.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366764084.png" alt="" loading="lazy"><br>
+还有一块要修改<br>
+<img src="https://tickertapetimer.github.io/post-images/1646366786996.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366789692.png" alt="" loading="lazy"><br>
+依法炮制<br>
+<img src="https://tickertapetimer.github.io/post-images/1646366836553.png" alt="" loading="lazy"><br>
+保存模块</p>
+<h2 id="登录选项">登录选项</h2>
+<p>UI相关的DLL，找到ribbon（选项卡），可能存在文件名与初始化有关的函数，找到InitializeComponent<br>
+<img src="https://tickertapetimer.github.io/post-images/1646366903516.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366911280.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366916144.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366922357.png" alt="" loading="lazy"><br>
+判断哪个是对的<br>
+<img src="https://tickertapetimer.github.io/post-images/1646366959575.png" alt="" loading="lazy"><br>
+四个UI，第一个不是按钮，第二第三个看参数与登录无关<br>
+<img src="https://tickertapetimer.github.io/post-images/1646366976011.png" alt="" loading="lazy"><br>
+<img src="https://tickertapetimer.github.io/post-images/1646366981180.png" alt="" loading="lazy"><br>
+最后一个应该是，改最后一个的参数，把size相关的全改为0，直接消失<br>
+<img src="https://tickertapetimer.github.io/post-images/1646367003095.png" alt="" loading="lazy"><br>
+用第二种patch操作，直接编辑方法<br>
+<img src="https://tickertapetimer.github.io/post-images/1646367023958.png" alt="" loading="lazy"><br>
+保存模块</p>
+
+              </div>
+
+            <div class="post_footer">
+              <div class="meta">
+                <div class="info">
+                  <span class="field tags"><i class="fa fa-flask"></i>
+                    <a href="https://tickertapetimer.github.io/tag/lPO99KDRN/" class="tag">逆向</a>
+                  
+                    <a href="https://tickertapetimer.github.io/tag/AFFv1xmrf/" class="tag">实战</a>
+                  </span>
+                </div>
+              </div>
+            </div>
+      </div>
+      <div id="comments" class="doc_comments">
+              
+                <p></p>
+              
+      </div>
+  </div>
+</div>
+<a id="back_to_top" href="#" class="back_to_top" style="display: block;"><span>△</span>
+</a>
+    </div>
+    <!-- end: #main -->
+
+    <div class="footer">
+  <div class="bitcron_nav">
+    
+    <a href="/" class="menu">
+      首页
+    </a>
+    
+    <a href="/archives" class="menu">
+      归档
+    </a>
+    
+    <a href="/tags" class="menu">
+      标签
+    </a>
+    
+    <a href="https://tickertapetimer.github.io/post/me" class="menu">
+      关于
+    </a>
+    
+  </div>
+
+  <div class="powered_by">
+    <a href="https://www.caicai.me" target="_blank">Designed by CaiCai,</a><a href="https://gridea.dev/" target="_blank">Powered by Gridea.</a>
+  </div>
+
+  <div class="footer_slogan">
+    <img src="https://tickertapetimer.github.io/media/images/footer.svg" alt="把生命浪费在美好的事物上">
+  </div>
+</div>
+
+<!--字体渲染 & 统计-->
+<script src="https://tickertapetimer.github.io/media/js/sii0bgt.js" async=""></script>
+<script type="text/javascript" src="https://tickertapetimer.github.io/media/js/fonts.js"></script>
+
+<!--电信运营商，整天用 iframe 的方式给用户弹广告 参考:http://en.wikipedia.org/wiki/Framekiller（by fenng）-->
+<style>html{display:none;}</style>
+
+<script>
+  if( self == top ) {
+    document.documentElement.style.display = 'block' ;
+  } else {
+    top.location = self.location ;
+  }
+  jQuery(document).ready(function($){
+    <!-- bigfootjs 控制-->
+    var bigfoot = $.bigfoot({
+      actionOriginalFN: "hide",
+      positionContent: "true"
+    });
+    <!--新窗口打开链接 by 林木木-->
+    $('.post_content a:not(:has(img)),.author-name a,.footer a').click (function() {
+        var location_href = window.location.href.replace(/.*:\/\/(.*)\/.*/,'$1')
+        var click_href = $(this).attr('href').replace(/.*:\/\/(.*)(\/|)$/,'$1').replace(/^(.*)\/.*/,'$1');
+        if ( location_href != click_href )
+            $(this).attr('target','_blank');
+
+    });
+  });
+</script>
+
+
+<script>
+  jQuery(document).ready(function($){
+    var bt;
+    bt = $('#back_to_top');
+    if ($(document).width() > 480) {
+      $(window).scroll(function() {
+        var st;
+        st = $(window).scrollTop();
+        if (st > 30) {
+          return bt.css('display', 'block');
+        } else {
+          return bt.css('display', 'none');
+        }
+      });
+      return bt.click(function() {
+        $('body,html').animate({
+          scrollTop: 0
+        }, 800);
+        return false;
+      });
+    }
+  });
+</script>
+  </body>
+</html>
