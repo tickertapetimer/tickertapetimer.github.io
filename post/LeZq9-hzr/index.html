@@ -1,0 +1,293 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>SEH初探 | A little blog</title>
+<meta name="description" content="" />
+<link rel="shortcut icon" href="https://tickertapetimer.github.io/media/images/favicon.ico?v=1646998091224">
+<link rel="stylesheet" href="https://tickertapetimer.github.io/styles/main.css">
+<script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://tickertapetimer.github.io/media/js/bigfoot.min.js"></script>
+
+    <script src="https://cdn.staticfile.org/prism/1.17.1/prism.min.js"></script>
+    
+  </head>
+  <body>
+    <!-- start: main -->
+    <div class="main animated">
+      
+      <div class="header animated fadeInDown">
+  <div class="site_title_container">
+    <div class="site_title"><a href="https://tickertapetimer.github.io"><img src="https://tickertapetimer.github.io/media/images/logo1.svg" alt=""></a></div>
+    <div class="description">
+      <p class="sub_title">一个邋遢君子的自娱自乐</p>
+      <div class="my_socials">
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="autopagerize_page_element">
+  <div class="content">
+
+      <div class="post animated fadeInDown">
+        <div class="post_title">
+          <h2><a>SEH初探</a></h2>
+          <span class="date">2022-03-11</span>
+        </div>
+
+              <div class="post_content markdown">
+                <h2 id="简要">简要</h2>
+<p>SEH，也叫结构化异常处理，想要明白这个是什么意思，就需要去知道什么是异常处理。异常处理是指当程序运行出现错误时，系统会执行它自身或者程序设定好的行为，比如说当编写的程序在遇到out of range，或者是空指针等原因时，系统可能会终止程序运行，或者出现错误弹窗，这就是系统对于程序遇到的异常情况的处理。</p>
+<p>但当程序遇到上述这些异常时，不一定要执行系统默认的异常处理函数，也可以通过在编写程序时加入自己的异常处理函数，使得程序遇到异常时可以先执行自带的异常处理函数，避免程序因为异常直接被系统“截停”。这在日常开发中经常会被用到，开发者可以用来检测用户的输入是否合法。本文要提到的结构化异常处理则是Windows操作系统提供的强大异常处理功能。而Visual C++中的__try{}/__finally{}和__try{}/__except{}结构本质上是对Windows提供的SEH的封装。</p>
+<p>SEH本质上是一个链表，系统为每一个线程都设立一个单独的异常处理帧链表来处理异常事件，结构类似于这样（个人理解）</p>
+<pre><code>+---------+         +---------------+
+| 发生异常 +--------&gt;+   SEH         +--+
+|         |         +---------------+  |            +------------------+
++---------+         |   Handler     +--------------&gt;+  异常处理函数     |
+                    +---------------+  |            |  ...             |
+                                       |            |  retn            |
+                            +----------+            +------------------+
+                            |
+                    +-------v-------+
+                    |   Next        +--+
+                    +---------------+  |            +------------------+
+                    |   Handler     +--------------&gt;+  异常处理函数     |
+                    +---------------+  |            |  ...             |
+                                       |            |  retn            |
+                            +----------+            +------------------+
+                            |
+                    +-------v-------+
+                    |  FFFFFFh      |
+                    +---------------+               +------------------+
+                    |   Handler     +--------------&gt;+  异常处理函数     |
+                    +---------------+               |  ...             |
+                                                    |  retn            |
+                                                     +------------------+
+</code></pre>
+<p>当出现异常时，我们可以通过使用对应异常状态的“筛选器”去进行处理，类似于这样</p>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;windows.h&gt; // for EXCEPTION_ACCESS_VIOLATION
+#include &lt;excpt.h&gt;
+
+
+int main()
+{
+    int* p = 0x00000000;   // pointer to NULL
+    puts(&quot;hello&quot;);
+    __try
+    {
+        puts(&quot;in try&quot;);
+        *p = 13;    // causes an access violation exception;
+
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER)
+    {
+        puts(&quot;in except&quot;);
+    }
+    puts(&quot;world&quot;);
+}
+</code></pre>
+<p>对空指针赋值导致出现异常，这时 __except ()接收到对应的状态EXCEPTION_EXECUTE_HANDLER，开始执行里面的代码，最终输出结果为</p>
+<pre><code>hello
+in try
+in except
+world
+</code></pre>
+<p>上述为SEH基础知识，SEH还有很多东西可以探究，本文仅仅是一个简单的介绍，实际上SEH还可以用来实现反调试反跟踪等等高端的操作。</p>
+<h2 id="奇想">奇想</h2>
+<p>既然我们知道异常处理可以在程序碰到异常时执行别的代码，那它配合上代码自解密（SMC），是不是有可能做到将加密代码的密钥隐藏起来，使其不那么容易被发现。例如用随机密码的方式，先用一个密钥将代码段加密起来，比如说选择124作为密钥，加密用最简单的异或，在解密运行代码时，用随机数去解密代码，一旦生成的随机数不是124，那样解密出来的代码就一定无法运行，导致触发异常，用异常处理去重新生成密钥，不断的随机，直到生成原来的密钥，这样理论上可以大大降低密钥被发现进而导致代码段被解密所带来的风险，甚至可以在代码段解密成功运行后，用随机数异或回去，这样每一次调试所需要的密钥都是不一样的，进一步降低风险。</p>
+<h3 id="具体实现">具体实现</h3>
+<p>说干就干，写了个demo去测试这种想法</p>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;windows.h&gt;
+#include &lt;excpt.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+
+#pragma code_seg(&quot;.ddd&quot;)
+void D()
+{
+	puts(&quot;WIN&quot;);
+}
+void A()
+{
+	;
+}
+#pragma code_seg()
+#pragma comment(linker, &quot;/SECTION:.ddd,ERW&quot;)
+
+void flag(int key)
+{
+	char* b1 = (char*)D;
+	char* c1 = (char*)A;
+	int i = 0;
+	for (; b1 &lt; c1; b1++)
+	{
+		i++;
+	}
+	void* a1 = (char*)D;
+	for (int i = 0; i &lt; 32; i++)
+	{
+		*((BYTE*)a1 + i) ^= key;
+	}
+	D();
+}
+
+int main1(int key)
+{
+	int i, n;
+	void* a1 = (char*)D;
+	key = rand() % 200;
+	__try
+	{
+		flag(key);
+	}
+	__except (EXCEPTION_EXECUTE_HANDLER)
+	{
+		for (int i = 0; i &lt; 32; i++)
+		{
+			*((BYTE*)a1 + i) ^= key;
+		}
+		main1(key,);
+	}
+	system(&quot;PAUSE&quot;);
+	return num;
+}
+
+int main()
+{
+	int key = 0;
+	time_t t;
+	srand(time(&amp;t));
+	main1(key,);
+	system(&quot;PAUSE&quot;);
+}
+</code></pre>
+<p>从demo中不难看出，唯有key值随机到0时，才能正常运行程序。</p>
+<h2 id="问题">问题</h2>
+<p>在运行demo时，遇到了一些问题，对于某些随机出来的key，在和代码段异或后执行该代码段时，程序不会进入异常处理，程序在等待了一段时间后直接关闭了，原因暂时不明，推测可能是使用该key值解密生成的代码段在运行时遇到了非常严重的错误，异常处理无法接管，导致出现错误，无法继续运行。</p>
+<h3 id="解决方案">解决方案</h3>
+<p>错误是出现在执行代码段时，那如果并不执行代码段，而是在代码段前放一个标识，如果解密后的代码段无法检测到该标识，就将其鉴定为解密失败，强行抛出异常进入异常处理，重新生成密钥。</p>
+<p>或者是对代码段做一个CRC校验，判断与原代码段是否相同，两者应该都可以解决该问题。</p>
+
+              </div>
+
+            <div class="post_footer">
+              <div class="meta">
+                <div class="info">
+                  <span class="field tags"><i class="fa fa-flask"></i></span>
+                </div>
+              </div>
+            </div>
+      </div>
+      <div id="comments" class="doc_comments">
+              
+                <p></p>
+              
+      </div>
+  </div>
+</div>
+<a id="back_to_top" href="#" class="back_to_top" style="display: block;"><span>△</span>
+</a>
+    </div>
+    <!-- end: #main -->
+
+    <div class="footer">
+  <div class="bitcron_nav">
+    
+    <a href="/" class="menu">
+      首页
+    </a>
+    
+    <a href="/archives" class="menu">
+      归档
+    </a>
+    
+    <a href="/tags" class="menu">
+      标签
+    </a>
+    
+    <a href="https://tickertapetimer.github.io/post/me" class="menu">
+      关于
+    </a>
+    
+  </div>
+
+  <div class="powered_by">
+    <a href="https://www.caicai.me" target="_blank">Designed by CaiCai,</a><a href="https://gridea.dev/" target="_blank">Powered by Gridea.</a>
+  </div>
+
+  <div class="footer_slogan">
+    <img src="https://tickertapetimer.github.io/media/images/footer.svg" alt="把生命浪费在美好的事物上">
+  </div>
+</div>
+
+<!--字体渲染 & 统计-->
+<script src="https://tickertapetimer.github.io/media/js/sii0bgt.js" async=""></script>
+<script type="text/javascript" src="https://tickertapetimer.github.io/media/js/fonts.js"></script>
+
+<!--电信运营商，整天用 iframe 的方式给用户弹广告 参考:http://en.wikipedia.org/wiki/Framekiller（by fenng）-->
+<style>html{display:none;}</style>
+
+<script>
+  if( self == top ) {
+    document.documentElement.style.display = 'block' ;
+  } else {
+    top.location = self.location ;
+  }
+  jQuery(document).ready(function($){
+    <!-- bigfootjs 控制-->
+    var bigfoot = $.bigfoot({
+      actionOriginalFN: "hide",
+      positionContent: "true"
+    });
+    <!--新窗口打开链接 by 林木木-->
+    $('.post_content a:not(:has(img)),.author-name a,.footer a').click (function() {
+        var location_href = window.location.href.replace(/.*:\/\/(.*)\/.*/,'$1')
+        var click_href = $(this).attr('href').replace(/.*:\/\/(.*)(\/|)$/,'$1').replace(/^(.*)\/.*/,'$1');
+        if ( location_href != click_href )
+            $(this).attr('target','_blank');
+
+    });
+  });
+</script>
+
+
+<script>
+  jQuery(document).ready(function($){
+    var bt;
+    bt = $('#back_to_top');
+    if ($(document).width() > 480) {
+      $(window).scroll(function() {
+        var st;
+        st = $(window).scrollTop();
+        if (st > 30) {
+          return bt.css('display', 'block');
+        } else {
+          return bt.css('display', 'none');
+        }
+      });
+      return bt.click(function() {
+        $('body,html').animate({
+          scrollTop: 0
+        }, 800);
+        return false;
+      });
+    }
+  });
+</script>
+  </body>
+</html>
