@@ -2,15 +2,13 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-<title>整数型溢出 | A little blog</title>
+<title>A little blog</title>
 <meta name="description" content="" />
 <link rel="shortcut icon" href="https://tickertapetimer.github.io/media/images/favicon.ico?v=1648897482755">
 <link rel="stylesheet" href="https://tickertapetimer.github.io/styles/main.css">
 <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://tickertapetimer.github.io/media/js/bigfoot.min.js"></script>
 
-    <script src="https://cdn.staticfile.org/prism/1.17.1/prism.min.js"></script>
-    
   </head>
   <body>
     <!-- start: main -->
@@ -41,58 +39,40 @@
 
 <div class="autopagerize_page_element">
   <div class="content">
-
+    
       <div class="post animated fadeInDown">
         <div class="post_title">
-          <h2><a>整数型溢出</a></h2>
-          <span class="date">2020-04-04</span>
+          <h2><a href="https://tickertapetimer.github.io/post/栈溢出初级学习之level1/">栈溢出初级学习之level1</a></h2>
         </div>
-
-              <div class="post_content markdown">
-                <p>参考xctf的一道整数型溢出<br>
-整数溢出三种类型：<br>
-1、溢出<br>
-只有有符号数才会发生溢出。有符号数最高位表示符号，在两正或两负相加时，有可能改变符号位的值，产生溢出。<br>
-溢出标志 OF 可检测有符号数的溢出。<br>
-2、回绕<br>
-无符号数 0-1 时会变成最大的数，如 1 字节的无符号数会变为 255，而 255+1 会变成最小数 0。<br>
-进位标志 CF 可检测无符号数的回绕。<br>
-3、截断<br>
-将一个较大宽度的数存入一个宽度小的操作数中，高位发生截断。</p>
-<h3 id="参考下图的回绕可有助于了解">参考下图的回绕可有助于了解</h3>
-<p><img src="https://tickertapetimer.github.io/post-images/%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/1.png" alt="1" loading="lazy"><br>
-xctf的这道<code>int_overflow</code>就是利用了回绕<br>
-观察ida的<code>login</code>函数可以看到用来表示密码变量的buf设置的长度极长，这就提供了回绕的空间；<br>
-<img src="https://tickertapetimer.github.io/post-images/%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/2.png" alt="2" loading="lazy"><br>
-<img src="https://tickertapetimer.github.io/post-images/%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/3.png" alt="3" loading="lazy"><br>
-在<code>check_passwd</code>函数中更是发现了传递buf变量值的S变量是无符号整型，基本确定是回绕，ida中显示判断条件为3到8，所以构造字节大小应为<code>(256+3)~(256+8)</code>，且S覆盖到的<code>dest</code>变量的长度为<code>0x14</code>；<br>
-在整体观察函数时，发现一个<code>get_flag</code>函数，于是利用这个函数的返回地址构造<code>payload</code>；<br>
-PS：<code>get_flag</code>的返回地址不是<code>command</code>那个，而是在该函数的上层函数<code>what_is_this</code>里面的一个返回地址。<img src="https://tickertapetimer.github.io/post-images/%E6%95%B4%E6%95%B0%E5%9E%8B%E6%BA%A2%E5%87%BA/4.png" alt="4" loading="lazy"><br>
-在观察这个地址时还发现了<code>leave</code>(出栈)，所以要在溢出时多分配四个字节，所以构造<code>payload</code>为<code>'a'*0x14+'a'*4+p32(get_flag address)+'a'*(256+(3~8)-0x14-4-4)</code>。</p>
-
+            <div class="list">
+              <div class="post_content">
+                
               </div>
-
+            </div>
             <div class="post_footer">
               <div class="meta">
                 <div class="info">
+                  <span class="field"><i class="fa fa-sun-o"></i><span class="date">2020-04-03</span></span>
+                  <span class="field"><i class="fa fa-eye"></i><span class="date">2 min read</span></span>
                   <span class="field tags"><i class="fa fa-flask"></i>
-                    <a href="https://tickertapetimer.github.io/tag/OI2yF9Mjr/" class="tag">学习</a>
-                  
                     <a href="https://tickertapetimer.github.io/tag/6g_QaqWQH/" class="tag">WP</a>
                   </span>
                 </div>
               </div>
             </div>
       </div>
-      <div id="comments" class="doc_comments">
-              
-                <p></p>
-              
-      </div>
+    
+  <div class="paginator pager pagination">
+  <div class="paginator_container pagination_container">
+                
+                  <a href="https://tickertapetimer.github.io/page/4/" class="btn pre newer-posts newer_posts">返回上一页</a>
+                
+                
   </div>
 </div>
-<a id="back_to_top" href="#" class="back_to_top" style="display: block;"><span>△</span>
-</a>
+  </div>
+</div>
+
     </div>
     <!-- end: #main -->
 
@@ -156,29 +136,5 @@ PS：<code>get_flag</code>的返回地址不是<code>command</code>那个，而�
   });
 </script>
 
-
-<script>
-  jQuery(document).ready(function($){
-    var bt;
-    bt = $('#back_to_top');
-    if ($(document).width() > 480) {
-      $(window).scroll(function() {
-        var st;
-        st = $(window).scrollTop();
-        if (st > 30) {
-          return bt.css('display', 'block');
-        } else {
-          return bt.css('display', 'none');
-        }
-      });
-      return bt.click(function() {
-        $('body,html').animate({
-          scrollTop: 0
-        }, 800);
-        return false;
-      });
-    }
-  });
-</script>
   </body>
 </html>

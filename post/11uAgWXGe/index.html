@@ -2,7 +2,7 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-<title>康威生命游戏 | A little blog</title>
+<title>卑微逆向手实习面经 | A little blog</title>
 <meta name="description" content="" />
 <link rel="shortcut icon" href="https://tickertapetimer.github.io/media/images/favicon.ico?v=1648897482755">
 <link rel="stylesheet" href="https://tickertapetimer.github.io/styles/main.css">
@@ -44,28 +44,68 @@
 
       <div class="post animated fadeInDown">
         <div class="post_title">
-          <h2><a>康威生命游戏</a></h2>
-          <span class="date">2021-08-27</span>
+          <h2><a>卑微逆向手实习面经</a></h2>
+          <span class="date">2022-04-02</span>
         </div>
 
               <div class="post_content markdown">
-                <h2 id="简介">简介</h2>
-<p>康威生命游戏（Conway's Game of Life），又称康威生命棋，是英国数学家约翰·何顿·康威在1970年发明的细胞自动机。</p>
-<h2 id="规则">规则</h2>
-<p>生命游戏中，对于任意细胞，传统规则如下：</p>
-<p>每个细胞有两种状态 - 存活或死亡，每个细胞与以自身为中心的周围八格细胞产生互动（如图，黑色为存活，白色为死亡）<br>
-当前细胞为存活状态时，当周围的存活细胞低于2个时（不包含2个），该细胞变成死亡状态。（模拟生命数量稀少）<br>
-当前细胞为存活状态时，当周围有2个或3个存活细胞时，该细胞保持原样。<br>
-当前细胞为存活状态时，当周围有超过3个存活细胞时，该细胞变成死亡状态。（模拟生命数量过多）<br>
-当前细胞为死亡状态时，当周围有3个存活细胞时，该细胞变成存活状态。（模拟繁殖）<br>
-可以把最初的细胞结构定义为种子，当所有在种子中的细胞同时被以上规则处理后，可以得到第一代细胞图。按规则继续处理当前的细胞图，可以得到下一代的细胞图，周而复始。</p>
-<h2 id="趣味">趣味</h2>
-<p>在传统的生命游戏中，随着游戏的进行，杂乱无序的细胞会逐渐演化出各种精致、有形的结构；这些结构往往有很好的对称性，而且每一代都在变化形状。一些形状已经锁定，不会逐代变化。有时，一些已经成形的结构会因为一些无序细胞的“入侵”而被破坏。但是形状和秩序经常能从杂乱中产生出来。</p>
-<figure data-type="image" tabindex="1"><img src="https://tickertapetimer.github.io/post-images/1630032039689.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="2"><img src="https://tickertapetimer.github.io/post-images/1630032103202.png" alt="" loading="lazy"></figure>
-<p>更为趣味的是，如果将细胞存活或死亡的判定规则更改，那样衍生出来的图案也会发生变化，某种意义上，它暗示着在资源丰富或者匮乏的情况下，生命聚落的生存方式</p>
-<h2 id="链接">链接</h2>
-<p><a href="https://playgameoflife.com/">康威生命游戏</a></p>
+                <h1 id="前言">前言</h1>
+<p>有一说一，二进制安全岗大部分都是要会挖洞的，不会挖洞的卑微逆向手只能靠着一点平时攒的知识去找到满意的实习<br>
+可能真的因为是不会挖洞，很多厂的安全岗一投下去就是石沉大海（呜呜）<br>
+最后选择润去深信服，直接躺平</p>
+<h1 id="面经">面经</h1>
+<h2 id="深信服两个岗">深信服（两个岗）</h2>
+<h3 id="样本分析实习工程师">样本分析实习工程师</h3>
+<p>CTF比赛中遇到的印象深刻的逆向题<br>
+简历上的项目，遇到的难点巴拉巴拉<br>
+看简历里有一个cnvd，所以问有没有web渗透的经验（直接答莫得）<br>
+看简历会取证，要求简单描述一下<br>
+看简历学过密码学，问有没有学习过一些密码学算法，能否简单讲讲<br>
+假如给你一个病毒样本，要怎么下手去分析它<br>
+回答：先丢虚拟机看病毒行为，分析可能使用的API，再结合IDA去分析流程（自己盲猜的）</p>
+<p>感觉技术细节问的不多，主要是看简历问</p>
+<h3 id="攻防研究工程师">攻防研究工程师</h3>
+<p>CTF比赛中遇到的印象深刻的逆向题<br>
+简历上的项目，遇到的难点巴拉巴拉<br>
+讲讲你写的壳和现在网上流行的壳相比有什么优势：直接躺平，没有<br>
+简单讲讲PE文件结构<br>
+如何修改DLL文件，使其加载时是固定基址：一开始说直接改编译器选项，结果面试官要问的是无源码情况，无源码情况下直接修改DLL里面一个值为false就好了<br>
+函数调用约定知不知道<br>
+对断点的了解，软件、硬件、内存<br>
+有没有了解过内网的横向渗透：直接开摆，没有<br>
+有什么是我没问到但你会的：取证<br>
+说说有哪些DLL注入，简单讲讲DLL劫持的原理<br>
+有没有手脱壳的经验<br>
+ATT&amp;CK矩阵有没有了解过<br>
+知不知道Windows的安全机制，能不能简单说一个：PG，口胡说成了GD<br>
+问如何看待加班，说可能有时候不会6点下班，可能要八点半，怎么看待（感觉回答不行就直接把我挂了）</p>
+<h2 id="软牛科技逆向开发工程师">软牛科技（逆向开发工程师）</h2>
+<p>第一次见到逆向和开发挂一起的岗位<br>
+最离奇的是，简历投过去后，发了份附件笔试题，让写完发回去<br>
+。。。<br>
+看过哪些书，什么渠道学的逆向<br>
+PE有哪些头，入口点在哪个位置<br>
+断点<br>
+调用约定<br>
+加壳流程<br>
+DLL注入类型<br>
+有没有学习过hook<br>
+system权限的系统服务运行时会有什么安全隐患：会话隔离</p>
+<p>然后开始问一连串C\C++的知识<br>
+包括但不限于：<br>
+模板和类<br>
+继承和多态<br>
+static关键字<br>
+虚函数<br>
+等等等等</p>
+<h2 id="美团安全工程师">美团（安全工程师）</h2>
+<p>项目难点<br>
+DLL注入、hook<br>
+了不了解栈溢出<br>
+如何修改返回地址使其能跳转到shellcode处去执行<br>
+如何获取函数参数和返回地址在栈上的地址<br>
+由于在面美团时看到了深信服的offer邮件，一时间猪脑过载，记不得后面的面试问题了<br>
+不过面完美团才知道，原来美团的安全工程师主要是负责他们内部的软件安全，我就说为什么美团会有Windows安全的需求</p>
 
               </div>
 
@@ -73,8 +113,6 @@
               <div class="meta">
                 <div class="info">
                   <span class="field tags"><i class="fa fa-flask"></i>
-                    <a href="https://tickertapetimer.github.io/tag/OI2yF9Mjr/" class="tag">学习</a>
-                  
                     <a href="https://tickertapetimer.github.io/tag/NpOlg1WrO/" class="tag">其他</a>
                   </span>
                 </div>

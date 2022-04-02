@@ -2,13 +2,78 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://tickertapetimer.github.io</id>
     <title>A little blog</title>
-    <updated>2022-03-11T11:31:38.274Z</updated>
+    <updated>2022-04-02T11:06:05.876Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://tickertapetimer.github.io"/>
     <link rel="self" href="https://tickertapetimer.github.io/atom.xml"/>
     <logo>https://tickertapetimer.github.io/images/avatar.png</logo>
     <icon>https://tickertapetimer.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, A little blog</rights>
+    <entry>
+        <title type="html"><![CDATA[卑微逆向手实习面经]]></title>
+        <id>https://tickertapetimer.github.io/post/11uAgWXGe/</id>
+        <link href="https://tickertapetimer.github.io/post/11uAgWXGe/">
+        </link>
+        <updated>2022-04-02T10:15:38.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="前言">前言</h1>
+<p>有一说一，二进制安全岗大部分都是要会挖洞的，不会挖洞的卑微逆向手只能靠着一点平时攒的知识去找到满意的实习<br>
+可能真的因为是不会挖洞，很多厂的安全岗一投下去就是石沉大海（呜呜）<br>
+最后选择润去深信服，直接躺平</p>
+<h1 id="面经">面经</h1>
+<h2 id="深信服两个岗">深信服（两个岗）</h2>
+<h3 id="样本分析实习工程师">样本分析实习工程师</h3>
+<p>CTF比赛中遇到的印象深刻的逆向题<br>
+简历上的项目，遇到的难点巴拉巴拉<br>
+看简历里有一个cnvd，所以问有没有web渗透的经验（直接答莫得）<br>
+看简历会取证，要求简单描述一下<br>
+看简历学过密码学，问有没有学习过一些密码学算法，能否简单讲讲<br>
+假如给你一个病毒样本，要怎么下手去分析它<br>
+回答：先丢虚拟机看病毒行为，分析可能使用的API，再结合IDA去分析流程（自己盲猜的）</p>
+<p>感觉技术细节问的不多，主要是看简历问</p>
+<h3 id="攻防研究工程师">攻防研究工程师</h3>
+<p>CTF比赛中遇到的印象深刻的逆向题<br>
+简历上的项目，遇到的难点巴拉巴拉<br>
+讲讲你写的壳和现在网上流行的壳相比有什么优势：直接躺平，没有<br>
+简单讲讲PE文件结构<br>
+如何修改DLL文件，使其加载时是固定基址：一开始说直接改编译器选项，结果面试官要问的是无源码情况，无源码情况下直接修改DLL里面一个值为false就好了<br>
+函数调用约定知不知道<br>
+对断点的了解，软件、硬件、内存<br>
+有没有了解过内网的横向渗透：直接开摆，没有<br>
+有什么是我没问到但你会的：取证<br>
+说说有哪些DLL注入，简单讲讲DLL劫持的原理<br>
+有没有手脱壳的经验<br>
+ATT&amp;CK矩阵有没有了解过<br>
+知不知道Windows的安全机制，能不能简单说一个：PG，口胡说成了GD<br>
+问如何看待加班，说可能有时候不会6点下班，可能要八点半，怎么看待（感觉回答不行就直接把我挂了）</p>
+<h2 id="软牛科技逆向开发工程师">软牛科技（逆向开发工程师）</h2>
+<p>第一次见到逆向和开发挂一起的岗位<br>
+最离奇的是，简历投过去后，发了份附件笔试题，让写完发回去<br>
+。。。<br>
+看过哪些书，什么渠道学的逆向<br>
+PE有哪些头，入口点在哪个位置<br>
+断点<br>
+调用约定<br>
+加壳流程<br>
+DLL注入类型<br>
+有没有学习过hook<br>
+system权限的系统服务运行时会有什么安全隐患：会话隔离</p>
+<p>然后开始问一连串C\C++的知识<br>
+包括但不限于：<br>
+模板和类<br>
+继承和多态<br>
+static关键字<br>
+虚函数<br>
+等等等等</p>
+<h2 id="美团安全工程师">美团（安全工程师）</h2>
+<p>项目难点<br>
+DLL注入、hook<br>
+了不了解栈溢出<br>
+如何修改返回地址使其能跳转到shellcode处去执行<br>
+如何获取函数参数和返回地址在栈上的地址<br>
+由于在面美团时看到了深信服的offer邮件，一时间猪脑过载，记不得后面的面试问题了<br>
+不过面完美团才知道，原来美团的安全工程师主要是负责他们内部的软件安全，我就说为什么美团会有Windows安全的需求</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[SEH初探]]></title>
         <id>https://tickertapetimer.github.io/post/LeZq9-hzr/</id>
@@ -756,41 +821,6 @@ int main()
 </li>
 <li></li>
 </ol>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[利用PEB寻找kernel32.dll的基地址]]></title>
-        <id>https://tickertapetimer.github.io/post/利用PEB寻找kernel32.dll的基地址/</id>
-        <link href="https://tickertapetimer.github.io/post/利用PEB寻找kernel32.dll的基地址/">
-        </link>
-        <updated>2021-06-28T07:16:00.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="前言">前言</h2>
-<p>最近在尝试入门免杀，于是打算开始学习一手shellcode编写，而想要运行shellcode，就必须要明白shellcode的实现原理。</p>
-<h3 id="shellcode">shellcode</h3>
-<p>shellcode是一段独立于正常代码的数据，甚至可以把它放进数组里，然后去call它，这个特点既提高了它的灵活性，也加大了编写的难度。</p>
-<p>因为shellcode只是一段二进制数据，所以它没有调用DLL获取api的简单操作，想要让shellcode在运行时可以使用kernel32.dll里面的api，我们就需要使用PEB，在说PEB前，我们需要先明白TEB</p>
-<h3 id="teb">TEB</h3>
-<p>TEB对应的全称是Thread Environment Block ，直译过来是线程环绕块。<br>
-TEB结构体存储了线程相关的一些关键信息。<br>
-在介绍TEB之前，先简单介绍一下进程和线程的概念。<br>
-简单来说，进程可以理解为一个程序，比如启动微信，启动cmd.exe都是启动了一个进程。<br>
-线程在进程内部，可以理解为真正干活的东西。一个进程至少要完成一个任务，所以一个进程至少有一个线程。当然一个进程可以有很多个线程，这些线程可以是顺序执行的，也可以是并发执行的（多线程）<br>
-线程是程序执行的最小单元。<br>
-系统会在TEB中保存线程的一些相关数据。TEB位于用户地址空间，比PEB所在地址低。<br>
-进程中的每一个线程都有属于自己的一个TEB，进程中的所有TEB都以堆栈的方式存放在0x7FFDE000开始的线性内存中，每个TEB的大小为4kb。<br>
-所以在用户模式下，当前线程的TEB拥有4kb的空间，可以通过CPU的FS寄存器来访问该段。<br>
-TEB的起始地址一般是FS:[0]<br>
-在windbg中可以使用$thread取得TEB的地址。</p>
-<h3 id="peb">PEB</h3>
-<p>PEB全称是Process Environment Block 进程环境块。<br>
-通过上面的介绍已经说了每个线程都有自己的TEB，其实每个进程也有自己的PEB信息。<br>
-PEB也存放在用户态的地址空间。<br>
-在以前的操作系统中，PEB的默认地址在0x7FFDF000处。<br>
-PEB的地址计算有两种：<br>
-1 通过EPROCESS偏移0x1b0得到，但是EPROCESS是系统地址空间，访问EPROCESS需要R0的权限<br>
-2 通过TEB结构偏移0x30获取PEB<br>
-之前已经讲过，通过FS:[0] 可以获取到当前TEB 的起始地址<br>
-所以通过fs:[0x30] 就可以获取到PEB的地址</p>
 ]]></content>
     </entry>
 </feed>
